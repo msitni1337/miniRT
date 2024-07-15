@@ -55,3 +55,22 @@ t_vec3 vec3_normalize(t_vec3 a)
 	a.z /= mag;
 	return a;
 }
+t_vec4 vec3_to_vec4(t_vec3 a, float w)
+{
+	t_vec4 res;
+
+	res.x = a.x;
+	res.y = a.y;
+	res.z = a.z;
+	res.w = w;
+	return res;
+}
+t_vec3 vec4_to_vec3(t_vec4 a)
+{
+	t_vec3 res;
+
+	res.x = a.x;
+	res.y = a.y;
+	res.z = a.z;
+	return res;
+}
