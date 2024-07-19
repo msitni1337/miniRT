@@ -23,6 +23,13 @@ t_vec3 vec3_add_vec3(t_vec3 a, t_vec3 b)
 	a.x += b.z;
 	return a;
 }
+t_vec3 vec3_sub_vec3(t_vec3 a, t_vec3 b)
+{
+	a.x -= b.x;
+	a.y -= b.y;
+	a.x -= b.z;
+	return a;
+}
 t_vec3 vec3_add_float(t_vec3 a, float b)
 {
 	a.x += b;
