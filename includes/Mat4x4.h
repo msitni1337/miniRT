@@ -1,8 +1,8 @@
 #ifndef MAT4X4_H
 #define MAT4X4_H
-#include "vec3.h"
 #define MAT_COLS 4
 #define MAT_ROWS 4
+#include "Vec3.h"
 
 typedef struct s_mat4x4
 {
