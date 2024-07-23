@@ -20,28 +20,28 @@ t_vec3 vec3_add_vec3(t_vec3 a, t_vec3 b)
 {
 	a.x += b.x;
 	a.y += b.y;
-	a.x += b.z;
+	a.z += b.z;
 	return a;
 }
 t_vec3 vec3_sub_vec3(t_vec3 a, t_vec3 b)
 {
 	a.x -= b.x;
 	a.y -= b.y;
-	a.x -= b.z;
+	a.z -= b.z;
 	return a;
 }
 t_vec3 vec3_add_float(t_vec3 a, float b)
 {
 	a.x += b;
 	a.y += b;
-	a.x += b;
+	a.z += b;
 	return a;
 }
 t_vec3 vec3_scale(t_vec3 a, float s)
 {
 	a.x *= s;
 	a.y *= s;
-	a.x *= s;
+	a.z *= s;
 	return a;
 }
 t_vec3 vec3_cross(t_vec3 a, t_vec3 b)

@@ -5,7 +5,7 @@ OBJ = $(SRC:.c=.o)
 # VARS
 CC = cc
 NAME = miniRT
-CFLAGS = -Iincludes #-Wall -Werror -Wextra # -g3 -fsanitize=address
+CFLAGS = -Iincludes -g3 #-Wall -Werror -Wextra # -g3 -fsanitize=address
 LDFLAGS = -Lmlx_linux -lmlx -lXext -lX11 -lm
 
 

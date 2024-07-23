@@ -5,14 +5,14 @@
 typedef struct s_camera
 {
 	t_vec3	origin;
-	t_vec3	up;
 	t_vec3	forward;
 	t_vec3	U;
 	t_vec3	V;
-	float	horizontal_size;
+	float	fov;
 	float	aspect_ratio;
 } t_camera;
 
+t_camera new_camera(t_vec3 origin, t_vec3 orientation, float aspect_ratio, float fov);
 void calculate_camera_uv(t_camera*camera);
 
 #endif // CAMERA_H

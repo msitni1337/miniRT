@@ -2,6 +2,7 @@
 #define VEC3_H
 #include <math.h>
 #include <assert.h>
+#define PI 3.1415926f
 
 typedef struct s_vec3
 {
