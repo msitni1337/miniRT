@@ -13,7 +13,8 @@ typedef struct s_object
 {
 	t_object_type type;
 	t_mat4x4 SRT_matrix;
-	t_mat4x4 ISRT_matrix; // Todo: Possibly not needed
+	t_mat4x4 ISRT_matrix;
 	t_vec4 color;
+	size_t object_data;
 } t_object;
 #endif //SPHERE_H

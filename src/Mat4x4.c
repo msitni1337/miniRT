@@ -3,27 +3,43 @@
 t_mat4x4 mat_new(float val)
 {
 	assert(!"NOT IMPLEMENTED"); // TODO: Possibly not needed
-	return (t_mat4x4) {0};
+	return (t_mat4x4){0};
 }
 t_mat4x4 mat_inv(t_mat4x4 *m1)
 {
 	assert(!"NOT IMPLEMENTED");
-	return (t_mat4x4) {0};
+	return (t_mat4x4){0};
 }
 t_mat4x4 mat_mul(t_mat4x4 *m1, t_mat4x4 *m2)
 {
-	assert(!"NOT IMPLEMENTED");
-	return (t_mat4x4) {0};
+	t_mat4x4 res;
+	int row;
+	int col;
+	int i;
+
+	res = (t_mat4x4){0};
+	row = 0;
+	while (row < MAT_ROWS)
+	{
+		col = 0;
+		while (col < MAT_COLS)
+		{
+			i = 0;
+			while (i < MAT_COLS)
+			{
+				*mat_at(&res, row, col) += *mat_at(m1, row, i) * *mat_at(m2, i, col); 
+				i++;
+			}
+			col++;
+		}
+		row++;
+	}
+	return res;
 }
-t_mat4x4 mat_mul_vec4(t_mat4x4 mat, t_vec4 vec)
+t_vec3 mat_mul_vec3(t_mat4x4* mat, t_vec3 *vec)
 {
 	assert(!"NOT IMPLEMENTED");
-	return (t_mat4x4) {0};
-}
-t_mat4x4 vec4_mul_mat(t_vec4 *vec, t_mat4x4 *mat)
-{
-	assert(!"NOT IMPLEMENTED");
-	return (t_mat4x4) {0};
+	return (t_vec3){0};
 }
 float *mat_at(t_mat4x4 *mat, unsigned int row, unsigned int col)
 {

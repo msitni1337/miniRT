@@ -7,8 +7,7 @@
 typedef struct s_hits
 {
 	size_t count;
-	t_vec3*	hit_point;
-	float*	distance;
+	t_vec3 hit_point;
 } t_hits;
 
 

@@ -6,7 +6,7 @@ OBJ = $(SRC:.c=.o)
 CC = cc
 NAME = miniRT
 CFLAGS = -Iincludes -g3 #-Wall -Werror -Wextra # -g3 -fsanitize=address
-LDFLAGS = -Lmlx_linux -lmlx -lXext -lX11 -lm
+LDFLAGS = -lm #-Lmlx_linux -lmlx -lXext -lX11 -lm
 
 
 .PHONY : re fclean clean all bonus

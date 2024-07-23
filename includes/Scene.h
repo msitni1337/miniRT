@@ -7,8 +7,10 @@
 typedef struct s_scene
 {
 	t_camera camera;
+	size_t meta_data;
 	size_t objects_count;
-	t_object * objects;
+	t_object objects;
+
 } t_scene;
 
 #endif // SCENE_H
