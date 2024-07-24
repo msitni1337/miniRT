@@ -1,6 +1,6 @@
 #include "Object.h"
 
-t_hits sphere_intersection(t_object *object, t_ray ray)
+t_hit sphere_intersection(t_object *object, t_ray ray)
 {
 	/*
 		(r.a.x + t r.d.x)² + (r.a.y + t r.d.y)² + (r.a.z + t r.d.z)²  = r²
@@ -19,14 +19,15 @@ t_hits sphere_intersection(t_object *object, t_ray ray)
 
 		t = (-b +/- sqrt(b² - 4 a c)) / (2 * a)
 	*/
-	float radius_sq = (float)object->object_data;
+	float radius_sq = object->object_data;
 	t_vec3 map_origine = mat_mul_vec3(&object->ISRT_matrix, &ray.origin);
-	t_vec3 map_direct = mat_mul_vec3(&object->ISRT_matrix, &ray.dir);
+	t_vec3 map_target = mat_mul_vec3(&object->ISRT_matrix, &ray.target);
+	t_vec3 map_direct = vec3_sub_vec3(map_target, map_origine);
 
 	float b = 2 * (map_origine.x * map_direct.x + map_origine.y * map_direct.y + map_origine.z * map_direct.z);
 	float c = (map_origine.x * map_origine.x + map_origine.y * map_origine.y + map_origine.z * map_origine.z - radius_sq);
 	float determinant = b * b - 4 * c;
-	t_hits hit;
+	t_hit hit;
 	hit.count = 0;
 	if (determinant == 0.0)
 	{
@@ -34,7 +35,6 @@ t_hits sphere_intersection(t_object *object, t_ray ray)
 		if (t < 0.1) // near clipping plane
 			return hit;
 		hit.count = 1;
-
 		hit.hit_point = vec3_scale(map_direct, t);
 		hit.hit_point = vec3_add_vec3(hit.hit_point, map_origine);
 		hit.hit_point = mat_mul_vec3(&object->SRT_matrix, &hit.hit_point);

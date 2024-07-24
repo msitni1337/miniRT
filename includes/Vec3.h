@@ -2,6 +2,8 @@
 #define VEC3_H
 #include <math.h>
 #include <assert.h>
+#include <stddef.h>
+#define ZERO 1e-10
 #define PI 3.1415926f
 
 typedef struct s_vec3

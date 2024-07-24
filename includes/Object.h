@@ -12,7 +12,7 @@ typedef enum e_object_type
 typedef struct s_object
 {
 	t_object_type type;
-	t_hits (*intersection)(t_object *object, t_ray ray);
+	struct s_hit (*intersection)(struct s_object *object, struct s_ray ray);
 	t_mat4x4 SRT_matrix;
 	t_mat4x4 ISRT_matrix;
 	t_vec3 color;

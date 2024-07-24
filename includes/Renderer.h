@@ -1,7 +1,6 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 #include "Scene.h"
-#include "Ray.h"
 //#include <mlx.h>
 
 typedef struct s_img

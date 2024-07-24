@@ -1,19 +1,19 @@
 #include "Mat4x4.h"
 #include <stdio.h>
 
-void mat_print(t_mat4x4 *mat)
+void mat_print(float *data,int rows)
 {
 	unsigned int i;
 	unsigned int j;
 
 	i = 0;
-	while (i < MAT_ROWS)
+	while (i < rows)
 	{
 		j = 0;
 		printf("| ");
-		while (j < MAT_COLS)
+		while (j < rows)
 		{
-			printf("%5.2f ", *mat_at(mat, i, j));
+			printf("%5.2f ", data[(i * rows) + j]);
 			j++;
 		}
 		printf("|\n");

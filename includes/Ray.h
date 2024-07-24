@@ -2,13 +2,12 @@
 #define RAY_H
 #include "Mat4x4.h"
 #include "Camera.h"
-#include "Scene.h"
 
-typedef struct s_hits
+typedef struct s_hit
 {
 	size_t count;
 	t_vec3 hit_point;
-} t_hits;
+} t_hit;
 
 
 typedef struct s_ray
@@ -20,6 +19,5 @@ typedef struct s_ray
 
 t_ray	get_ray(t_camera*camera, t_vec3 pixel, t_vec3 img_size);
 t_ray	apply_mat(t_ray ray, t_mat4x4 mat);
-t_hits	cast_ray(t_scene*scene, t_ray ray);
 
 #endif // RAY_H
