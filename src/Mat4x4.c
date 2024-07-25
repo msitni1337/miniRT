@@ -159,8 +159,24 @@ t_mat4x4 mat_mul(t_mat4x4 *m1, t_mat4x4 *m2)
 }
 t_vec3 mat_mul_vec3(t_mat4x4 *mat, t_vec3 *vec)
 {
-	assert(!"NOT IMPLEMENTED");
-	return (t_vec3){0};
+	t_vec4 result;
+	float sum;
+	int row;
+
+	result = vec3_to_vec4(*vec, 1.0f);
+	row = 0;
+	while (row < MAT_ROWS)
+	{
+		sum = 0;
+		sum += *mat_at(mat, row, 0) * result.x;
+		sum += *mat_at(mat, row, 1) * result.y;
+		sum += *mat_at(mat, row, 2) * result.z;
+		sum += *mat_at(mat, row, 3) * result.w;
+
+		*((float*)&result + row) = sum;
+		row++;
+	}
+	return vec4_to_vec3(result);
 }
 float *mat_at(t_mat4x4 *mat, unsigned int row, unsigned int col)
 {

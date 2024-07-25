@@ -22,14 +22,14 @@ void mat_print(float *data,int rows)
 }
 void print_vec3(t_vec3 u)
 {
-	printf("| %5.2f |\n", u.x);
-	printf("| %5.2f |\n", u.y);
-	printf("| %5.2f |\n", u.z);
+	printf("| %6.4f |\n", u.x);
+	printf("| %6.4f |\n", u.y);
+	printf("| %6.4f |\n", u.z);
 }
 void print_vec4(t_vec4 u)
 {
-	printf("| %5.2f |\n", u.x);
-	printf("| %5.2f |\n", u.y);
-	printf("| %5.2f |\n", u.z);
-	printf("| %5.2f |\n", u.w);
+	printf("| %6.4f |\n", u.x);
+	printf("| %6.4f |\n", u.y);
+	printf("| %6.4f |\n", u.z);
+	printf("| %6.4f |\n", u.w);
 }
