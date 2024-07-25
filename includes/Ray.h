@@ -5,8 +5,9 @@
 
 typedef struct s_hit
 {
-	size_t count;
+	void *object;
 	t_vec3 hit_point;
+	float data;
 } t_hit;
 
 

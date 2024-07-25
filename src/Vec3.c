@@ -51,7 +51,7 @@ t_vec3 vec3_cross(t_vec3 a, t_vec3 b)
 	result.x = (a.y * b.z) - (a.z * b.y);
 	result.y = (a.z * b.x) - (a.x * b.z);
 	result.z = (a.x * b.y) - (a.y * b.x);
-	
+
 	return result;
 }
 float vec3_dot(t_vec3 a, t_vec3 b)
@@ -90,4 +90,12 @@ t_vec3 vec4_to_vec3(t_vec4 a)
 	res.y = a.y;
 	res.z = a.z;
 	return res;
+}
+float float_cap(float val, float min, float max)
+{
+	if (val < min)
+		return min;
+	if (val > max)
+		return max;
+	return val;
 }

@@ -32,15 +32,19 @@ int key_hook(int key, t_renderer *renderer)
 	{
 	case KEY_UP:
 		renderer->scene.camera.origin.y += 0.1f;
+		renderer->redraw = TRUE;
 		break;
 	case KEY_DOWN:
 		renderer->scene.camera.origin.y -= 0.1f;
+		renderer->redraw = TRUE;
 		break;
 	case KEY_LEFT:
 		renderer->scene.camera.origin.x -= 0.1f;
+		renderer->redraw = TRUE;
 		break;
 	case KEY_RIGHT:
 		renderer->scene.camera.origin.x += 0.1f;
+		renderer->redraw = TRUE;
 		break;
 	default:
 		break;
@@ -54,10 +58,11 @@ int main(int c, char **v)
 
 	t_renderer renderer;
 
+
 	renderer.mlx_context = mlx_init();
 	if (renderer.mlx_context == NULL)
 	{
-		printf("MLX INIT FAILED.");
+		LOG_ERROR("MLX INIT FAILED.");
 		return 1;
 	}
 	renderer.win_width = 1280;
@@ -65,7 +70,7 @@ int main(int c, char **v)
 	renderer.window = mlx_new_window(renderer.mlx_context, renderer.win_width, renderer.win_height, WIN_TITLE);
 	if (renderer.window == NULL)
 	{
-		printf("MLX WINDOW INIT FAILED.");
+		LOG_ERROR("MLX WINDOW INIT FAILED.");
 		return 1;
 	}
 	renderer.mlx_texture.width = renderer.win_width;
@@ -73,20 +78,32 @@ int main(int c, char **v)
 	renderer.mlx_texture.handle = mlx_new_image(renderer.mlx_context, renderer.mlx_texture.width, renderer.mlx_texture.height);
 	if (renderer.mlx_texture.handle == NULL)
 	{
-		printf("MLX IMG INIT FAILED.");
+		LOG_ERROR("MLX IMG INIT FAILED.");
 		return 1;
 	}
 	renderer.mlx_texture.data = mlx_get_data_addr(renderer.mlx_texture.handle, &renderer.mlx_texture.bpp, &renderer.mlx_texture.size_line, &renderer.mlx_texture.endian);
 	if (renderer.mlx_texture.data == NULL)
 	{
-		printf("MLX IMG CAN'T GET IMG DATA BUFFER ADDRESS.");
+		LOG_ERROR("MLX IMG CAN'T GET IMG DATA BUFFER ADDRESS.");
 		return 1;
 	}
-	renderer.scene.camera = new_camera((t_vec3){0, -3, 0}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 180);
+	renderer.scene.camera = new_camera((t_vec3){0, -4, 0}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 180);
+	
+	renderer.scene.objects_count = 3;
+	renderer.scene.objects = malloc(sizeof(t_object) * renderer.scene.objects_count);
+	if (renderer.scene.objects == NULL)
+	{
+		LOG_ERROR("MALLOC FAILED.");
+		return 1;
+	}
+	renderer.scene.objects[0] = new_sphere((t_vec3){0, 0, 0}, 1.0f, (t_vec3){255.0f, 0, 0});
+	renderer.scene.objects[1] = new_sphere((t_vec3){4, 2, 0}, 1.0f, (t_vec3){0, 255.0f, 0});
+	renderer.scene.objects[2] = new_light((t_vec3){5, -5, 5}, 1.0f, (t_vec3){255.0f, 255.0f, 255.0f});
+	renderer.redraw = TRUE;
+
 	print_camera_value(renderer.scene.camera);
-	renderer.scene.objects_count = 1;
-	renderer.scene.objects = new_sphere((t_vec3){0, 0, 0}, 1.0f, (t_vec3){255.0f, 0, 0});
-	print_object_value(renderer.scene.objects);
+	print_object_value(renderer.scene.objects[0]);
+	print_object_value(renderer.scene.objects[1]);
 
 	mlx_key_hook(renderer.window,key_hook,&renderer);
 	mlx_loop_hook(renderer.mlx_context, render, &renderer);

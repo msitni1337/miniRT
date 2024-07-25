@@ -3,6 +3,9 @@
 #include <math.h>
 #include <assert.h>
 #include <stddef.h>
+#include "logging.h"
+#define TRUE 1
+#define FALSE 0
 #define ZERO 1e-10
 #define PI 3.1415926f
 
@@ -36,5 +39,7 @@ t_vec4 vec3_to_vec4(t_vec3 a, float w);
 t_vec3 vec4_to_vec3(t_vec4 a);
 void print_vec3(t_vec3 u);
 void print_vec4(t_vec4 u);
+
+float float_cap(float val, float min, float max);
 
 #endif // VEC3_H

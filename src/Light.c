@@ -1,7 +1,5 @@
 #include "Object.h"
 
-#include "Object.h"
-
 t_hit light_intersection(t_object *object, t_ray ray)
 {
     /*
@@ -19,7 +17,7 @@ t_object new_light(t_vec3 pos, float intensity, t_vec3 color)
     light.intersection = &light_intersection;
     light.object_data = intensity;
     light.SRT_matrix = mat_id();
-    set_object_pos(&light.SRT_matrix, pos);
+    set_object_pos(&light, pos);
     light.ISRT_matrix = mat_inv(&light.SRT_matrix);
     return light;
 }

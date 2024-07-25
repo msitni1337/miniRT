@@ -1,6 +1,6 @@
 #ifndef RENDERER_H
 #define RENDERER_H
-#include "Scene.h"
+#include "Object.h"
 // #include <mlx.h>
 #include "../mlx.h"
 #define WIN_TITLE "miniRT"
@@ -8,6 +8,8 @@
 #define KEY_UP 65362
 #define KEY_RIGHT 65363
 #define KEY_LEFT 65361
+
+#define BG_COLOR 0xFF021526
 
 typedef struct s_img
 {
@@ -26,8 +28,9 @@ typedef struct s_renderer
 	void *window;
 	int win_width;
 	int win_height;
-	t_scene scene;
 	t_img mlx_texture;
+	t_scene scene;
+	int redraw;
 } t_renderer;
 
 void set_img_pixel_at(t_img *img, int x, int y, int color);
