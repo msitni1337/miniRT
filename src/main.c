@@ -87,9 +87,9 @@ int main(int c, char **v)
 		LOG_ERROR("MLX IMG CAN'T GET IMG DATA BUFFER ADDRESS.");
 		return 1;
 	}
-	renderer.scene.camera = new_camera((t_vec3){0, -4, 0}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 180);
+	renderer.scene.camera = new_camera((t_vec3){0, -10, 0}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 120);
 	
-	renderer.scene.objects_count = 3;
+	renderer.scene.objects_count = 4;
 	renderer.scene.objects = malloc(sizeof(t_object) * renderer.scene.objects_count);
 	if (renderer.scene.objects == NULL)
 	{
@@ -97,8 +97,9 @@ int main(int c, char **v)
 		return 1;
 	}
 	renderer.scene.objects[0] = new_sphere((t_vec3){0, 0, 0}, 1.0f, (t_vec3){255.0f, 0, 0});
-	renderer.scene.objects[1] = new_sphere((t_vec3){4, 2, 0}, 1.0f, (t_vec3){0, 255.0f, 0});
-	renderer.scene.objects[2] = new_light((t_vec3){5, -5, 5}, 1.0f, (t_vec3){255.0f, 255.0f, 255.0f});
+	renderer.scene.objects[1] = new_sphere((t_vec3){4, 0, 0}, 1.0f, (t_vec3){0, 255.0f, 0});
+	renderer.scene.objects[2] = new_sphere((t_vec3){-4, 0, 0}, 1.0f, (t_vec3){0, 0, 255.0f});
+	renderer.scene.objects[3] = new_light((t_vec3){0, 0, 20}, 1.0f, (t_vec3){255.0f, 255.0f, 255.0f});
 	renderer.redraw = TRUE;
 
 	print_camera_value(renderer.scene.camera);

@@ -50,7 +50,7 @@ t_hit get_light_hit(t_scene *scene, t_hit hit_point)
 		t_vec3 hit_normal = vec3_sub_vec3(hit_point.hit_point, get_object_pos(hit_point.object));
 		hit_normal = vec3_normalize(hit_normal);
 
-		t_vec3 light_normal = vec3_sub_vec3(get_object_pos(hit_point.object), get_object_pos(light));
+		t_vec3 light_normal = vec3_sub_vec3(get_object_pos(light), get_object_pos(hit_point.object));
 		light_normal = vec3_normalize(light_normal);
 		float intensity = vec3_dot(hit_normal, light_normal);
 		intensity = float_cap(intensity, 0.0f, 1.0f);
@@ -100,7 +100,7 @@ int render(t_renderer *renderer)
 			t_ray ray;
 			ray = get_ray(&renderer->scene.camera, (t_vec3){x, y}, (t_vec3){img->width, img->height});
 			unsigned int color = calculate_intersections(&renderer->scene, ray);
-			set_img_pixel_at(&renderer->mlx_texture, x, y, color);
+			set_img_pixel_at(&renderer->mlx_texture, x, renderer->mlx_texture.height - y, color);
 		}
 	}
 	mlx_put_image_to_window(renderer->mlx_context, renderer->window, renderer->mlx_texture.handle, 0, 0);
