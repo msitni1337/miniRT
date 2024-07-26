@@ -1,4 +1,4 @@
-#include "Mat4x4.h"
+#include "Renderer.h"
 #include <stdio.h>
 
 void mat_print(float *data,int rows)
@@ -32,4 +32,26 @@ void print_vec4(t_vec4 u)
 	printf("| %7.4f  |\n", u.y);
 	printf("| %7.4f  |\n", u.z);
 	printf("| %7.4f  |\n", u.w);
+}
+void print_camera_value(t_camera camera)
+{
+	printf("camera.origin: \n");
+	print_vec3(camera.origin);
+	printf("camera.forward: \n");
+	print_vec3(camera.forward);
+	printf("camera.U: \n");
+	print_vec3(camera.U);
+	printf("camera.V: \n");
+	print_vec3(camera.V);
+	printf("camera.aspect_ratio: %f\n", camera.aspect_ratio);
+}
+void print_object_value(t_object object)
+{
+	printf("object.SRT_matrix: \n");
+	mat_print(object.SRT_matrix.data, 4);
+	printf("object.ISRT_matrix: \n");
+	mat_print(object.ISRT_matrix.data, 4);
+	printf("object.color: \n");
+	print_vec3(object.color);
+	printf("object.object_data: %f\n", object.object_data);
 }

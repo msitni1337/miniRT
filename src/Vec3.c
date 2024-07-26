@@ -60,13 +60,15 @@ float vec3_dot(t_vec3 a, t_vec3 b)
 }
 float vec3_magnitude(t_vec3 a)
 {
-	return sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
+	return sqrtf(a.x * a.x + a.y * a.y + a.z * a.z);
 }
 t_vec3 vec3_normalize(t_vec3 a)
 {
 	float mag;
 
 	mag = vec3_magnitude(a);
+	if (fabs(mag - ZERO) < ZERO)
+		return (t_vec3){0, 0, 0};
 	a.x /= mag;
 	a.y /= mag;
 	a.z /= mag;

@@ -18,7 +18,7 @@ t_hit sphere_intersection(t_object *object, t_ray ray)
 		b = 2 * (rax * rdx + ray * rdy + raz * rdz)
 		c = (rax² + ray² + raz² - r²) << Can be calculated & stored once instead of always calculating it hum ...
 
-		t = (-b +/- sqrt(b² - 4 a c)) / (2 * a)
+		t = (-b +/- sqrtf(b² - 4 a c)) / (2 * a)
 	*/
 
 	float radius_sq = object->object_data * object->object_data;
@@ -48,7 +48,7 @@ t_hit sphere_intersection(t_object *object, t_ray ray)
 	}
 	else if (determinant > 0.0)
 	{
-		float t = (-b + sqrt(determinant)) / 2;
+		float t = (-b + sqrtf(determinant)) / 2;
 		if (t < 0.1) // near clipping plane
 			return hit;
 		hit.object = object;

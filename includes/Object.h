@@ -27,6 +27,8 @@ typedef struct s_scene
 	t_object *objects;
 } t_scene;
 
+t_mat4x4 get_euler_rotation_matrix(t_vec3 normalized_orientation);
+
 t_object new_light(t_vec3 pos, float intensity, t_vec3 color);
 t_object new_sphere(t_vec3 pos, float radius, t_vec3 color);
 void set_object_pos(t_object *object, t_vec3 pos);

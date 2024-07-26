@@ -5,8 +5,8 @@ OBJ = $(SRC:.c=.o)
 # VARS
 CC = cc
 NAME = miniRT
-CFLAGS = -Iincludes -g3 #-Wall -Werror -Wextra # -g3 -fsanitize=address
-LDFLAGS = -lm #-Lmlx_linux -lmlx -lXext -lX11 -lm
+CFLAGS = -O3 -Iincludes -g3 -fsanitize=address
+LDFLAGS = -Lmlx_Linux -lmlx_Linux -lXext -lX11 -lm
 
 
 .PHONY : re fclean clean all bonus
@@ -14,7 +14,7 @@ LDFLAGS = -lm #-Lmlx_linux -lmlx -lXext -lX11 -lm
 
 all : $(NAME)
 
-$(NAME): $(LIBFT) $(OBJ)
+$(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LDFLAGS)
 
 clean :
@@ -22,5 +22,8 @@ clean :
 
 fclean : clean
 	rm -f $(NAME)
+
+basic_rendering: $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) tests/Basic_rendering.c -o $(NAME) $(LDFLAGS)
 
 re : fclean all

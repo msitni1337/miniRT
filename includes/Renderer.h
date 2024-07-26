@@ -34,4 +34,9 @@ typedef struct s_renderer
 
 void set_img_pixel_at(t_img *img, int x, int y, int color);
 int render(t_renderer *renderer);
+
+// Debug
+void print_camera_value(t_camera camera);
+void print_object_value(t_object object);
+
 #endif // RENDERER_H
