@@ -127,7 +127,7 @@ t_mat4x4 mat_inv(t_mat4x4 *m1)
 	}
 	adjugate = mat4_transpose(&adjugate);
 	float determinant = mat4_determinant(m1);
-	if (fabs(determinant) < ZERO)
+	if (fabs(determinant) <= ZERO)
 		return (t_mat4x4){0};
 	return mat_scale(&adjugate, 1.0f / determinant);
 }

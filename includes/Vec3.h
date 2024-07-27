@@ -8,6 +8,8 @@
 #define FALSE 0
 #define ZERO 1e-10
 #define PI 3.1415926f
+#define CAM_CLIP 0.1f
+#define INF 1e8f
 
 typedef struct s_vec3
 {

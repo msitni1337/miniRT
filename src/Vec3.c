@@ -67,7 +67,7 @@ t_vec3 vec3_normalize(t_vec3 a)
 	float mag;
 
 	mag = vec3_magnitude(a);
-	if (fabs(mag - ZERO) < ZERO)
+	if (mag <= ZERO)
 		return (t_vec3){0, 0, 0};
 	a.x /= mag;
 	a.y /= mag;

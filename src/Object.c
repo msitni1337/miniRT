@@ -4,7 +4,7 @@ t_object *get_next_object_by_type(t_scene *scene, size_t *i, t_object_type type)
 {
     while (scene->objects && *i < scene->objects_count)
     {
-        if (scene->objects[*i].type == type)
+        if (scene->objects[*i].type & type)
             return &scene->objects[*i];
         (*i)++;
     }
@@ -44,7 +44,7 @@ t_mat4x4 get_x_rotation_matrix(t_vec3 normalized_orientation)
     t_vec3 theta;
 
     x_rot = mat_id();
-    theta = get_axis_rotation(normalized_orientation, (t_vec3){1.0f, 0, 0});
+    theta = get_axis_rotation(normalized_orientation, (t_vec3){0, 0, 1.0f});
     *mat_at(&x_rot, 1, 1) = theta.x;
     *mat_at(&x_rot, 1, 2) = -theta.y;
     *mat_at(&x_rot, 2, 1) = theta.y;
@@ -59,7 +59,7 @@ t_mat4x4 get_y_rotation_matrix(t_vec3 normalized_orientation)
     t_vec3 theta;
 
     y_rot = mat_id();
-    theta = get_axis_rotation(normalized_orientation, (t_vec3){0, 1.0f, 0});
+    theta = get_axis_rotation(normalized_orientation, (t_vec3){1.0f, 0, 0});
     *mat_at(&y_rot, 0, 0) = theta.x;
     *mat_at(&y_rot, 0, 2) = theta.y;
     *mat_at(&y_rot, 2, 0) = -theta.y;
@@ -74,7 +74,7 @@ t_mat4x4 get_z_rotation_matrix(t_vec3 normalized_orientation)
     t_vec3 theta;
 
     z_rot = mat_id();
-    theta = get_axis_rotation(normalized_orientation, (t_vec3){1.0f, 0, 0});
+    theta = get_axis_rotation(normalized_orientation, (t_vec3){0, 1.0f, 0});
     *mat_at(&z_rot, 0, 0) = theta.x;
     *mat_at(&z_rot, 0, 1) = -theta.y;
     *mat_at(&z_rot, 1, 0) = theta.y;
@@ -90,6 +90,7 @@ t_mat4x4 get_euler_rotation_matrix(t_vec3 normalized_orientation)
     t_mat4x4 z_rot;
     t_mat4x4 result;
 
+    normalized_orientation = vec3_normalize(normalized_orientation);
     x_rot = get_x_rotation_matrix(normalized_orientation);
     y_rot = get_y_rotation_matrix(normalized_orientation);
     z_rot = get_z_rotation_matrix(normalized_orientation);

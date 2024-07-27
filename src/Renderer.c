@@ -9,15 +9,15 @@ t_hit get_ray_hit(t_scene *scene, t_ray ray)
 
 	i = 0;
 	hit.object = NULL;
-	hit.data = INFINITY;
-	object = get_next_object_by_type(scene, &i, OBJ_SPHERE);
+	hit.data = INF;
+	object = get_next_object_by_type(scene, &i, OBJ_SPHERE | OBJ_PLANE);
 	while (object)
 	{
 		tmp = object->intersection(object, ray);
-		if (tmp.object && (tmp.data - hit.data) < ZERO)
+		if (tmp.object && (tmp.data < hit.data))
 			hit = tmp;
 		i++;
-		object = get_next_object_by_type(scene, &i, OBJ_SPHERE);
+		object = get_next_object_by_type(scene, &i, OBJ_SPHERE | OBJ_PLANE);
 	}
 	return hit;
 }
@@ -27,7 +27,7 @@ unsigned int get_color_vec3(t_vec3 vec)
 	unsigned char r;
 	unsigned char g;
 	unsigned char b;
-	
+
 	r = vec.x * 255.0f;
 	g = vec.y * 255.0f;
 	b = vec.z * 255.0f;
@@ -58,7 +58,7 @@ t_hit get_light_hit(t_scene *scene, t_hit hit_point)
 		hit_light.data = intensity;
 		hit_light.object = light;
 		hit_light.hit_point = hit_normal;
-		
+
 		i++;
 		light = get_next_object_by_type(scene, &i, OBJ_SPHERE);
 	}
@@ -74,13 +74,20 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 	hit_point = get_ray_hit(scene, ray);
 	if (hit_point.object != NULL)
 	{
-		hit_light = get_light_hit(scene, hit_point);
+		if (((t_object *)hit_point.object)->type == OBJ_SPHERE)
+			hit_light = get_light_hit(scene, hit_point);
+		else
+			hit_light.object = NULL;
 		if (hit_light.object)
 		{
 			t_vec3 color_vec;
-			
-			color_vec = vec3_scale(((t_object*)hit_point.object)->color, hit_light.data);
+
+			color_vec = vec3_scale(((t_object *)hit_point.object)->color, hit_light.data);
 			color = get_color_vec3(color_vec);
+		}
+		else
+		{
+			color = get_color_vec3(((t_object *)hit_point.object)->color);
 		}
 	}
 	return color;

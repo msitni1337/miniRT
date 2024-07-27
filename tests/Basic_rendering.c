@@ -5,28 +5,54 @@
 
 int key_hook(int key, t_renderer *renderer)
 {
-	printf("key pressed: %d\n",key);
+	printf("key pressed: %d\n", key);
 	switch (key)
 	{
 	case KEY_UP:
-		renderer->scene.camera.origin.y += 0.1f;
+		renderer->scene.camera.forward.y += 0.5f;
 		renderer->redraw = TRUE;
 		break;
 	case KEY_DOWN:
-		renderer->scene.camera.origin.y -= 0.1f;
+		renderer->scene.camera.forward.y -= 0.5f;
 		renderer->redraw = TRUE;
 		break;
 	case KEY_LEFT:
-		renderer->scene.camera.origin.x -= 0.1f;
+		renderer->scene.camera.forward.x -= 0.5f;
 		renderer->redraw = TRUE;
 		break;
 	case KEY_RIGHT:
-		renderer->scene.camera.origin.x += 0.1f;
+		renderer->scene.camera.forward.x += 0.5f;
+		renderer->redraw = TRUE;
+		break;
+	case KEY_Z:
+		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale(renderer->scene.camera.forward, 0.5f));
+		renderer->redraw = TRUE;
+		break;
+	case KEY_S:
+		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale(renderer->scene.camera.forward, -0.5f));
+		renderer->redraw = TRUE;
+		break;
+	case KEY_Q:
+		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale(renderer->scene.camera.U, -0.5f));
+		renderer->redraw = TRUE;
+		break;
+	case KEY_D:
+		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale(renderer->scene.camera.U, 0.5f));
+		renderer->redraw = TRUE;
+		break;
+	case KEY_8:
+		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale((t_vec3){0, 0, 1.0}, 0.5f));
+		renderer->redraw = TRUE;
+		break;
+	case KEY_2:
+		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale((t_vec3){0, 0, 1.0}, -0.5f));
+		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale(renderer->scene.camera.forward, -0.5f));
 		renderer->redraw = TRUE;
 		break;
 	default:
 		break;
 	}
+	calculate_camera_uv(&renderer->scene.camera);
 	return 0;
 }
 int main(int c, char **v)
@@ -35,7 +61,6 @@ int main(int c, char **v)
 	(void)v;
 
 	t_renderer renderer;
-
 
 	renderer.mlx_context = mlx_init();
 	if (renderer.mlx_context == NULL)
@@ -65,8 +90,8 @@ int main(int c, char **v)
 		LOG_ERROR("MLX IMG CAN'T GET IMG DATA BUFFER ADDRESS.");
 		return 1;
 	}
-	renderer.scene.camera = new_camera((t_vec3){0, -10, 0}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 120);
-	
+	renderer.scene.camera = new_camera((t_vec3){0, -3, 0}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 120);
+
 	renderer.scene.objects_count = 4;
 	renderer.scene.objects = malloc(sizeof(t_object) * renderer.scene.objects_count);
 	if (renderer.scene.objects == NULL)
@@ -75,8 +100,8 @@ int main(int c, char **v)
 		return 1;
 	}
 	renderer.scene.objects[0] = new_sphere((t_vec3){0, 0, 0}, 1.0f, (t_vec3){255.0f, 0, 0});
-	renderer.scene.objects[1] = new_sphere((t_vec3){4, 0, 0}, 1.0f, (t_vec3){0, 255.0f, 0});
-	renderer.scene.objects[2] = new_sphere((t_vec3){-4, 0, 0}, 1.0f, (t_vec3){0, 0, 255.0f});
+	renderer.scene.objects[1] = new_sphere((t_vec3){2, 0, 0}, 1.0f, (t_vec3){0, 255.0f, 0});
+	renderer.scene.objects[2] = new_plane((t_vec3){0, 0, -.7f}, (t_vec3){0, 0.0, 1.0}, (t_vec3){60.0f, 20.0f, 75.0f});
 	renderer.scene.objects[3] = new_light((t_vec3){0, 0, 20}, 1.0f, (t_vec3){255.0f, 255.0f, 255.0f});
 	renderer.redraw = TRUE;
 
@@ -84,7 +109,7 @@ int main(int c, char **v)
 	print_object_value(renderer.scene.objects[0]);
 	print_object_value(renderer.scene.objects[1]);
 
-	mlx_key_hook(renderer.window,key_hook,&renderer);
+	mlx_key_hook(renderer.window, key_hook, &renderer);
 	mlx_loop_hook(renderer.mlx_context, render, &renderer);
 	mlx_loop(renderer.mlx_context);
 	return 0;

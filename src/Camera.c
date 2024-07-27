@@ -2,6 +2,7 @@
 
 void calculate_camera_uv(t_camera*camera)
 {
+	camera->forward = vec3_normalize(camera->forward);
 	// Constructing uvs vectors
 	camera->U = vec3_cross(camera->forward, (t_vec3){0.0f, 0.0f, 1.0f});
 	camera->U = vec3_scale(camera->U, sinf((camera->fov / 180.0f) * (PI / 2.0f)));
@@ -16,7 +17,7 @@ t_camera new_camera(t_vec3 origin, t_vec3 orientation, float aspect_ratio, float
 	t_camera camera;
 
 	camera.origin = origin;
-	camera.forward = vec3_normalize(orientation);
+	camera.forward = orientation;
 	camera.aspect_ratio = aspect_ratio;
 	camera.fov = fov;
 	calculate_camera_uv(&camera);
