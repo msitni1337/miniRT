@@ -14,6 +14,7 @@ typedef struct s_object
 {
 	t_object_type type;
 	struct s_hit (*intersection)(struct s_object *object, struct s_ray ray);
+	struct s_vec3 (*point_normal)(t_hit hit_point);
 	t_mat4x4 SRT_matrix;
 	t_mat4x4 ISRT_matrix;
 	t_vec3 normal;

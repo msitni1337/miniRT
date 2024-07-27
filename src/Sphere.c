@@ -63,6 +63,11 @@ t_hit sphere_intersection(t_object *object, t_ray ray)
 	return hit;
 }
 
+t_vec3 sphere_point_normal(t_hit hit_point)
+{
+    return vec3_normalize(vec3_sub_vec3(hit_point.hit_point, get_object_pos(hit_point.object)));
+}
+
 t_object new_sphere(t_vec3 pos, float radius, t_vec3 color)
 {
 	t_object sphere;
@@ -70,6 +75,7 @@ t_object new_sphere(t_vec3 pos, float radius, t_vec3 color)
 	sphere.type = OBJ_SPHERE;
 	sphere.color = vec3_scale(color, 1.0f / 255.0f);
 	sphere.intersection = &sphere_intersection;
+    sphere.point_normal = &sphere_point_normal;
 	sphere.object_data = radius;
 	sphere.SRT_matrix = mat_id();
 	set_object_pos(&sphere, pos);

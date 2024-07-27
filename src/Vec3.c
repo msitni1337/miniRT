@@ -37,6 +37,28 @@ t_vec3 vec3_add_float(t_vec3 a, float b)
 	a.z += b;
 	return a;
 }
+t_vec3 vec3_cap(t_vec3 a, float min, float max)
+{
+	if (a.x < min)
+		a.x = min;
+	else if (a.x > max)
+		a.x = max;
+	if (a.y < min)
+		a.y = min;
+	else if (a.y > max)
+		a.y = max;
+	if (a.z < min)
+		a.z = min;
+	else if (a.z > max)
+		a.z = max;
+}
+t_vec3 vec3_mul(t_vec3 a, t_vec3 b)
+{
+	a.x *= b.x;
+	a.y *= b.y;
+	a.z *= b.z;
+	return a;
+}
 t_vec3 vec3_scale(t_vec3 a, float s)
 {
 	a.x *= s;

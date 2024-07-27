@@ -44,6 +44,12 @@ t_hit plane_intersection(t_object *object, t_ray ray)
     return hit;
 }
 
+
+t_vec3 plane_point_normal(t_hit hit_point)
+{
+    return ((t_object*)hit_point.object)->normal;
+}
+
 t_object new_plane(t_vec3 point, t_vec3 normal, t_vec3 color)
 {
     t_object plane;
@@ -52,6 +58,7 @@ t_object new_plane(t_vec3 point, t_vec3 normal, t_vec3 color)
     plane.type = OBJ_PLANE;
     plane.color = vec3_scale(color, 1.0f / 255.0f);
     plane.intersection = &plane_intersection;
+    plane.point_normal = &plane_point_normal;
     
     
     set_object_pos(&plane, point);

@@ -43,5 +43,7 @@ void print_vec3(t_vec3 u);
 void print_vec4(t_vec4 u);
 
 float float_cap(float val, float min, float max);
+t_vec3 vec3_cap(t_vec3 a, float min, float max);
+t_vec3 vec3_mul(t_vec3 a, t_vec3 b);
 
 #endif // VEC3_H
