@@ -1,12 +1,12 @@
 # SRCS
-SRC = $(wildcard src/*.c)
+SRC = $(wildcard src/*/*.c) $(wildcard src/*.c)
 OBJ = $(SRC:.c=.o)
 
 # VARS
 CC = cc
 NAME = miniRT
 CFLAGS = -O3 -Iincludes -g3 -fsanitize=address
-LDFLAGS = -L./lib -lmlx -lXext -lX11 -lm
+LDFLAGS = -Lmlx_Linux -lmlx_Linux -lXext -lX11 -lm
 
 
 .PHONY : re fclean clean all bonus

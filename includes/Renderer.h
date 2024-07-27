@@ -1,7 +1,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 #include "Object.h"
-#include "../mlx.h"
+#include <mlx.h>
 #define WIN_TITLE "miniRT"
 #define KEY_DOWN 65364
 #define KEY_UP 65362

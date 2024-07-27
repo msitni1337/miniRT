@@ -51,6 +51,7 @@ t_vec3 vec3_cap(t_vec3 a, float min, float max)
 		a.z = min;
 	else if (a.z > max)
 		a.z = max;
+	return a;
 }
 t_vec3 vec3_mul(t_vec3 a, t_vec3 b)
 {
