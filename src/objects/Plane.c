@@ -61,14 +61,13 @@ t_object new_plane(t_vec3 point, t_vec3 normal, t_vec3 color)
     plane.point_normal = &plane_point_normal;
     
     
-    set_object_pos(&plane, point);
     plane.normal = vec3_normalize(normal);
     
-    //plane.SRT_matrix = mat_id();
+    plane.SRT_matrix = mat_id();
     //tmp = get_euler_rotation_matrix(normal);
     //plane.SRT_matrix = mat_mul(&tmp, &plane.SRT_matrix);
-    //set_object_pos(&plane, point);
-    //plane.ISRT_matrix = mat_inv(&plane.SRT_matrix);
+    set_object_pos(&plane, point);
+    plane.ISRT_matrix = mat_inv(&plane.SRT_matrix);
     
     return plane;
 }

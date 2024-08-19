@@ -10,14 +10,14 @@ t_hit get_ray_hit(t_scene *scene, t_ray ray)
 	i = 0;
 	hit.object = NULL;
 	hit.data = INF;
-	object = get_next_object_by_type(scene, &i, OBJ_SPHERE | OBJ_PLANE);
+	object = get_next_object_by_type(scene, &i, OBJ_CYLINDER | OBJ_SPHERE | OBJ_PLANE);
 	while (object)
 	{
 		tmp = object->intersection(object, ray);
 		if (tmp.object && (tmp.data < hit.data))
 			hit = tmp;
 		i++;
-		object = get_next_object_by_type(scene, &i, OBJ_SPHERE | OBJ_PLANE);
+		object = get_next_object_by_type(scene, &i, OBJ_CYLINDER | OBJ_SPHERE | OBJ_PLANE);
 	}
 	return hit;
 }
@@ -52,7 +52,7 @@ t_hit get_light_hit(t_scene *scene, t_hit hit_point)
 		t_vec3 light_normal = vec3_sub_vec3(get_object_pos(light), hit_point.hit_point);
 		light_normal = vec3_normalize(light_normal);
 
-		float intensity = light->object_data * vec3_dot(hit_normal, light_normal);
+		float intensity = light->intensity * vec3_dot(hit_normal, light_normal);
 		intensity = float_cap(intensity, 0.0f, 1.0f);
 
 		hit_light.data = intensity;

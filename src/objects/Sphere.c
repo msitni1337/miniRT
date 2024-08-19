@@ -21,7 +21,7 @@ t_hit sphere_intersection(t_object *object, t_ray ray)
 		t = (-b +/- sqrtf(b² - 4 a c)) / (2 * a)
 	*/
 
-	float radius_sq = object->object_data * object->object_data;
+	float radius_sq = object->radius * object->radius;
 	t_vec3 map_origine = mat_mul_vec3(&object->ISRT_matrix, &ray.origin);
 	t_vec3 map_target = mat_mul_vec3(&object->ISRT_matrix, &ray.target);
 	t_vec3 map_direct = vec3_sub_vec3(map_target, map_origine);
@@ -76,7 +76,7 @@ t_object new_sphere(t_vec3 pos, float radius, t_vec3 color)
 	sphere.color = vec3_scale(color, 1.0f / 255.0f);
 	sphere.intersection = &sphere_intersection;
     sphere.point_normal = &sphere_point_normal;
-	sphere.object_data = radius;
+	sphere.radius = radius;
 	sphere.SRT_matrix = mat_id();
 	set_object_pos(&sphere, pos);
 	sphere.ISRT_matrix = mat_inv(&sphere.SRT_matrix);

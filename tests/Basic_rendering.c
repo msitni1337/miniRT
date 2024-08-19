@@ -95,8 +95,8 @@ int main(int c, char **v)
 	renderer.scene.objects_count = 4;
 	t_object objects[renderer.scene.objects_count];
 	renderer.scene.objects = objects;
-	renderer.scene.objects[0] = new_sphere((t_vec3){-2, 0, 0}, 1.0f, (t_vec3){255.0f, 0, 0});
-	renderer.scene.objects[1] = new_sphere((t_vec3){2, 0, 0}, 1.0f, (t_vec3){0, 255.0f, 0});
+	renderer.scene.objects[0] = new_sphere((t_vec3){0, 0, 0}, 1.0f, (t_vec3){255.0f, 0, 0});
+	renderer.scene.objects[1] = new_cylinder((t_vec3){0, 0, 1}, (t_vec3){0, 0, 0}, (t_vec3){1, 1, 0}, (t_vec3){125.0f, 125.0f, 0});
 	renderer.scene.objects[2] = new_plane((t_vec3){0, 0, -1}, (t_vec3){0.0, 0.0, 1.0}, (t_vec3){30.0f, 80.0f, 45.0f});
 	renderer.scene.objects[3] = new_light((t_vec3){0, -4, 2}, 1.0f, (t_vec3){255.0f, 255.0f, 255.0f});
 	renderer.redraw = TRUE;

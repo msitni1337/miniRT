@@ -53,5 +53,6 @@ void print_object_value(t_object object)
 	mat_print(object.ISRT_matrix.data, 4);
 	printf("object.color: \n");
 	print_vec3(object.color);
-	printf("object.object_data: %f\n", object.object_data);
+	printf("object.radius: %f\n", object.radius);
+	printf("object.intensity: %f\n", object.intensity);
 }

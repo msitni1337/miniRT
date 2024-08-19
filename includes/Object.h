@@ -4,10 +4,11 @@
 
 typedef enum e_object_type
 {
-	OBJ_PLANE  = (1 << 1),
-	OBJ_SPHERE = (1 << 2),
-	OBJ_LIGHT  = (1 << 3),
-	OBJ_CONE   = (1 << 4),
+	OBJ_PLANE    = (1 << 1),
+	OBJ_SPHERE   = (1 << 2),
+	OBJ_LIGHT    = (1 << 3),
+	OBJ_CYLINDER = (1 << 4),
+	OBJ_CONE     = (1 << 5),
 } t_object_type;
 
 typedef struct s_object
@@ -19,7 +20,9 @@ typedef struct s_object
 	t_mat4x4 ISRT_matrix;
 	t_vec3 normal;
 	t_vec3 color;
-	float object_data;
+	t_vec3 params;
+	float radius;
+	float intensity;
 } t_object;
 
 typedef struct s_scene
@@ -33,6 +36,7 @@ typedef struct s_scene
 t_object new_light(t_vec3 pos, float intensity, t_vec3 color);
 t_object new_sphere(t_vec3 pos, float radius, t_vec3 color);
 t_object new_plane(t_vec3 point, t_vec3 normal, t_vec3 color);
+t_object new_cylinder(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_vec3 color);
 
 t_mat4x4 get_euler_rotation_matrix(t_vec3 normalized_orientation);
 t_vec3 get_object_pos(t_object *object);
