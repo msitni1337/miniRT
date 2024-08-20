@@ -17,7 +17,7 @@ t_camera new_camera(t_vec3 origin, t_vec3 orientation, float aspect_ratio, float
 	t_camera camera;
 
 	camera.origin = origin;
-	camera.forward = orientation;
+	camera.forward = vec3_normalize(orientation);
 	camera.aspect_ratio = aspect_ratio;
 	camera.fov = fov;
 	calculate_camera_uv(&camera);
