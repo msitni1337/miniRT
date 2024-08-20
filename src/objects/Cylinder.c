@@ -41,7 +41,12 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 
 t_vec3 cylinder_point_normal(t_hit hit_point)
 {
-    return ((t_object *)hit_point.object)->normal;
+	t_object * object = hit_point.object;
+    t_vec3 p = vec3_sub_vec3(hit_point.hit_point, get_object_pos(object));
+	float p_height = vec3_dot(p, object->normal); 
+	p = vec3_scale(object->normal, p_height);
+
+	return (vec3_normalize(vec3_sub_vec3(hit_point.hit_point, p)));
 }
 
 t_object new_cylinder(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_vec3 color)
