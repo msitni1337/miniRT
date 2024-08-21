@@ -71,49 +71,47 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 		hit.normal = cylinder_point_normal(hit);
 	}
 
-	if (hit.object)
+	t_vec3 hitpoint_vector = vec3_sub_vec3(hit.hit_point, get_object_pos(object));
+	float origin_distance = vec3_dot(hitpoint_vector, object->normal);
+	if (fabs(origin_distance) > object->params.x / 2)
 	{
-		t_vec3 hitpoint_vector = vec3_sub_vec3(hit.hit_point, get_object_pos(object));
-		float origin_distance = vec3_dot(hitpoint_vector, object->normal);
-		if (fabs(origin_distance) > object->params.x / 2)
+		if (determinant > ZERO)
 		{
-			if (determinant > ZERO)
+			float t = (-b + sqrtf(determinant)) / (2 * a);
+			hit.hit_point = vec3_scale(ray.dir, t);
+			hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
+			hit.data = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
+			hitpoint_vector = vec3_sub_vec3(hit.hit_point, get_object_pos(object));
+			origin_distance = vec3_dot(hitpoint_vector, object->normal);
+			if (fabs(origin_distance) > object->params.x / 2)
 			{
-				float t = (-b + sqrtf(determinant)) / (2 * a);
-				hit.hit_point = vec3_scale(ray.dir, t);
-				hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
-				hit.data = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
-				hitpoint_vector = vec3_sub_vec3(hit.hit_point, get_object_pos(object));
-				origin_distance = vec3_dot(hitpoint_vector, object->normal);
-				if (fabs(origin_distance) > object->params.x / 2)
-				{
-					hit.object = NULL;
-					hit.data = INF;
-				}
+				hit.object = NULL;
+				hit.data = INF;
 			}
 		}
-		t_hit cap;
-		t_hit tmp_cap;
-		cap = cap_intersection(object->normal, vec3_scale(object->normal, object->params.x / 2), (object->params.y / 2), ray);
-		cap.normal = object->normal;
-		
-		
-		tmp_cap = cap_intersection(object->normal, vec3_scale(object->normal, -object->params.x / 2), (object->params.y / 2), ray);
-		tmp_cap.normal = vec3_scale(object->normal, -1.0f);
+	}
+	t_hit cap;
+	t_hit tmp_cap;
+	cap = cap_intersection(object->normal, vec3_add_vec3(get_object_pos(object), vec3_scale(object->normal, object->params.x / 2)), (object->params.y / 2), ray);
+	// cap = cap_intersection(object->normal, vec3_scale(object->normal, object->params.x / 2), (object->params.y / 2), ray);
+	cap.normal = object->normal;
 
-		if (vec3_magnitude(vec3_sub_vec3(tmp_cap.hit_point, ray.origin)) < vec3_magnitude(vec3_sub_vec3(cap.hit_point, ray.origin)))
+	tmp_cap = cap_intersection(object->normal, vec3_add_vec3(get_object_pos(object), vec3_scale(object->normal, -object->params.x / 2)), (object->params.y / 2), ray);
+	tmp_cap.normal = vec3_scale(object->normal, -1.0f);
+
+	if (vec3_magnitude(vec3_sub_vec3(tmp_cap.hit_point, ray.origin)) < vec3_magnitude(vec3_sub_vec3(cap.hit_point, ray.origin)))
+	{
+		if (tmp_cap.is_valid)
 		{
-			if (tmp_cap.is_valid)
-			{
-				cap = tmp_cap;
-			}
+			cap = tmp_cap;
 		}
-		if (cap.is_valid && cap.data < hit.data)
-		{
-			hit.hit_point = cap.hit_point;
-			hit.data = cap.data;
-			hit.normal = cap.normal;
-		}
+	}
+	if (cap.is_valid && cap.data < hit.data)
+	{
+		hit.object = object;
+		hit.hit_point = cap.hit_point;
+		hit.data = cap.data;
+		hit.normal = cap.normal;
 	}
 	return hit;
 }
