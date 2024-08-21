@@ -59,6 +59,14 @@ t_hit get_light_hit(t_scene *scene, t_hit hit_point)
 		hit_light.object = light;
 		hit_light.hit_point = hit_normal;
 
+		t_ray light_ray;
+		light_ray.origin = hit_point.hit_point;
+		light_ray.target = get_object_pos(light);
+		light_ray.dir = vec3_normalize(vec3_sub_vec3(light_ray.target, light_ray.origin));
+
+		t_hit shadow_hit = get_ray_hit(scene, light_ray);
+		if (shadow_hit.object)
+			hit_light.data = 0.0f;
 		i++;
 		light = get_next_object_by_type(scene, &i, OBJ_LIGHT);
 		/*
