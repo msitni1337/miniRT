@@ -5,6 +5,8 @@
 
 typedef struct s_hit
 {
+	int is_valid;
+	t_vec3 normal;
 	void *object;
 	t_vec3 hit_point;
 	float data;

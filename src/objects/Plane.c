@@ -1,5 +1,10 @@
 #include "Object.h"
 
+t_vec3 plane_point_normal(t_hit hit_point)
+{
+    return ((t_object*)hit_point.object)->normal;
+}
+
 t_hit plane_intersection(t_object *object, t_ray ray)
 {
     /*
@@ -40,15 +45,11 @@ t_hit plane_intersection(t_object *object, t_ray ray)
         hit.hit_point = vec3_scale(ray.dir, t);
 		hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
 		hit.data = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
+        hit.normal = plane_point_normal(hit);
     }
     return hit;
 }
 
-
-t_vec3 plane_point_normal(t_hit hit_point)
-{
-    return ((t_object*)hit_point.object)->normal;
-}
 
 t_object new_plane(t_vec3 point, t_vec3 normal, t_vec3 color)
 {
@@ -58,7 +59,7 @@ t_object new_plane(t_vec3 point, t_vec3 normal, t_vec3 color)
     plane.type = OBJ_PLANE;
     plane.color = vec3_scale(color, 1.0f / 255.0f);
     plane.intersection = &plane_intersection;
-    plane.point_normal = &plane_point_normal;
+    //plane.point_normal = &plane_point_normal;
     
     
     plane.normal = vec3_normalize(normal);

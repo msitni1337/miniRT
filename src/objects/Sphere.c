@@ -1,6 +1,11 @@
 #include "Object.h"
 #include <stdio.h>
 
+t_vec3 sphere_point_normal(t_hit hit_point)
+{
+    return vec3_normalize(vec3_sub_vec3(hit_point.hit_point, get_object_pos(hit_point.object)));
+}
+
 t_hit sphere_intersection(t_object *object, t_ray ray)
 {
 	/*
@@ -44,6 +49,7 @@ t_hit sphere_intersection(t_object *object, t_ray ray)
 		hit.hit_point = vec3_add_vec3(hit.hit_point, map_origine);
 		hit.hit_point = mat_mul_vec3(&object->SRT_matrix, &hit.hit_point);
 		hit.data = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
+		hit.normal = sphere_point_normal(hit);
 	}
 	else if (determinant > ZERO)
 	{
@@ -59,13 +65,9 @@ t_hit sphere_intersection(t_object *object, t_ray ray)
 		hit.hit_point = vec3_add_vec3(hit.hit_point, map_origine);
 		hit.hit_point = mat_mul_vec3(&object->SRT_matrix, &hit.hit_point);
 		hit.data = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
+		hit.normal = sphere_point_normal(hit);
 	}
 	return hit;
-}
-
-t_vec3 sphere_point_normal(t_hit hit_point)
-{
-    return vec3_normalize(vec3_sub_vec3(hit_point.hit_point, get_object_pos(hit_point.object)));
 }
 
 t_object new_sphere(t_vec3 pos, float radius, t_vec3 color)
@@ -75,7 +77,7 @@ t_object new_sphere(t_vec3 pos, float radius, t_vec3 color)
 	sphere.type = OBJ_SPHERE;
 	sphere.color = vec3_scale(color, 1.0f / 255.0f);
 	sphere.intersection = &sphere_intersection;
-    sphere.point_normal = &sphere_point_normal;
+    //sphere.point_normal = &sphere_point_normal;
 	sphere.radius = radius;
 	sphere.SRT_matrix = mat_id();
 	set_object_pos(&sphere, pos);
