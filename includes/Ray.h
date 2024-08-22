@@ -9,6 +9,7 @@ typedef struct s_hit
 	t_vec3 normal;
 	void *object;
 	t_vec3 hit_point;
+	t_vec3 color;
 	float data;
 } t_hit;
 

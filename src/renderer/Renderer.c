@@ -79,6 +79,7 @@ t_vec3 get_light_color(t_scene *scene, t_hit hit_point)
 	}
 	return vec3_cap(color, 0.0f, 1.0f);
 }
+#include <stdlib.h>
 unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 {
 	t_hit hit_point;
@@ -89,11 +90,30 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 	hit_point = get_ray_hit(scene, ray);
 	if (hit_point.object != NULL)
 	{
+		t_object *obj = hit_point.object;
 		light_color = get_light_color(scene, hit_point);
 		t_vec3 color_vec;
-
-		color_vec = vec3_mul(light_color, ((t_object *)hit_point.object)->color);
-		t_vec3 color_vec1 = vec3_mul(vec3_scale(scene->ambient_color, scene->ambient_intemsity), ((t_object *)hit_point.object)->color);
+		t_vec3 hit_point_color = obj->color;
+		if (obj->reflection > ZERO)
+		{
+			t_ray ref_ray;
+			ref_ray.origin = hit_point.hit_point;
+			ref_ray.dir = hit_point.normal;
+			ref_ray.dir.x += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.025;
+			ref_ray.dir.y += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.025;
+			ref_ray.dir.z += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.025;
+			ref_ray.dir = vec3_normalize(ref_ray.dir);
+			ref_ray.target = vec3_add_vec3(ref_ray.origin, ref_ray.dir);
+			t_hit ref_hit = get_ray_hit(scene, ref_ray);
+			if (ref_hit.object && ref_hit.object != hit_point.object)
+			{
+				t_object *ref_obj = ref_hit.object;
+				hit_point_color = vec3_scale(hit_point_color, 1.0f - obj->reflection);
+				hit_point_color = vec3_add_vec3(hit_point_color, vec3_scale(ref_obj->color, obj->reflection));
+			}
+		}
+		color_vec = vec3_mul(light_color, hit_point_color);
+		t_vec3 color_vec1 = vec3_mul(vec3_scale(scene->ambient_color, scene->ambient_intemsity), hit_point_color);
 		color_vec = vec3_add_vec3(color_vec, color_vec1);
 		color = get_color_vec3(vec3_cap(color_vec, 0.0f, 1.0f));
 	}

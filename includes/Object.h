@@ -20,6 +20,7 @@ typedef struct s_object
 	t_mat4x4 ISRT_matrix;
 	t_vec3 normal;
 	t_vec3 color;
+	float reflection;
 	float height;
 	float radius;
 	float intensity;
