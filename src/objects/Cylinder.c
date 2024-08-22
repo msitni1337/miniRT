@@ -27,7 +27,7 @@ t_vec3 cylinder_point_normal(t_hit hit_point)
 	t_object *object = hit_point.object;
 	t_vec3 p = vec3_sub_vec3(hit_point.hit_point, get_object_pos(object));
 	float p_height = vec3_dot(p, object->normal);
-	p = vec3_scale(object->normal, p_height);
+	p = vec3_add_vec3(get_object_pos(object),vec3_scale(object->normal, p_height));
 
 	return (vec3_normalize(vec3_sub_vec3(hit_point.hit_point, p)));
 }
@@ -38,7 +38,7 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 
 	float a = vec3_dot(ray.dir, ray.dir) - (vec3_dot(ray.dir, object->normal) * vec3_dot(ray.dir, object->normal));
 	float b = 2 * (vec3_dot(ray.dir, w) - (vec3_dot(ray.dir, object->normal) * vec3_dot(w, object->normal)));
-	float c = vec3_dot(w, w) - (vec3_dot(w, object->normal) * vec3_dot(w, object->normal)) - ((object->params.y / 2) * (object->params.y / 2));
+	float c = vec3_dot(w, w) - (vec3_dot(w, object->normal) * vec3_dot(w, object->normal)) - (object->radius * object->radius);
 
 	float determinant = (b * b) - (4.0f * a * c);
 	t_hit hit;
@@ -73,7 +73,7 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 
 	t_vec3 hitpoint_vector = vec3_sub_vec3(hit.hit_point, get_object_pos(object));
 	float origin_distance = vec3_dot(hitpoint_vector, object->normal);
-	if (fabs(origin_distance) > object->params.x / 2)
+	if (fabs(origin_distance) > object->height / 2)
 	{
 		if (determinant > ZERO)
 		{
@@ -83,7 +83,7 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 			hit.data = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
 			hitpoint_vector = vec3_sub_vec3(hit.hit_point, get_object_pos(object));
 			origin_distance = vec3_dot(hitpoint_vector, object->normal);
-			if (fabs(origin_distance) > object->params.x / 2)
+			if (fabs(origin_distance) > object->height / 2)
 			{
 				hit.object = NULL;
 				hit.data = INF;
@@ -92,11 +92,11 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 	}
 	t_hit cap;
 	t_hit tmp_cap;
-	cap = cap_intersection(object->normal, vec3_add_vec3(get_object_pos(object), vec3_scale(object->normal, object->params.x / 2)), (object->params.y / 2), ray);
+	cap = cap_intersection(object->normal, vec3_add_vec3(get_object_pos(object), vec3_scale(object->normal, object->height / 2)), object->radius, ray);
 	// cap = cap_intersection(object->normal, vec3_scale(object->normal, object->params.x / 2), (object->params.y / 2), ray);
 	cap.normal = object->normal;
 
-	tmp_cap = cap_intersection(object->normal, vec3_add_vec3(get_object_pos(object), vec3_scale(object->normal, -object->params.x / 2)), (object->params.y / 2), ray);
+	tmp_cap = cap_intersection(object->normal, vec3_add_vec3(get_object_pos(object), vec3_scale(object->normal, -object->height / 2)), object->radius, ray);
 	tmp_cap.normal = vec3_scale(object->normal, -1.0f);
 
 	if (vec3_magnitude(vec3_sub_vec3(tmp_cap.hit_point, ray.origin)) < vec3_magnitude(vec3_sub_vec3(cap.hit_point, ray.origin)))
@@ -127,7 +127,8 @@ t_object new_cylinder(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_ve
 
 	cylinder.normal = vec3_normalize(normal);
 	cylinder.color = vec3_scale(color, 1.0f / 255.0f);
-	cylinder.params = height_diameter;
+	cylinder.height = height_diameter.x;
+	cylinder.radius = height_diameter.y / 2;
 
 	cylinder.SRT_matrix = mat_id();
 	// tmp = get_euler_rotation_matrix(normal);
