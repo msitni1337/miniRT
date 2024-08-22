@@ -10,14 +10,14 @@ t_hit get_ray_hit(t_scene *scene, t_ray ray)
 	i = 0;
 	hit.object = NULL;
 	hit.data = INF;
-	object = get_next_object_by_type(scene, &i, OBJ_CYLINDER | OBJ_SPHERE | OBJ_PLANE);
+	object = get_next_object_by_type(scene, &i, OBJ_RECT | OBJ_CYLINDER | OBJ_SPHERE | OBJ_PLANE);
 	while (object)
 	{
 		tmp = object->intersection(object, ray);
 		if (tmp.object && (tmp.data < hit.data))
 			hit = tmp;
 		i++;
-		object = get_next_object_by_type(scene, &i, OBJ_CYLINDER | OBJ_SPHERE | OBJ_PLANE);
+		object = get_next_object_by_type(scene, &i, OBJ_RECT | OBJ_CYLINDER | OBJ_SPHERE | OBJ_PLANE);
 	}
 	return hit;
 }
@@ -94,6 +94,21 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 		light_color = get_light_color(scene, hit_point);
 		t_vec3 color_vec;
 		t_vec3 hit_point_color = obj->color;
+
+		/* CheckerBoard Color mapping */
+		if (obj->checkerboard)
+		{
+			int checker_color_x;
+			int checker_color_y;
+			checker_color_x = (int)vec3_sub_vec3(obj->uvs_origin, hit_point.hit_point).x % 2;
+			checker_color_y = (int)vec3_sub_vec3(obj->uvs_origin, hit_point.hit_point).y % 2;
+			if (checker_color_x)
+				hit_point_color = (t_vec3){0};
+			else
+				hit_point_color = (t_vec3){1, 1, 1};
+		}
+
+		/* Reflection Calculations */
 		if (obj->reflection > ZERO)
 		{
 			t_ray ref_ray;

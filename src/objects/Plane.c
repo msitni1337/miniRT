@@ -59,6 +59,7 @@ t_object new_plane(t_vec3 point, t_vec3 normal, t_vec3 color)
     plane.type = OBJ_PLANE;
     plane.color = vec3_scale(color, 1.0f / 255.0f);
     plane.intersection = &plane_intersection;
+    plane.uvs_origin = point;
     //plane.point_normal = &plane_point_normal;
     
     

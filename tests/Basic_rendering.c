@@ -92,28 +92,30 @@ int main(int c, char **v)
 		return 1;
 	}
 	renderer.scene.camera = new_camera((t_vec3){12, -12, 5}, (t_vec3){-1, 1, -.2f}, (float)renderer.win_height / renderer.win_width, 180);
-	//renderer.scene.camera = new_camera((t_vec3){0, -12, 0}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 180);
+	//renderer.scene.camera = new_camera((t_vec3){0, -20, 0}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 180);
 	renderer.scene.ambient_color = (t_vec3){1.0f, 1.0f, 1.0f};
-	renderer.scene.ambient_intemsity = 0.1f;
+	renderer.scene.ambient_intemsity = 0.4f;
 
-	renderer.scene.objects_count = 7;
+	renderer.scene.objects_count = 8;
 	t_object objects[renderer.scene.objects_count];
 	renderer.scene.objects = objects;
 	renderer.scene.objects[0] = new_plane((t_vec3){0, 10, 0}, (t_vec3){0.0, -1.0, 0.0}, (t_vec3){10.0f, 50.0f, 100.0f});
 	renderer.scene.objects[1] = new_plane((t_vec3){0, 0, -1}, (t_vec3){0.0, 0.0, 1.0}, (t_vec3){130.0f, 80.0f, 145.0f});
 	renderer.scene.objects[2] = new_sphere((t_vec3){-6, -2, 0}, 4.0f, (t_vec3){255.0f, 0, 0});
 	renderer.scene.objects[3] = new_cylinder((t_vec3){0.0f, 0.0, 1.0f}, (t_vec3){2, -7, 0}, (t_vec3){2, 2, 0}, (t_vec3){10.0f, 125.0f, 70.0f});
-	renderer.scene.objects[4] = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){3, -1, 2}, (t_vec3){6, .5f, 0}, (t_vec3){10.0f, 125.0f, 70.0f});
+	renderer.scene.objects[4] = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){5, -1, 2}, (t_vec3){6, .5f, 0}, (t_vec3){10.0f, 125.0f, 70.0f});
 	renderer.scene.objects[5] = new_light((t_vec3){5, -5, 5}, 1.0f, (t_vec3){255.0f, 255.0f, 255.0f});
 	renderer.scene.objects[6] = new_light((t_vec3){-5, -3, 5}, .6f, (t_vec3){255.0f, 255.0f, 255.0f});
+	renderer.scene.objects[7] = new_rect((t_vec3){0, 2, 5}, (t_vec3){0.0, -1.0, 0.0}, (t_vec3){200.0f, 80.0f, 145.0f} , (t_vec3){5.0, 2.0, 0.0});
 
 	for (size_t i = 0; i < renderer.scene.objects_count; i++)
 	{
 		renderer.scene.objects[i].reflection = 0;
+		renderer.scene.objects[i].checkerboard = 0;
 	}
 	renderer.scene.objects[2].reflection = .7f;
-	renderer.scene.objects[3].reflection = 1.0f;
-
+	//renderer.scene.objects[3].reflection = 1.0f;
+	renderer.scene.objects[1].checkerboard = 0;
 	renderer.redraw = TRUE;
 
 	print_camera_value(renderer.scene.camera);
