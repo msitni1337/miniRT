@@ -47,9 +47,10 @@ t_hit rect_intersection(t_object *object, t_ray ray)
         hit.data = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
         hit.normal = rect_point_normal(hit);
 
-        t_vec3 dp = vec3_normalize(vec3_sub_vec3(vec3_scale(object->normal, 2), get_object_pos(object)));
-        t_vec3 x_tangent = vec3_normalize(vec3_cross(object->normal, dp));
-        t_vec3 y_tangent = vec3_cross(x_tangent, object->normal);
+        t_vec3 dp = vec3_normalize(vec3_cross(object->normal, (t_vec3){0.0f, 0.0f, 1.0f}));
+        t_vec3 y_tangent = vec3_normalize(vec3_cross(object->normal, dp));
+        t_vec3 x_tangent = vec3_cross(y_tangent, object->normal);
+
         dp = vec3_sub_vec3(hit.hit_point, get_object_pos(object));
         if (fabs(vec3_dot(dp, x_tangent)) > object->width || fabs(vec3_dot(dp, y_tangent)) > object->height)
         {

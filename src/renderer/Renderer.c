@@ -114,9 +114,9 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			t_ray ref_ray;
 			ref_ray.origin = hit_point.hit_point;
 			ref_ray.dir = hit_point.normal;
-			ref_ray.dir.x += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.025;
-			ref_ray.dir.y += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.025;
-			ref_ray.dir.z += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.025;
+			ref_ray.dir.x += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.05;
+			ref_ray.dir.y += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.05;
+			ref_ray.dir.z += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.05;
 			ref_ray.dir = vec3_normalize(ref_ray.dir);
 			ref_ray.target = vec3_add_vec3(ref_ray.origin, ref_ray.dir);
 			t_hit ref_hit = get_ray_hit(scene, ref_ray);
