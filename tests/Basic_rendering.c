@@ -10,44 +10,55 @@ int key_hook(int key, t_renderer *renderer)
 	switch (key)
 	{
 	case KEY_UP:
-		renderer->scene.camera.forward.y += 0.5f;
+	{
+		t_mat4x4 x_rot = get_x_rotation_matrix(10);
+		renderer->scene.camera.forward = mat_mul_vec3(&x_rot, &renderer->scene.camera.forward);
 		renderer->redraw = TRUE;
 		break;
+	}
 	case KEY_DOWN:
-		renderer->scene.camera.forward.y -= 0.5f;
+	{
+		t_mat4x4 x_rot = get_x_rotation_matrix(-10);
+		renderer->scene.camera.forward = mat_mul_vec3(&x_rot, &renderer->scene.camera.forward);
 		renderer->redraw = TRUE;
 		break;
+	}
 	case KEY_LEFT:
-		renderer->scene.camera.forward.x -= 0.5f;
+	{
+		t_mat4x4 x_rot = get_z_rotation_matrix(10);
+		renderer->scene.camera.forward = mat_mul_vec3(&x_rot, &renderer->scene.camera.forward);
 		renderer->redraw = TRUE;
 		break;
+	}
 	case KEY_RIGHT:
-		renderer->scene.camera.forward.x += 0.5f;
+	{
+		t_mat4x4 x_rot = get_z_rotation_matrix(-10);
+		renderer->scene.camera.forward = mat_mul_vec3(&x_rot, &renderer->scene.camera.forward);
 		renderer->redraw = TRUE;
 		break;
+	}
 	case KEY_Z:
-		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale(renderer->scene.camera.forward, 0.5f));
+		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale(renderer->scene.camera.forward, 2.0f));
 		renderer->redraw = TRUE;
 		break;
 	case KEY_S:
-		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale(renderer->scene.camera.forward, -0.5f));
+		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale(renderer->scene.camera.forward, -2.0f));
 		renderer->redraw = TRUE;
 		break;
 	case KEY_Q:
-		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale(renderer->scene.camera.U, -0.5f));
+		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale(renderer->scene.camera.U, -2.0f));
 		renderer->redraw = TRUE;
 		break;
 	case KEY_D:
-		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale(renderer->scene.camera.U, 0.5f));
+		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale(renderer->scene.camera.U, 2.0f));
 		renderer->redraw = TRUE;
 		break;
 	case KEY_8:
-		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale((t_vec3){0, 0, 1.0}, 0.5f));
+		renderer->scene.camera.origin.z += 2.0f;
 		renderer->redraw = TRUE;
 		break;
 	case KEY_2:
-		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale((t_vec3){0, 0, 1.0}, -0.5f));
-		renderer->scene.camera.origin = vec3_add_vec3(renderer->scene.camera.origin, vec3_scale(renderer->scene.camera.forward, -0.5f));
+		renderer->scene.camera.origin.z -= 2.0f;
 		renderer->redraw = TRUE;
 		break;
 	default:
@@ -93,21 +104,24 @@ int main(int c, char **v)
 		return 1;
 	}
 	renderer.scene.camera = new_camera((t_vec3){12, -12, 5}, (t_vec3){-1, 1, -.2f}, (float)renderer.win_height / renderer.win_width, 180);
-	//renderer.scene.camera = new_camera((t_vec3){0, -20, 2}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 180);
+	renderer.scene.camera = new_camera((t_vec3){0, -20, 2}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 70);
 	renderer.scene.ambient_color = (t_vec3){1.0f, 1.0f, 1.0f};
-	renderer.scene.ambient_intemsity = 0.1f;
+	renderer.scene.ambient_intemsity = 0.3f;
 
 	t_darr objects = init_da(sizeof(t_object));
 	t_object obj;
 
-	obj = new_plane((t_vec3){0, 10, 0}, (t_vec3){0.0, -1.0, 0.0}, (t_vec3){10.0f, 50.0f, 100.0f});
-	add_to_arr(&objects, &obj);
 
 	obj = new_plane((t_vec3){0, 0, -1}, (t_vec3){0.0, 0.0, 1.0}, (t_vec3){130.0f, 80.0f, 145.0f});
 	add_to_arr(&objects, &obj);
 
+	obj = new_plane((t_vec3){0, 10, 0}, (t_vec3){0.0, -1.0, 0.0}, (t_vec3){10.0f, 50.0f, 100.0f});
+	add_to_arr(&objects, &obj);
 
 	obj = new_sphere((t_vec3){-6, -2, 0}, 4.0f, (t_vec3){255.0f, 0, 0});
+	add_to_arr(&objects, &obj);
+
+	obj = new_sphere((t_vec3){0, 0, 0}, .5f, (t_vec3){255.0f, 0, 0});
 	add_to_arr(&objects, &obj);
 
 	obj = new_cylinder((t_vec3){0.0f, 0.0, 1.0f}, (t_vec3){2, -7, 0}, (t_vec3){2, 2, 0}, (t_vec3){10.0f, 125.0f, 70.0f});
@@ -116,14 +130,14 @@ int main(int c, char **v)
 	obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){5, -3, 2}, (t_vec3){6, .5f, 0}, (t_vec3){10.0f, 125.0f, 70.0f});
 	add_to_arr(&objects, &obj);
 
-
-	obj = new_light((t_vec3){-1.5, -2, 0}, 1.0f, (t_vec3){255.0f, 255.0f, 255.0f});
+	obj = new_light((t_vec3){-1, -2, 0}, 1.0f, (t_vec3){255.0f, 255.0f, 255.0f});
 	add_to_arr(&objects, &obj);
-
-	obj = new_light((t_vec3){-5, -3, 5}, .6f, (t_vec3){255.0f, 255.0f, 255.0f});
+/*
+	obj = new_light((t_vec3){4, -2, 8.2f}, 1.0f, (t_vec3){255.0f, 255.0f, 255.0f});
 	add_to_arr(&objects, &obj);
+*/
 
-	obj = new_rect((t_vec3){5, 2, 5}, (t_vec3){0.0, -1.0, 0.0}, (t_vec3){200.0f, 80.0f, 145.0f} , (t_vec3){6.0, 4.0, 0.0});
+	obj = new_rect((t_vec3){5, 2, 2}, (t_vec3){0.0, -1.0, 0.0}, (t_vec3){200.0f, 80.0f, 145.0f}, (t_vec3){6.0, 4.0, 0.0});
 	add_to_arr(&objects, &obj);
 
 	renderer.scene.objects = objects.data;
@@ -133,11 +147,10 @@ int main(int c, char **v)
 		renderer.scene.objects[i].reflection = 0;
 		renderer.scene.objects[i].checkerboard = 0;
 	}
-	
-	renderer.scene.objects[2].reflection = .7f;
-	renderer.scene.objects[1].reflection = .5f;
-	renderer.scene.objects[objects.count - 1].reflection = 1.0f;
-	
+
+	renderer.scene.objects[objects.count - 1].reflection = .8f;
+	renderer.scene.objects[0].checkerboard = 1;
+
 	renderer.redraw = TRUE;
 
 	print_camera_value(renderer.scene.camera);

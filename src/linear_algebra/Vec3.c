@@ -81,21 +81,15 @@ float vec3_dot(t_vec3 a, t_vec3 b)
 {
 	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
-float inv_sqrt(float number)
+float inv_sqrt(float x)
 {
-  long i;
-  float x2, y;
-  const float threehalfs = 1.5F;
-
-  x2 = number * 0.5F;
-  y  = number;
-  i  = * ( long * ) &y;                       // evil floating point bit level hacking
-  i  = 0x5f3759df - ( i >> 1 );               // what the fuck?
-  y  = * ( float * ) &i;
-  y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
-  y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
-
-  return y;
+    float xhalf = 0.5f * x;
+    int i = *(int*)&x;              // get bits for floating value
+    i = 0x5f375a86 - (i >> 1);      // gives initial guess y0
+    x = *(float*)&i;                // convert bits back to float
+    x = x * (1.5f - xhalf * x * x); // Newton step, repeating increases accuracy
+    x = x * (1.5f - xhalf * x * x); // Newton step, repeating increases accuracy
+    return x;
 }
 float vec3_magnitude(t_vec3 a)
 {

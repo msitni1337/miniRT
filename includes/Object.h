@@ -46,7 +46,9 @@ t_object new_plane(t_vec3 point, t_vec3 normal, t_vec3 color);
 t_object new_cylinder(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_vec3 color);
 t_object new_rect(t_vec3 centre_point, t_vec3 normal, t_vec3 color, t_vec3 dimensions);
 
-t_mat4x4 get_euler_rotation_matrix(t_vec3 normalized_orientation);
+t_mat4x4 get_x_rotation_matrix(float angle);
+t_mat4x4 get_y_rotation_matrix(float angle);
+t_mat4x4 get_z_rotation_matrix(float angle);
 t_vec3 get_object_pos(t_object *object);
 t_object *get_next_object_by_type(t_scene *scene, size_t *i, t_object_type type);
 

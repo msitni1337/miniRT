@@ -100,9 +100,9 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 		{
 			int checker_color_x;
 			int checker_color_y;
-			checker_color_x = (int)vec3_sub_vec3(obj->uvs_origin, hit_point.hit_point).x % 2;
-			checker_color_y = (int)vec3_sub_vec3(obj->uvs_origin, hit_point.hit_point).y % 2;
-			if (checker_color_x)
+			checker_color_x = ((int)vec3_sub_vec3(hit_point.hit_point, obj->uvs_origin).x);
+			checker_color_y = ((int)vec3_sub_vec3(hit_point.hit_point, obj->uvs_origin).y);
+			if (abs(checker_color_x + checker_color_y) % 2)
 				hit_point_color = (t_vec3){0};
 			else
 				hit_point_color = (t_vec3){1, 1, 1};
@@ -114,9 +114,9 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			t_ray ref_ray;
 			ref_ray.origin = hit_point.hit_point;
 			ref_ray.dir = hit_point.normal;
-			ref_ray.dir.x += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.05;
-			ref_ray.dir.y += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.05;
-			ref_ray.dir.z += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.05;
+			ref_ray.dir.x += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.025;
+			ref_ray.dir.y += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.025;
+			ref_ray.dir.z += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.025;
 			ref_ray.dir = vec3_normalize(ref_ray.dir);
 			ref_ray.target = vec3_add_vec3(ref_ray.origin, ref_ray.dir);
 			t_hit ref_hit = get_ray_hit(scene, ref_ray);
@@ -143,18 +143,19 @@ int render(t_renderer *renderer)
 		return 0;
 	LOG_INFO("Rendering Image..");
 	img = &(renderer->mlx_texture);
-	for (int x = 0; x < renderer->mlx_texture.width; x++)
+	for (int y = renderer->mlx_texture.height - 1; y >= 0; y--)
 	{
-		for (int y = 0; y < renderer->mlx_texture.height; y++)
+		for (int x = 0; x < renderer->mlx_texture.width; x++)
 		{
 			t_ray ray;
 			ray = get_ray(&renderer->scene.camera, (t_vec3){x, y}, (t_vec3){img->width, img->height});
 			unsigned int color = calculate_intersections(&renderer->scene, ray);
-			set_img_pixel_at(&renderer->mlx_texture, x, renderer->mlx_texture.height - y, color);
+			mlx_pixel_put(renderer->mlx_context, renderer->window, x, renderer->mlx_texture.height - y, color);
+			// set_img_pixel_at(&renderer->mlx_texture, x, renderer->mlx_texture.height - y, color);
 		}
+		// mlx_put_image_to_window(renderer->mlx_context, renderer->window, renderer->mlx_texture.handle, 0, 0);
 	}
-	LOG_INFO("Puting Image to window..");
-	mlx_put_image_to_window(renderer->mlx_context, renderer->window, renderer->mlx_texture.handle, 0, 0);
+	LOG_INFO("Finished Image..");
 	renderer->redraw = FALSE;
 	return 0;
 }

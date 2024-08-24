@@ -16,7 +16,7 @@ t_hit cap_intersection(t_vec3 cap_normal, t_vec3 cap_center, float radius, t_ray
 		hit.hit_point = vec3_scale(ray.dir, t);
 		hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
 		hit.data = vec3_magnitude(vec3_sub_vec3(hit.hit_point, ray.origin));
-		if (vec3_magnitude(vec3_sub_vec3(hit.hit_point, cap_center)) < radius)
+		if (vec3_magnitude(vec3_sub_vec3(hit.hit_point, cap_center)) <= radius)
 			hit.is_valid = 1;
 	}
 	return hit;
