@@ -8,7 +8,8 @@
 #define KEY_RIGHT 65363
 #define KEY_LEFT 65361
 #define KEY_Z 122
-#define KEY_Q 113
+#define KEY_W 119
+#define KEY_A 97
 #define KEY_S 115
 #define KEY_D 100
 #define KEY_8 65431

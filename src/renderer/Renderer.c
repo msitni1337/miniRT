@@ -10,14 +10,14 @@ t_hit get_ray_hit(t_scene *scene, t_ray ray)
 	i = 0;
 	hit.object = NULL;
 	hit.data = INF;
-	object = get_next_object_by_type(scene, &i, OBJ_RECT | OBJ_CYLINDER | OBJ_SPHERE | OBJ_PLANE);
+	object = get_next_object_by_type(scene, &i, OBJ_CONE | OBJ_RECT | OBJ_CYLINDER | OBJ_SPHERE | OBJ_PLANE);
 	while (object)
 	{
 		tmp = object->intersection(object, ray);
 		if (tmp.object && (tmp.data < hit.data))
 			hit = tmp;
 		i++;
-		object = get_next_object_by_type(scene, &i, OBJ_RECT | OBJ_CYLINDER | OBJ_SPHERE | OBJ_PLANE);
+		object = get_next_object_by_type(scene, &i, OBJ_CONE | OBJ_RECT | OBJ_CYLINDER | OBJ_SPHERE | OBJ_PLANE);
 	}
 	return hit;
 }
@@ -114,18 +114,27 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			t_ray ref_ray;
 			ref_ray.origin = hit_point.hit_point;
 			ref_ray.dir = hit_point.normal;
-			ref_ray.dir.x += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.025;
-			ref_ray.dir.y += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.025;
-			ref_ray.dir.z += ((((float)rand() / RAND_MAX) / 2) - 1) * 0.025;
+			/* 
+			 * Randomize reflection direction to have haizzy effect.*/
+			ref_ray.dir.x += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
+			ref_ray.dir.y += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
+			ref_ray.dir.z += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
 			ref_ray.dir = vec3_normalize(ref_ray.dir);
+			/**/
 			ref_ray.target = vec3_add_vec3(ref_ray.origin, ref_ray.dir);
 			t_hit ref_hit = get_ray_hit(scene, ref_ray);
 			if (ref_hit.object && ref_hit.object != hit_point.object)
 			{
 				t_object *ref_obj = ref_hit.object;
+				t_vec3 light_intensity = get_light_color(scene, ref_hit);
 				hit_point_color = vec3_scale(hit_point_color, 1.0f - obj->reflection);
-				hit_point_color = vec3_add_vec3(hit_point_color, vec3_scale(ref_obj->color, obj->reflection));
+				hit_point_color = vec3_add_vec3(hit_point_color, vec3_scale(vec3_mul(ref_obj->color, light_intensity), obj->reflection));
 			}
+			else
+			{
+				hit_point_color = (t_vec3){0};
+			}
+			
 		}
 		color_vec = vec3_mul(light_color, hit_point_color);
 		t_vec3 color_vec1 = vec3_mul(vec3_scale(scene->ambient_color, scene->ambient_intemsity), hit_point_color);

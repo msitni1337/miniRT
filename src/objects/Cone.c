@@ -34,14 +34,16 @@ t_vec3 cone_point_normal(t_hit hit_point)
 
 t_hit cone_intersection(t_object *object, t_ray ray)
 {
-	t_vec3 w = vec3_sub_vec3(ray.origin, get_object_pos(object));
+	t_vec3 tip = vec3_add_vec3(get_object_pos(object), vec3_scale(object->normal, object->height)); // can be optimize out
+	t_vec3 w = vec3_sub_vec3(ray.origin, tip);
 
 
 	float r = object->radius;
+	float m = (r * r) / vec3_dot(tip, tip);
 
-	float a = vec3_dot(ray.dir, ray.dir) - (vec3_dot(ray.dir, object->normal) * vec3_dot(ray.dir, object->normal));
-	float b = 2 * (vec3_dot(ray.dir, w) - (vec3_dot(ray.dir, object->normal) * vec3_dot(w, object->normal)));
-	float c = vec3_dot(w, w) - (vec3_dot(w, object->normal) * vec3_dot(w, object->normal)) - (r * r);
+	float a = vec3_dot(ray.dir, ray.dir) - m * (vec3_dot(ray.dir, object->normal) * vec3_dot(ray.dir, object->normal)) - (vec3_dot(ray.dir, object->normal) * vec3_dot(ray.dir, object->normal));
+	float b = 2 * (vec3_dot(ray.dir, w) - m * (vec3_dot(ray.dir, object->normal) * vec3_dot(w, object->normal)) - (vec3_dot(ray.dir, object->normal) * vec3_dot(w, object->normal)));
+	float c = vec3_dot(w, w) - m * (vec3_dot(w, object->normal) * vec3_dot(w, object->normal)) - (vec3_dot(w, object->normal) * vec3_dot(w, object->normal));
 
 	float determinant = (b * b) - (4.0f * a * c);
 	t_hit hit;
@@ -73,7 +75,7 @@ t_hit cone_intersection(t_object *object, t_ray ray)
 		hit.data = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
 		hit.normal = cone_point_normal(hit);
 	}
-
+/*
 	t_vec3 hitpoint_vector = vec3_sub_vec3(hit.hit_point, get_object_pos(object));
 	float origin_distance = vec3_dot(hitpoint_vector, object->normal);
 	if (fabs(origin_distance) > object->height / 2)
@@ -116,6 +118,7 @@ t_hit cone_intersection(t_object *object, t_ray ray)
 		hit.data = cap.data;
 		hit.normal = cap.normal;
 	}
+*/
 	return hit;
 }
 
@@ -125,7 +128,7 @@ t_object new_cone(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_vec3 c
 	t_mat4x4 tmp;
 
 	cone.type = OBJ_CONE;
-	// cylinder.intersection = &cylinder_intersection;
+	cone.intersection = &cone_intersection;
 	// cylinder.point_normal = &cylinder_point_normal;
 
 	cone.normal = vec3_normalize(normal);

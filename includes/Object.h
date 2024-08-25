@@ -44,6 +44,7 @@ t_object new_light(t_vec3 pos, float intensity, t_vec3 color);
 t_object new_sphere(t_vec3 pos, float radius, t_vec3 color);
 t_object new_plane(t_vec3 point, t_vec3 normal, t_vec3 color);
 t_object new_cylinder(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_vec3 color);
+t_object new_cone(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_vec3 color);
 t_object new_rect(t_vec3 centre_point, t_vec3 normal, t_vec3 color, t_vec3 dimensions);
 
 t_mat4x4 get_x_rotation_matrix(float angle);
