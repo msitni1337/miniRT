@@ -41,7 +41,6 @@ t_vec3 get_axis_rotation(t_vec3 normalized_orientation, t_vec3 axis)
 t_mat4x4 get_x_rotation_matrix(float angle)
 {
     t_mat4x4 x_rot;
-    t_vec3 theta;
 
     float cos = cosf((angle / 180) * PI);
     float sin = sinf((angle / 180) * PI);
@@ -55,17 +54,18 @@ t_mat4x4 get_x_rotation_matrix(float angle)
     return x_rot;
 }
 
-t_mat4x4 set_y_rotation_matrix(t_vec3 normalized_orientation)
+t_mat4x4 get_y_rotation_matrix(float angle)
 {
     t_mat4x4 y_rot;
-    t_vec3 theta;
+
+    float cos = cosf((angle / 180) * PI);
+    float sin = sinf((angle / 180) * PI);
 
     y_rot = mat_id();
-    theta = get_axis_rotation(normalized_orientation, (t_vec3){1.0f, 0, 0});
-    *mat_at(&y_rot, 0, 0) = theta.x;
-    *mat_at(&y_rot, 0, 2) = theta.y;
-    *mat_at(&y_rot, 2, 0) = -theta.y;
-    *mat_at(&y_rot, 2, 2) = theta.x;
+    *mat_at(&y_rot, 0, 0) = cos;
+    *mat_at(&y_rot, 0, 2) = sin;
+    *mat_at(&y_rot, 2, 0) = -sin;
+    *mat_at(&y_rot, 2, 2) = cos;
     
     return y_rot;
 }
@@ -73,7 +73,6 @@ t_mat4x4 set_y_rotation_matrix(t_vec3 normalized_orientation)
 t_mat4x4 get_z_rotation_matrix(float angle)
 {
     t_mat4x4 z_rot;
-    t_vec3 theta;
 
     float cos = cosf((angle / 180) * PI);
     float sin = sinf((angle / 180) * PI);

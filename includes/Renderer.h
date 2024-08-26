@@ -3,19 +3,7 @@
 #include "Object.h"
 #include <mlx.h>
 #define WIN_TITLE "miniRT"
-#define KEY_DOWN 65364
-#define KEY_UP 65362
-#define KEY_RIGHT 65363
-#define KEY_LEFT 65361
-#define KEY_Z 122
-#define KEY_W 119
-#define KEY_A 97
-#define KEY_S 115
-#define KEY_D 100
-#define KEY_8 65431
-#define KEY_2 65433
-#define KEY_6 65432
-#define KEY_4 65430
+
 #define BG_COLOR 0xFF021526
 
 typedef struct s_img
@@ -31,6 +19,7 @@ typedef struct s_img
 
 typedef struct s_renderer
 {
+	t_object* selected_obj;
 	void *mlx_context;
 	void *window;
 	int win_width;
@@ -38,7 +27,10 @@ typedef struct s_renderer
 	t_img mlx_texture;
 	t_scene scene;
 	int redraw;
+	int tab_mode;
 } t_renderer;
+
+t_hit get_ray_hit(t_scene *scene, t_ray ray);
 
 void set_img_pixel_at(t_img *img, int x, int y, int color);
 int render(t_renderer *renderer);

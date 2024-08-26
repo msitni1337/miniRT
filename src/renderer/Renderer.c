@@ -130,10 +130,12 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 				hit_point_color = vec3_scale(hit_point_color, 1.0f - obj->reflection);
 				hit_point_color = vec3_add_vec3(hit_point_color, vec3_scale(vec3_mul(ref_obj->color, light_intensity), obj->reflection));
 			}
+			/*
 			else
 			{
 				hit_point_color = (t_vec3){0};
 			}
+			*/
 			
 		}
 		color_vec = vec3_mul(light_color, hit_point_color);

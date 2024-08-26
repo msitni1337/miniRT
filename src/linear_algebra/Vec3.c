@@ -81,19 +81,9 @@ float vec3_dot(t_vec3 a, t_vec3 b)
 {
 	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
-float inv_sqrt(float x)
-{
-    float xhalf = 0.5f * x;
-    int i = *(int*)&x;              // get bits for floating value
-    i = 0x5f375a86 - (i >> 1);      // gives initial guess y0
-    x = *(float*)&i;                // convert bits back to float
-    x = x * (1.5f - xhalf * x * x); // Newton step, repeating increases accuracy
-    x = x * (1.5f - xhalf * x * x); // Newton step, repeating increases accuracy
-    return x;
-}
 float vec3_magnitude(t_vec3 a)
 {
-	return 1 / inv_sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
+	return sqrtf(a.x * a.x + a.y * a.y + a.z * a.z);
 }
 t_vec3 vec3_normalize(t_vec3 a)
 {

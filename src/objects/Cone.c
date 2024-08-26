@@ -26,10 +26,10 @@ t_vec3 cone_point_normal(t_hit hit_point)
 {
 	t_object *object = hit_point.object;
 	t_vec3 p = vec3_sub_vec3(hit_point.hit_point, get_object_pos(object));
-	float p_height = vec3_dot(p, object->normal);
-	p = vec3_scale(object->normal, p_height);
+	// float p_height = vec3_dot(p, object->normal);
+	// p = vec3_add_vec3(get_object_pos(object),vec3_scale(object->normal, p_height));
 
-	return (vec3_normalize(vec3_sub_vec3(hit_point.hit_point, p)));
+	return (vec3_normalize(p));
 }
 
 t_hit cone_intersection(t_object *object, t_ray ray)
@@ -37,9 +37,9 @@ t_hit cone_intersection(t_object *object, t_ray ray)
 	t_vec3 tip = vec3_add_vec3(get_object_pos(object), vec3_scale(object->normal, object->height)); // can be optimize out
 	t_vec3 w = vec3_sub_vec3(ray.origin, tip);
 
-
 	float r = object->radius;
-	float m = (r * r) / vec3_dot(tip, tip);
+	float tip_dist = vec3_magnitude(vec3_scale(object->normal, object->height));
+	float m = (r * r) / (tip_dist * tip_dist);
 
 	float a = vec3_dot(ray.dir, ray.dir) - m * (vec3_dot(ray.dir, object->normal) * vec3_dot(ray.dir, object->normal)) - (vec3_dot(ray.dir, object->normal) * vec3_dot(ray.dir, object->normal));
 	float b = 2 * (vec3_dot(ray.dir, w) - m * (vec3_dot(ray.dir, object->normal) * vec3_dot(w, object->normal)) - (vec3_dot(ray.dir, object->normal) * vec3_dot(w, object->normal)));
@@ -75,10 +75,12 @@ t_hit cone_intersection(t_object *object, t_ray ray)
 		hit.data = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
 		hit.normal = cone_point_normal(hit);
 	}
-/*
+	/*
+	 * Check intersections with other side of the cone.
+	*/
 	t_vec3 hitpoint_vector = vec3_sub_vec3(hit.hit_point, get_object_pos(object));
 	float origin_distance = vec3_dot(hitpoint_vector, object->normal);
-	if (fabs(origin_distance) > object->height / 2)
+	if (origin_distance < ZERO || origin_distance > object->height)
 	{
 		if (determinant > ZERO)
 		{
@@ -86,9 +88,10 @@ t_hit cone_intersection(t_object *object, t_ray ray)
 			hit.hit_point = vec3_scale(ray.dir, t);
 			hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
 			hit.data = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
+
 			hitpoint_vector = vec3_sub_vec3(hit.hit_point, get_object_pos(object));
 			origin_distance = vec3_dot(hitpoint_vector, object->normal);
-			if (fabs(origin_distance) > object->height / 2)
+			if (origin_distance < ZERO || origin_distance > object->height)
 			{
 				hit.object = NULL;
 				hit.data = INF;
@@ -96,21 +99,10 @@ t_hit cone_intersection(t_object *object, t_ray ray)
 		}
 	}
 	t_hit cap;
-	t_hit tmp_cap;
-	cap = cone_cap_intersection(object->normal, vec3_add_vec3(get_object_pos(object), vec3_scale(object->normal, object->height / 2)), object->radius, ray);
-	// cap = cap_intersection(object->normal, vec3_scale(object->normal, object->params.x / 2), (object->params.y / 2), ray);
-	cap.normal = object->normal;
 
-	tmp_cap = cone_cap_intersection(object->normal, vec3_add_vec3(get_object_pos(object), vec3_scale(object->normal, -object->height / 2)), object->radius, ray);
-	tmp_cap.normal = vec3_scale(object->normal, -1.0f);
+	cap.normal = vec3_scale(object->normal, -1.0f);
+	cap = cone_cap_intersection(cap.normal, get_object_pos(object), object->radius, ray);
 
-	if (vec3_magnitude(vec3_sub_vec3(tmp_cap.hit_point, ray.origin)) < vec3_magnitude(vec3_sub_vec3(cap.hit_point, ray.origin)))
-	{
-		if (tmp_cap.is_valid)
-		{
-			cap = tmp_cap;
-		}
-	}
 	if (cap.is_valid && cap.data < hit.data)
 	{
 		hit.object = object;
@@ -118,7 +110,6 @@ t_hit cone_intersection(t_object *object, t_ray ray)
 		hit.data = cap.data;
 		hit.normal = cap.normal;
 	}
-*/
 	return hit;
 }
 
