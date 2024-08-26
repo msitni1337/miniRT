@@ -5,6 +5,15 @@
 #include "dynamic_arrays.h"
 #include "input.h"
 
+void *set_bump_map(void*mlx_ptr, t_object*obj, char*filename)
+{
+	obj->bump_map.handle = mlx_xpm_file_to_image(mlx_ptr, filename, obj->bump_map.width, obj->bump_map.height);
+	if (obj->bump_map.handle == NULL)
+		return NULL;
+	obj->bump_map.data = mlx_get_data_addr(obj->bump_map.handle, &obj->bump_map.bpp, &obj->bump_map.size_line, &obj->bump_map.endian);
+	return obj->bump_map.handle;
+}
+
 int main(int c, char **v)
 {
 	(void)c;
@@ -110,13 +119,13 @@ int main(int c, char **v)
 
 	renderer.scene.objects[objects.count - 1].reflection = .5;
 	renderer.scene.objects[0].reflection = .5;
-	// renderer.scene.objects[objects.count - 1].checkerboard = 1;
+	renderer.scene.objects[0].checkerboard = 1;
 
 	renderer.tab_mode = FALSE;
 	renderer.redraw = TRUE;
 	renderer.selected_obj = NULL;
 
-	print_camera_value(renderer.scene.camera);
+	set_bump_map(renderer.mlx_context, &renderer.scene.objects[0], "");
 
 	mlx_hook(renderer.window, ON_KEYDOWN, 1L << 0, key_hook_down, &renderer);
 	mlx_hook(renderer.window, ON_KEYUP, 1L << 1, key_hook_up, &renderer);

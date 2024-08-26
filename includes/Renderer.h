@@ -2,20 +2,10 @@
 #define RENDERER_H
 #include "Object.h"
 #include <mlx.h>
+#include "mlx_utils.h"
 #define WIN_TITLE "miniRT"
 
 #define BG_COLOR 0xFF021526
-
-typedef struct s_img
-{
-	void *handle;
-	char *data;
-	int bpp;
-	int size_line;
-	int width;
-	int height;
-	int endian;
-} t_img;
 
 typedef struct s_renderer
 {

@@ -85,6 +85,7 @@ void control_selected_obj(int key, t_renderer *renderer)
 		t_mat4x4 x_rot = get_x_rotation_matrix(10);
 		renderer->selected_obj->normal = mat_mul_vec3(&x_rot, &renderer->selected_obj->normal);
 		renderer->selected_obj->normal = vec3_normalize(renderer->selected_obj->normal);
+		renderer->selected_obj->calculate_uvs(renderer->selected_obj);
 		break;
 	}
 	case KEY_DOWN:
@@ -92,7 +93,7 @@ void control_selected_obj(int key, t_renderer *renderer)
 		t_mat4x4 x_rot = get_x_rotation_matrix(-10);
 		renderer->selected_obj->normal = mat_mul_vec3(&x_rot, &renderer->selected_obj->normal);
 		renderer->selected_obj->normal = vec3_normalize(renderer->selected_obj->normal);
-		renderer->redraw = TRUE;
+		renderer->selected_obj->calculate_uvs(renderer->selected_obj);
 		break;
 	}
 	case KEY_LEFT:
@@ -100,7 +101,7 @@ void control_selected_obj(int key, t_renderer *renderer)
 		t_mat4x4 x_rot = get_z_rotation_matrix(10);
 		renderer->selected_obj->normal = mat_mul_vec3(&x_rot, &renderer->selected_obj->normal);
 		renderer->selected_obj->normal = vec3_normalize(renderer->selected_obj->normal);
-		renderer->redraw = TRUE;
+		renderer->selected_obj->calculate_uvs(renderer->selected_obj);
 		break;
 	}
 	case KEY_RIGHT:
@@ -108,7 +109,7 @@ void control_selected_obj(int key, t_renderer *renderer)
 		t_mat4x4 x_rot = get_z_rotation_matrix(-10);
 		renderer->selected_obj->normal = mat_mul_vec3(&x_rot, &renderer->selected_obj->normal);
 		renderer->selected_obj->normal = vec3_normalize(renderer->selected_obj->normal);
-		renderer->redraw = TRUE;
+		renderer->selected_obj->calculate_uvs(renderer->selected_obj);
 		break;
 	}
 	case KEY_A:
@@ -131,21 +132,18 @@ void control_selected_obj(int key, t_renderer *renderer)
 		break;
 	case KEY_4:
 	{
-		if (!renderer->selected_obj)
-			break;
 		t_mat4x4 x_rot = get_y_rotation_matrix(5);
 		renderer->selected_obj->normal = mat_mul_vec3(&x_rot, &renderer->selected_obj->normal);
 		renderer->selected_obj->normal = vec3_normalize(renderer->selected_obj->normal);
-
+		renderer->selected_obj->calculate_uvs(renderer->selected_obj);
 		break;
 	}
 	case KEY_6:
 	{
-		if (!renderer->selected_obj)
-			break;
 		t_mat4x4 x_rot = get_y_rotation_matrix(-5);
 		renderer->selected_obj->normal = mat_mul_vec3(&x_rot, &renderer->selected_obj->normal);
 		renderer->selected_obj->normal = vec3_normalize(renderer->selected_obj->normal);
+		renderer->selected_obj->calculate_uvs(renderer->selected_obj);
 		break;
 	}
 	default:

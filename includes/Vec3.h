@@ -10,6 +10,8 @@
 #define PI 3.1415926f
 #define CAM_CLIP 0.1f
 #define INF 1e8f
+#define FLT_MAX 3.402823466e+38F
+#define FLT_MIN 1.175494351e-38F
 
 typedef struct s_vec3
 {

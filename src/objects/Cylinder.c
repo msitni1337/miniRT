@@ -71,6 +71,12 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 		hit.normal = cylinder_point_normal(hit);
 	}
 
+	/*
+	 * Check intersections with other side of the cylinder.
+	 * This step can be optimized out by skipping this
+	 * calculation as we always put caps on the end of 
+	 * the cylinder
+	*/
 	t_vec3 hitpoint_vector = vec3_sub_vec3(hit.hit_point, get_object_pos(object));
 	float origin_distance = vec3_dot(hitpoint_vector, object->normal);
 	if (fabs(origin_distance) > object->height / 2)
@@ -93,7 +99,6 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 	t_hit cap;
 	t_hit tmp_cap;
 	cap = cap_intersection(object->normal, vec3_add_vec3(get_object_pos(object), vec3_scale(object->normal, object->height / 2)), object->radius, ray);
-	// cap = cap_intersection(object->normal, vec3_scale(object->normal, object->params.x / 2), (object->params.y / 2), ray);
 	cap.normal = object->normal;
 
 	tmp_cap = cap_intersection(object->normal, vec3_add_vec3(get_object_pos(object), vec3_scale(object->normal, -object->height / 2)), object->radius, ray);

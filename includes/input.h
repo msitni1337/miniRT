@@ -1,7 +1,6 @@
 #ifndef INPUT_H
-#include "Renderer.h"
-
 #define INPUT_H
+#include "Renderer.h"
 #define KEY_DOWN 65364
 #define KEY_UP 65362
 #define KEY_RIGHT 65363

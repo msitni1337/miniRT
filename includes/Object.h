@@ -1,6 +1,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 #include "Ray.h"
+#include "mlx_utils.h"
 
 typedef enum e_object_type
 {
@@ -16,11 +17,18 @@ typedef struct s_object
 {
 	t_object_type type;
 	struct s_hit (*intersection)(struct s_object *object, struct s_ray ray);
+	t_vec3 (*map_uvs)(t_hit hit_point);
+	void (*calculate_uvs)(struct s_object* obj);
 	//struct s_vec3 (*point_normal)(t_hit hit_point);
 	t_mat4x4 SRT_matrix;
 	t_mat4x4 ISRT_matrix;
 	t_vec3 normal;
+
+	t_img bump_map;
 	t_vec3 uvs_origin;
+	t_vec3 u_vector;
+	t_vec3 v_vector;
+	
 	t_vec3 color;
 	float reflection;
 	float height;
@@ -54,4 +62,4 @@ t_vec3 get_object_pos(t_object *object);
 t_object *get_next_object_by_type(t_scene *scene, size_t *i, t_object_type type);
 
 void set_object_pos(t_object *object, t_vec3 pos);
-#endif //SPHERE_H
+#endif // OBJECT_H

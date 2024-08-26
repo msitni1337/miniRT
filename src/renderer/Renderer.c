@@ -98,11 +98,10 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 		/* CheckerBoard Color mapping */
 		if (obj->checkerboard)
 		{
-			int checker_color_x;
-			int checker_color_y;
-			checker_color_x = ((int)vec3_sub_vec3(hit_point.hit_point, obj->uvs_origin).x);
-			checker_color_y = ((int)vec3_sub_vec3(hit_point.hit_point, obj->uvs_origin).y);
-			if (abs(checker_color_x + checker_color_y) % 2)
+			t_vec3 uv_mapped_point;
+
+			uv_mapped_point = obj->map_uvs(hit_point);
+			if (((int)uv_mapped_point.x + (int)uv_mapped_point.y) % 2)
 				hit_point_color = (t_vec3){0};
 			else
 				hit_point_color = (t_vec3){1, 1, 1};
@@ -114,7 +113,7 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			t_ray ref_ray;
 			ref_ray.origin = hit_point.hit_point;
 			ref_ray.dir = hit_point.normal;
-			/* 
+			/*
 			 * Randomize reflection direction to have haizzy effect.*/
 			ref_ray.dir.x += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
 			ref_ray.dir.y += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
@@ -136,7 +135,6 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 				hit_point_color = (t_vec3){0};
 			}
 			*/
-			
 		}
 		color_vec = vec3_mul(light_color, hit_point_color);
 		t_vec3 color_vec1 = vec3_mul(vec3_scale(scene->ambient_color, scene->ambient_intemsity), hit_point_color);

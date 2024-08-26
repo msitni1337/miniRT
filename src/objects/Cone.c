@@ -75,8 +75,12 @@ t_hit cone_intersection(t_object *object, t_ray ray)
 		hit.data = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
 		hit.normal = cone_point_normal(hit);
 	}
+
 	/*
 	 * Check intersections with other side of the cone.
+	 * This step can be optimized out by skipping this
+	 * calculation as we always put caps on the end of 
+	 * the cone
 	*/
 	t_vec3 hitpoint_vector = vec3_sub_vec3(hit.hit_point, get_object_pos(object));
 	float origin_distance = vec3_dot(hitpoint_vector, object->normal);
@@ -98,8 +102,8 @@ t_hit cone_intersection(t_object *object, t_ray ray)
 			}
 		}
 	}
-	t_hit cap;
 
+	t_hit cap;
 	cap.normal = vec3_scale(object->normal, -1.0f);
 	cap = cone_cap_intersection(cap.normal, get_object_pos(object), object->radius, ray);
 
