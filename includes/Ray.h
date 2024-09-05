@@ -7,7 +7,7 @@ typedef struct s_hit
 {
 	int is_valid;
 	t_vec3 normal;
-	//void *object;
+	void *object;
 	t_vec3 hit_point;
 	t_vec3 color;
 	float distance;

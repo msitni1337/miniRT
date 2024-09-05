@@ -17,7 +17,8 @@ t_object new_light(t_vec3 pos, float intensity, t_vec3 color)
     light.intersection = &light_intersection;
     light.intensity = float_cap(intensity, 0.0f, 1.0f);
     light.SRT_matrix = mat_id();
-    set_object_pos(&light, pos);
+    light.position = pos;
+    // set_object_pos(&light, pos);
     light.ISRT_matrix = mat_inv(&light.SRT_matrix);
     return light;
 }

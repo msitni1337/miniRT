@@ -8,13 +8,12 @@ t_hit get_ray_hit(t_scene *scene, t_ray ray)
 	t_hit tmp;
 
 	i = 0;
-	hit.object = NULL;
-	hit.data = INF;
+	hit.is_valid = FALSE;
 	object = get_next_object_by_type(scene, &i, OBJ_CONE | OBJ_RECT | OBJ_CYLINDER | OBJ_SPHERE | OBJ_PLANE);
 	while (object)
 	{
 		tmp = object->intersection(object, ray);
-		if (tmp.object && (tmp.data < hit.data))
+		if (tmp.is_valid && (!hit.is_valid || tmp.distance < hit.distance))
 			hit = tmp;
 		i++;
 		object = get_next_object_by_type(scene, &i, OBJ_CONE | OBJ_RECT | OBJ_CYLINDER | OBJ_SPHERE | OBJ_PLANE);
@@ -44,38 +43,34 @@ t_vec3 get_light_color(t_scene *scene, t_hit hit_point)
 
 	i = 0;
 	hit_light.object = NULL;
-	hit_light.data = 0;
+	hit_light.distance = 0;
 	light = get_next_object_by_type(scene, &i, OBJ_LIGHT);
 	while (light)
 	{
 		t_vec3 hit_normal = hit_point.normal; //((t_object *)hit_point.object)->point_normal(hit_point);
 
-		t_vec3 light_normal = vec3_sub_vec3(get_object_pos(light), hit_point.hit_point);
+		t_vec3 light_normal = vec3_sub_vec3(light->position, hit_point.hit_point);
 		light_normal = vec3_normalize(light_normal);
 
 		float intensity = light->intensity * vec3_dot(hit_normal, light_normal);
 		intensity = float_cap(intensity, 0.0f, 1.0f);
 
-		hit_light.data = intensity;
+		hit_light.distance = intensity;
 		hit_light.object = light;
 		hit_light.hit_point = hit_normal;
 
 		t_ray light_ray;
-		light_ray.origin = get_object_pos(light);
+		light_ray.origin = light->position;
 		light_ray.target = hit_point.hit_point;
 		light_ray.dir = vec3_normalize(vec3_sub_vec3(light_ray.target, light_ray.origin));
 
 		t_hit shadow_hit = get_ray_hit(scene, light_ray);
 		if (shadow_hit.object != hit_point.object)
-			hit_light.data = 0.0f;
+			hit_light.distance = 0.0f;
 		else
 			color = vec3_add_vec3(color, vec3_scale(light->color, intensity));
-
 		i++;
 		light = get_next_object_by_type(scene, &i, OBJ_LIGHT);
-		/*
-			TODO: handle multiple light sources..
-		*/
 	}
 	return vec3_cap(color, 0.0f, 1.0f);
 }
@@ -88,7 +83,7 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 
 	color = BG_COLOR;
 	hit_point = get_ray_hit(scene, ray);
-	if (hit_point.object != NULL)
+	if (hit_point.is_valid)
 	{
 		t_object *obj = hit_point.object;
 		light_color = get_light_color(scene, hit_point);
@@ -122,7 +117,7 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			/**/
 			ref_ray.target = vec3_add_vec3(ref_ray.origin, ref_ray.dir);
 			t_hit ref_hit = get_ray_hit(scene, ref_ray);
-			if (ref_hit.object && ref_hit.object != hit_point.object)
+			if (ref_hit.is_valid && ref_hit.object != hit_point.object)
 			{
 				t_object *ref_obj = ref_hit.object;
 				t_vec3 light_intensity = get_light_color(scene, ref_hit);

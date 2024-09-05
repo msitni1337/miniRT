@@ -35,6 +35,7 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 {
 	t_hit hit;
 
+	hit.object = object;
 	hit.is_valid = FALSE;
 	t_vec3 w = vec3_sub_vec3(ray.origin, object->position);
 

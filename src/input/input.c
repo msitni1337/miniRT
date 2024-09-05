@@ -113,22 +113,22 @@ void control_selected_obj(int key, t_renderer *renderer)
 		break;
 	}
 	case KEY_A:
-		*mat_at(&renderer->selected_obj->SRT_matrix, 0, 3) = *mat_at(&renderer->selected_obj->SRT_matrix, 0, 3) + 2.0f ;
+		renderer->selected_obj->position.x -= 2.0f ;
 		break;
 	case KEY_D:
-		*mat_at(&renderer->selected_obj->SRT_matrix, 0, 3) = *mat_at(&renderer->selected_obj->SRT_matrix, 0, 3) - 2.0f ;
+		renderer->selected_obj->position.x += 2.0f ;
 		break;
 	case KEY_S:
-		*mat_at(&renderer->selected_obj->SRT_matrix, 1, 3) = *mat_at(&renderer->selected_obj->SRT_matrix, 1, 3) - 2.0f ;
+		renderer->selected_obj->position.y -= 2.0f ;
 		break;
 	case KEY_W:
-		*mat_at(&renderer->selected_obj->SRT_matrix, 1, 3) = *mat_at(&renderer->selected_obj->SRT_matrix, 1, 3) + 2.0f ;
+		renderer->selected_obj->position.y += 2.0f ;
 		break;
 	case KEY_8:
-		*mat_at(&renderer->selected_obj->SRT_matrix, 2, 3) = *mat_at(&renderer->selected_obj->SRT_matrix, 2, 3) + 2.0f;
+		renderer->selected_obj->position.z += 2.0f ;
 		break;
 	case KEY_2:
-		*mat_at(&renderer->selected_obj->SRT_matrix, 2, 3) = *mat_at(&renderer->selected_obj->SRT_matrix, 2, 3) - 2.0f;
+		renderer->selected_obj->position.z -= 2.0f ;
 		break;
 	case KEY_4:
 	{

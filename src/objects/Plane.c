@@ -2,11 +2,15 @@
 
 t_vec3 plane_point_normal(t_hit hit_point)
 {
+    /*
     return ((t_object *)hit_point.object)->normal;
+    */
+    return (t_vec3){0};
 }
 
 t_vec3 plane_map_uvs(t_hit hit_point)
 {
+    /*
     t_object *obj;
     t_vec3 tmp;
 
@@ -14,6 +18,8 @@ t_vec3 plane_map_uvs(t_hit hit_point)
     tmp = vec3_sub_vec3(obj->uvs_origin, hit_point.hit_point);
 
     return (t_vec3){vec3_dot(tmp, obj->u_vector), vec3_dot(tmp, obj->v_vector), 0.0f};
+    */
+    return (t_vec3){0};
 }
 
 t_hit plane_intersection(t_object *object, t_ray ray)
@@ -39,7 +45,7 @@ t_hit plane_intersection(t_object *object, t_ray ray)
     // t_vec3 map_target = mat_mul_vec3(&object->ISRT_matrix, &ray.target);
     // t_vec3 map_direct = vec3_sub_vec3(map_target, map_origine);
     // map_direct = vec3_normalize(map_direct);
-
+/*
     float dot_na = vec3_dot(object->normal, ray.origin);
     float dot_nd = vec3_dot(object->normal, ray.dir);
     float dot_np = vec3_dot(object->normal, get_object_pos(object));
@@ -59,10 +65,12 @@ t_hit plane_intersection(t_object *object, t_ray ray)
         hit.normal = plane_point_normal(hit);
     }
     return hit;
+*/
+    return (t_hit){0};
 }
 
 void plane_calculate_uvs(t_object*plane)
-{
+{/*
     t_vec3 tmp;
     float sqrt3;
 
@@ -78,6 +86,7 @@ void plane_calculate_uvs(t_object*plane)
 
    
     plane->uvs_origin = vec3_add_vec3(vec3_scale(plane->u_vector, 10000.0f), vec3_scale(plane->v_vector, 10000.0f));
+*/
 }
 
 t_object new_plane(t_vec3 point, t_vec3 normal, t_vec3 color)
@@ -92,7 +101,7 @@ t_object new_plane(t_vec3 point, t_vec3 normal, t_vec3 color)
     plane.normal = vec3_normalize(normal);
     
     plane.SRT_matrix = mat_id();
-    set_object_pos(&plane, point);
+    //set_object_pos(&plane, point);
     plane.ISRT_matrix = mat_inv(&plane.SRT_matrix);
 
     plane_calculate_uvs(&plane);

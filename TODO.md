@@ -1,0 +1,1 @@
+# Imlement calculate_uvs function for each atomic object.
