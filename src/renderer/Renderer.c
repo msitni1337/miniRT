@@ -9,14 +9,13 @@ t_hit get_ray_hit(t_scene *scene, t_ray ray)
 
 	i = 0;
 	hit.is_valid = FALSE;
-	object = get_next_object_by_type(scene, &i, OBJ_CONE | OBJ_RECT | OBJ_CYLINDER | OBJ_SPHERE | OBJ_PLANE);
-	while (object)
+	while (i < scene->objects_count)
 	{
+		object = scene->objects + i; 
 		tmp = object->intersection(object, ray);
 		if (tmp.is_valid && (!hit.is_valid || tmp.distance < hit.distance))
 			hit = tmp;
 		i++;
-		object = get_next_object_by_type(scene, &i, OBJ_CONE | OBJ_RECT | OBJ_CYLINDER | OBJ_SPHERE | OBJ_PLANE);
 	}
 	return hit;
 }
@@ -74,7 +73,7 @@ t_vec3 get_light_color(t_scene *scene, t_hit hit_point)
 	}
 	return vec3_cap(color, 0.0f, 1.0f);
 }
-#include <stdlib.h>
+
 unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 {
 	t_hit hit_point;
@@ -108,12 +107,14 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			t_ray ref_ray;
 			ref_ray.origin = hit_point.hit_point;
 			ref_ray.dir = hit_point.normal;
+			/**/
 			/*
-			 * Randomize reflection direction to have haizzy effect.*/
+			 * Randomize reflection direction to have haizzy effect.
 			ref_ray.dir.x += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
 			ref_ray.dir.y += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
 			ref_ray.dir.z += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
 			ref_ray.dir = vec3_normalize(ref_ray.dir);
+			*/
 			/**/
 			ref_ray.target = vec3_add_vec3(ref_ray.origin, ref_ray.dir);
 			t_hit ref_hit = get_ray_hit(scene, ref_ray);

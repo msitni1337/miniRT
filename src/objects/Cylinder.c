@@ -1,5 +1,17 @@
 #include "Object.h"
 
+void cylinder_calculate_uv(t_object*obj)
+{
+	obj->uvs_origin = 
+	assert(!"NOT IMPLEMENTED");
+}
+
+t_vec3 cylinder_map_uv(t_hit hit)
+{
+	assert(!"NOT IMPLMNTD");
+	return (t_vec3){0};
+}
+
 t_hit cap_intersection(t_vec3 cap_normal, t_vec3 cap_center, float radius, t_ray ray)
 {
 	float dot_na = vec3_dot(cap_normal, ray.origin);
@@ -108,11 +120,11 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 	t_hit down_cap;
 
 	cap.is_valid = FALSE;
-	top_cap = cap_intersection(object->normal, vec3_add_vec3(object->position, vec3_scale(object->normal, object->height / 2)), object->radius, ray);
+	top_cap = cap_intersection(object->normal, object->top_cap_center, object->radius, ray);
 	top_cap.normal = object->normal;
 
-	down_cap = cap_intersection(object->normal, vec3_add_vec3(object->position, vec3_scale(object->normal, -object->height / 2)), object->radius, ray);
-	down_cap.normal = vec3_scale(object->normal, -1.0f);
+	down_cap = cap_intersection(object->normal, object->bottom_cap_center, object->radius, ray);
+	down_cap.normal = object->anti_normal;
 
 	if (top_cap.is_valid && (!down_cap.is_valid || top_cap.distance < down_cap.distance))
 		cap = top_cap;
@@ -140,11 +152,16 @@ t_object new_cylinder(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_ve
 
 	cylinder.position = center;
 	cylinder.normal = vec3_normalize(normal);
-	cylinder.color = vec3_scale(color, 1.0f / 255.0f);
+	cylinder.anti_normal = vec3_scale(normal, -1);
 	cylinder.height = height_diameter.x;
 	cylinder.radius = height_diameter.y / 2;
+	cylinder.top_cap_center = vec3_add_vec3(cylinder.position, vec3_scale(cylinder.normal, cylinder.height / 2));
+	cylinder.bottom_cap_center = vec3_add_vec3(cylinder.position, vec3_scale(cylinder.anti_normal, cylinder.height / 2));
+	cylinder.color = vec3_scale(color, 1.0f / 255.0f);
+	
+	cylinder_calculate_uv(&cylinder);
 
-	cylinder.SRT_matrix = mat_id();
+	// cylinder.SRT_matrix = mat_id();
 	// tmp = get_euler_rotation_matrix(normal);
 	// plane.SRT_matrix = mat_mul(&tmp, &plane.SRT_matrix);
 	// set_object_pos(&cylinder, center);
