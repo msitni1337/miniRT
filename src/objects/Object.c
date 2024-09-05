@@ -10,6 +10,8 @@ t_object *get_next_object_by_type(t_scene *scene, size_t *i, t_object_type type)
     }
     return NULL;
 }
+
+/*
 t_vec3 get_object_pos(t_object *object)
 {
     t_vec3 pos;
@@ -26,6 +28,7 @@ void set_object_pos(t_object *object, t_vec3 pos)
     *mat_at(&object->SRT_matrix, 1, 3) = pos.y;
     *mat_at(&object->SRT_matrix, 2, 3) = pos.z;
 }
+*/
 
 t_vec3 get_axis_rotation(t_vec3 normalized_orientation, t_vec3 axis)
 {
