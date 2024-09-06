@@ -17,7 +17,7 @@ typedef struct s_object
 	t_object_type type;
 	struct s_hit (*intersection)(struct s_object *object, struct s_ray ray);
 	// t_vec3 (*map_uvs)(t_hit hit_point);
-	void (*calculate_uvs)(struct s_object* obj);
+	void (*recalculate)(struct s_object* obj);
 	//struct s_vec3 (*point_normal)(t_hit hit_point);
 	// t_mat4x4 SRT_matrix;
 	// t_mat4x4 ISRT_matrix;
@@ -53,6 +53,7 @@ typedef struct s_scene
 	t_camera camera;
 	size_t objects_count;
 	t_object *objects;
+	size_t lights_count;
 	t_light *lights;
 	t_vec3 ambient_color;
 	float ambient_intemsity;

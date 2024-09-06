@@ -35,7 +35,7 @@ unsigned int get_color_vec3(t_vec3 vec)
 t_vec3 get_light_color(t_scene *scene, t_hit hit_point)
 {
 	t_vec3 color = {0};
-	t_object *light;
+	t_light *light;
 	size_t i;
 	t_hit hit_light;
 	t_hit tmp;
@@ -43,9 +43,9 @@ t_vec3 get_light_color(t_scene *scene, t_hit hit_point)
 	i = 0;
 	hit_light.object = NULL;
 	hit_light.distance = 0;
-	light = get_next_object_by_type(scene, &i, OBJ_LIGHT);
-	while (light)
+	while (i < scene->lights_count)
 	{
+		light = scene->lights + i;
 		t_vec3 hit_normal = hit_point.normal; //((t_object *)hit_point.object)->point_normal(hit_point);
 
 		t_vec3 light_normal = vec3_sub_vec3(light->position, hit_point.hit_point);
@@ -69,7 +69,6 @@ t_vec3 get_light_color(t_scene *scene, t_hit hit_point)
 		else
 			color = vec3_add_vec3(color, vec3_scale(light->color, intensity));
 		i++;
-		light = get_next_object_by_type(scene, &i, OBJ_LIGHT);
 	}
 	return vec3_cap(color, 0.0f, 1.0f);
 }
@@ -94,7 +93,7 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 		{
 			t_vec3 uv_mapped_point;
 
-			uv_mapped_point = obj->map_uvs(hit_point);
+			uv_mapped_point = hit_point.uv_point;
 			if (((int)uv_mapped_point.x + (int)uv_mapped_point.y) % 2)
 				hit_point_color = (t_vec3){0};
 			else

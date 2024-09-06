@@ -7,6 +7,7 @@ typedef struct s_hit
 {
 	int is_valid;
 	t_vec3 normal;
+	t_vec3 uv_point;
 	void *object;
 	t_vec3 hit_point;
 	t_vec3 color;

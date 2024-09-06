@@ -142,7 +142,7 @@ t_object new_cone(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_vec3 c
 	cone.height = height_diameter.x;
 	cone.radius = height_diameter.y / 2;
 
-	cone.SRT_matrix = mat_id();
+	// cone.SRT_matrix = mat_id();
 	// tmp = get_euler_rotation_matrix(normal);
 	// plane.SRT_matrix = mat_mul(&tmp, &plane.SRT_matrix);
 	//set_object_pos(&cone, center);

@@ -84,11 +84,11 @@ t_object new_rect(t_vec3 centre_point, t_vec3 normal, t_vec3 color, t_vec3 dimen
 
     rect.normal = vec3_normalize(normal);
 
-    rect.SRT_matrix = mat_id();
+    //rect.SRT_matrix = mat_id();
     // tmp = get_euler_rotation_matrix(normal);
     // rect.SRT_matrix = mat_mul(&tmp, &rect.SRT_matrix);
     //set_object_pos(&rect, centre_point);
-    rect.ISRT_matrix = mat_inv(&rect.SRT_matrix);
+    // rect.ISRT_matrix = mat_inv(&rect.SRT_matrix);
 
     return rect;
 }

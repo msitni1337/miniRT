@@ -57,12 +57,13 @@ int main(int c, char **v)
 
 	t_darr objects = init_da(sizeof(t_object));
 	t_object obj;
-
-	obj = new_light((t_vec3){0, 0, 5}, .4f, (t_vec3){255.0f, 255.0f, 255.0f});
-	add_to_arr(&objects, &obj);
-
 	obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, 0, 0}, (t_vec3){3, 1.5f, 0}, (t_vec3){10.0f, 125.0f, 70.0f});
 	add_to_arr(&objects, &obj);
+
+	t_darr lights = init_da(sizeof(t_light));
+	t_light light;
+	light = new_light((t_vec3){0, 0, 5}, .4f, (t_vec3){255.0f, 255.0f, 255.0f});
+	add_to_arr(&lights, &light);
 
 	/*
 			obj = new_plane((t_vec3){0, 0, -1}, (t_vec3){0.0, 0.0, 1.0}, (t_vec3){130.0f, 20.0f, 200.0f});
@@ -113,8 +114,12 @@ int main(int c, char **v)
 		obj = new_rect((t_vec3){5, 2, 2}, (t_vec3){0.0, -1.0, -.2}, (t_vec3){255.0f, 255.0f, 255.0f}, (t_vec3){6.0, 4.0, 0.0});
 		add_to_arr(&objects, &obj);
 	*/
+
 	renderer.scene.objects = objects.data;
 	renderer.scene.objects_count = objects.count;
+	renderer.scene.lights = lights.data;
+	renderer.scene.lights_count = lights.count;
+
 	for (size_t i = 0; i < renderer.scene.objects_count; i++)
 	{
 		renderer.scene.objects[i].reflection = 0;

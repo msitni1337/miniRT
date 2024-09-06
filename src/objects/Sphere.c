@@ -85,8 +85,8 @@ t_object new_sphere(t_vec3 pos, float radius, t_vec3 color)
 	sphere.uvs_origin = vec3_add_vec3(pos, vec3_scale((t_vec3){1.0f, 0.0f, 0.0f}, radius));
 	// sphere.point_normal = &sphere_point_normal;
 	sphere.radius = radius;
-	sphere.SRT_matrix = mat_id();
+	//sphere.SRT_matrix = mat_id();
 	//set_object_pos(&sphere, pos);
-	sphere.ISRT_matrix = mat_inv(&sphere.SRT_matrix);
+	//sphere.ISRT_matrix = mat_inv(&sphere.SRT_matrix);
 	return sphere;
 }

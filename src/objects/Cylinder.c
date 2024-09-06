@@ -1,9 +1,12 @@
 #include "Object.h"
 
-void cylinder_calculate_uv(t_object*obj)
+void cylinder_recalculate(t_object *obj)
 {
-	obj->uvs_origin = 
-	assert(!"NOT IMPLEMENTED");
+	obj->anti_normal = vec3_scale(obj->normal, -1);
+	obj->top_cap_center = vec3_add_vec3(obj->position, vec3_scale(obj->normal, obj->height / 2));
+	obj->bottom_cap_center = vec3_add_vec3(obj->position, vec3_scale(obj->anti_normal, obj->height / 2));
+	
+	// assert(!"NOT IMPLEMENTED");
 }
 
 t_vec3 cylinder_map_uv(t_hit hit)
@@ -114,7 +117,7 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 				hit.is_valid = FALSE;
 		}
 	}
-	
+
 	t_hit cap;
 	t_hit top_cap;
 	t_hit down_cap;
@@ -148,18 +151,16 @@ t_object new_cylinder(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_ve
 
 	cylinder.type = OBJ_CYLINDER;
 	cylinder.intersection = &cylinder_intersection;
+	cylinder.recalculate = &cylinder_recalculate;
 	// cylinder.point_normal = &cylinder_point_normal;
 
 	cylinder.position = center;
 	cylinder.normal = vec3_normalize(normal);
-	cylinder.anti_normal = vec3_scale(normal, -1);
 	cylinder.height = height_diameter.x;
 	cylinder.radius = height_diameter.y / 2;
-	cylinder.top_cap_center = vec3_add_vec3(cylinder.position, vec3_scale(cylinder.normal, cylinder.height / 2));
-	cylinder.bottom_cap_center = vec3_add_vec3(cylinder.position, vec3_scale(cylinder.anti_normal, cylinder.height / 2));
 	cylinder.color = vec3_scale(color, 1.0f / 255.0f);
-	
-	cylinder_calculate_uv(&cylinder);
+
+	cylinder_recalculate(&cylinder);
 
 	// cylinder.SRT_matrix = mat_id();
 	// tmp = get_euler_rotation_matrix(normal);
