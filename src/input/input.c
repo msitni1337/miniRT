@@ -177,7 +177,8 @@ int mouse_hook_up(int button, int x, int y, t_renderer *renderer)
 	ray = get_ray(&renderer->scene.camera, (t_vec3){x, renderer->mlx_texture.height - y},
 				  (t_vec3){renderer->mlx_texture.width, renderer->mlx_texture.height});
 	hit = get_ray_hit(&(renderer->scene), ray);
-	renderer->selected_obj = hit.object;
+	if (hit.is_valid)
+		renderer->selected_obj = hit.object;
 	return (0);
 }
 int mouse_hook_down(int button, int x, int y, t_renderer *renderer)

@@ -41,7 +41,8 @@ t_vec3 get_light_color(t_scene *scene, t_hit hit_point)
 	t_hit tmp;
 
 	i = 0;
-	hit_light.object = NULL;
+	hit_light.is_valid = FALSE;
+	// hit_light.object = NULL;
 	hit_light.distance = 0;
 	while (i < scene->lights_count)
 	{
@@ -64,10 +65,10 @@ t_vec3 get_light_color(t_scene *scene, t_hit hit_point)
 		light_ray.dir = vec3_normalize(vec3_sub_vec3(light_ray.target, light_ray.origin));
 
 		t_hit shadow_hit = get_ray_hit(scene, light_ray);
-		if (shadow_hit.object != hit_point.object)
-			hit_light.distance = 0.0f;
-		else
+		if (!shadow_hit.is_valid || shadow_hit.object == hit_point.object)
+		{
 			color = vec3_add_vec3(color, vec3_scale(light->color, intensity));
+		}
 		i++;
 	}
 	return vec3_cap(color, 0.0f, 1.0f);
@@ -91,10 +92,12 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 		/* CheckerBoard Color mapping */
 		if (obj->checkerboard)
 		{
-			t_vec3 uv_mapped_point;
+			int x;
+			int y;
 
-			uv_mapped_point = hit_point.uv_point;
-			if (((int)uv_mapped_point.x + (int)uv_mapped_point.y) % 2)
+			x = ceil(hit_point.uv_point.x);
+			y = ceil(hit_point.uv_point.y);
+			if ((y + x) % 2 == 0)
 				hit_point_color = (t_vec3){0};
 			else
 				hit_point_color = (t_vec3){1, 1, 1};
@@ -120,9 +123,9 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			if (ref_hit.is_valid && ref_hit.object != hit_point.object)
 			{
 				t_object *ref_obj = ref_hit.object;
-				t_vec3 light_intensity = get_light_color(scene, ref_hit);
+				t_vec3 shaded_ref_color = get_light_color(scene, ref_hit);
 				hit_point_color = vec3_scale(hit_point_color, 1.0f - obj->reflection);
-				hit_point_color = vec3_add_vec3(hit_point_color, vec3_scale(vec3_mul(ref_obj->color, light_intensity), obj->reflection));
+				hit_point_color = vec3_add_vec3(hit_point_color, vec3_scale(vec3_mul(ref_obj->color, shaded_ref_color), obj->reflection));
 			}
 			/*
 			else

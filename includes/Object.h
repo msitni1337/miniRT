@@ -23,6 +23,7 @@ typedef struct s_object
 	// t_mat4x4 ISRT_matrix;
 	t_vec3 normal;
 	t_vec3 anti_normal;
+	t_vec3 orth_normal;
 	t_vec3 top_cap_center;
 	t_vec3 bottom_cap_center;
 

@@ -97,7 +97,8 @@ t_object new_plane(t_vec3 point, t_vec3 normal, t_vec3 color)
     plane.color = vec3_scale(color, 1.0f / 255.0f);
     plane.intersection = &plane_intersection;
     // plane.map_uvs = &plane_map_uvs;
-    plane.calculate_uvs = &plane_calculate_uvs;
+    //plane.calculate_uvs = &plane_calculate_uvs;
+
     plane.normal = vec3_normalize(normal);
     
     // plane.SRT_matrix = mat_id();

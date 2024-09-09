@@ -57,66 +57,21 @@ int main(int c, char **v)
 
 	t_darr objects = init_da(sizeof(t_object));
 	t_object obj;
-	obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, 0, 0}, (t_vec3){3, 1.5f, 0}, (t_vec3){10.0f, 125.0f, 70.0f});
+	obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, 50, 0}, (t_vec3){10, 100.5f, 0}, (t_vec3){250.0f, 150.0f, 150.0f});
+	add_to_arr(&objects, &obj);
+	obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, -10, 0}, (t_vec3){4, 5.5f, 0}, (t_vec3){250.0f, 0.0f, 150.0f});
 	add_to_arr(&objects, &obj);
 
 	t_darr lights = init_da(sizeof(t_light));
 	t_light light;
-	light = new_light((t_vec3){0, 0, 5}, .4f, (t_vec3){255.0f, 255.0f, 255.0f});
+	light = new_light((t_vec3){20, 0, 10}, .5f, (t_vec3){255.0f, 255.0f, 255.0f});
 	add_to_arr(&lights, &light);
-
-	/*
-			obj = new_plane((t_vec3){0, 0, -1}, (t_vec3){0.0, 0.0, 1.0}, (t_vec3){130.0f, 20.0f, 200.0f});
-			add_to_arr(&objects, &obj);
-
-			obj = new_plane((t_vec3){0, 10, 0}, (t_vec3){0.0, -1.0, 0.0}, (t_vec3){10.0f, 50.0f, 100.0f});
-			add_to_arr(&objects, &obj);
-
-			obj = new_cone((t_vec3){0.0f, 0.0, 1.0f}, (t_vec3){0, 0, 0}, (t_vec3){2, 2, 0}, (t_vec3){150.0f, 25.0f, 170.0f});
-			add_to_arr(&objects, &obj);
-
-
-			obj = new_rect((t_vec3){5, 2, 2}, (t_vec3){0.0, -1.0, -.2}, (t_vec3){255.0f, 255.0f, 255.0f}, (t_vec3){6.0, 4.0, 0.0});
-			add_to_arr(&objects, &obj);
-		obj = new_plane((t_vec3){0, 0, -1}, (t_vec3){0.0, 0.0, 1.0}, (t_vec3){130.0f, 20.0f, 200.0f});
-		add_to_arr(&objects, &obj);
-
-		obj = new_plane((t_vec3){0, 10, 0}, (t_vec3){0.0, -1.0, 0.0}, (t_vec3){10.0f, 50.0f, 100.0f});
-		add_to_arr(&objects, &obj);
-
-		obj = new_sphere((t_vec3){-6, -2, 1}, 4.0f, (t_vec3){255.0f, 0, 0});
-		add_to_arr(&objects, &obj);
-
-		obj = new_sphere((t_vec3){0, 0, 0}, .05f, (t_vec3){255.0f, 0, 0});
-		add_to_arr(&objects, &obj);
-
-		obj = new_sphere((t_vec3){1, 0, 0}, .05f, (t_vec3){255.0f, 0, 0});
-		add_to_arr(&objects, &obj);
-
-		obj = new_sphere((t_vec3){0, 0, 1}, .05f, (t_vec3){255.0f, 0, 0});
-		add_to_arr(&objects, &obj);
-
-		obj = new_cylinder((t_vec3){0.0f, 0.0, 1.0f}, (t_vec3){2, -7, 0}, (t_vec3){2, 2, 0}, (t_vec3){10.0f, 125.0f, 70.0f});
-		add_to_arr(&objects, &obj);
-
-		obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){5, -3, 2}, (t_vec3){6, .5f, 0}, (t_vec3){10.0f, 125.0f, 70.0f});
-		add_to_arr(&objects, &obj);
-
-		obj = new_cone((t_vec3){0.0f, 1.0, 0.0f}, (t_vec3){0, 0, 0}, (t_vec3){2, 2, 0}, (t_vec3){150.0f, 25.0f, 170.0f});
-		add_to_arr(&objects, &obj);
-
-		obj = new_light((t_vec3){-1, -2, 2}, .4f, (t_vec3){255.0f, 255.0f, 255.0f});
-		add_to_arr(&objects, &obj);
-
-		obj = new_light((t_vec3){2, -2, 4.0f}, 0.6f, (t_vec3){255.0f, 255.0f, 255.0f});
-		add_to_arr(&objects, &obj);
-
-		obj = new_rect((t_vec3){5, 2, 2}, (t_vec3){0.0, -1.0, -.2}, (t_vec3){255.0f, 255.0f, 255.0f}, (t_vec3){6.0, 4.0, 0.0});
-		add_to_arr(&objects, &obj);
-	*/
+	light = new_light((t_vec3){-20, 0, 10}, .7f, (t_vec3){255.0f, 255.0f, 255.0f});
+	add_to_arr(&lights, &light);
 
 	renderer.scene.objects = objects.data;
 	renderer.scene.objects_count = objects.count;
+
 	renderer.scene.lights = lights.data;
 	renderer.scene.lights_count = lights.count;
 
@@ -125,10 +80,8 @@ int main(int c, char **v)
 		renderer.scene.objects[i].reflection = 0;
 		renderer.scene.objects[i].checkerboard = 0;
 	}
-
-	renderer.scene.objects[objects.count - 1].reflection = .5;
-	renderer.scene.objects[0].reflection = .5;
-	renderer.scene.objects[0].checkerboard = 1;
+	renderer.scene.objects[0].reflection = .7;
+	renderer.scene.objects[0].checkerboard = 0;
 
 	renderer.tab_mode = FALSE;
 	renderer.redraw = TRUE;
@@ -144,3 +97,53 @@ int main(int c, char **v)
 	mlx_loop(renderer.mlx_context);
 	return 0;
 }
+
+/*
+		obj = new_plane((t_vec3){0, 0, -1}, (t_vec3){0.0, 0.0, 1.0}, (t_vec3){130.0f, 20.0f, 200.0f});
+		add_to_arr(&objects, &obj);
+
+		obj = new_plane((t_vec3){0, 10, 0}, (t_vec3){0.0, -1.0, 0.0}, (t_vec3){10.0f, 50.0f, 100.0f});
+		add_to_arr(&objects, &obj);
+
+		obj = new_cone((t_vec3){0.0f, 0.0, 1.0f}, (t_vec3){0, 0, 0}, (t_vec3){2, 2, 0}, (t_vec3){150.0f, 25.0f, 170.0f});
+		add_to_arr(&objects, &obj);
+
+
+		obj = new_rect((t_vec3){5, 2, 2}, (t_vec3){0.0, -1.0, -.2}, (t_vec3){255.0f, 255.0f, 255.0f}, (t_vec3){6.0, 4.0, 0.0});
+		add_to_arr(&objects, &obj);
+	obj = new_plane((t_vec3){0, 0, -1}, (t_vec3){0.0, 0.0, 1.0}, (t_vec3){130.0f, 20.0f, 200.0f});
+	add_to_arr(&objects, &obj);
+
+	obj = new_plane((t_vec3){0, 10, 0}, (t_vec3){0.0, -1.0, 0.0}, (t_vec3){10.0f, 50.0f, 100.0f});
+	add_to_arr(&objects, &obj);
+
+	obj = new_sphere((t_vec3){-6, -2, 1}, 4.0f, (t_vec3){255.0f, 0, 0});
+	add_to_arr(&objects, &obj);
+
+	obj = new_sphere((t_vec3){0, 0, 0}, .05f, (t_vec3){255.0f, 0, 0});
+	add_to_arr(&objects, &obj);
+
+	obj = new_sphere((t_vec3){1, 0, 0}, .05f, (t_vec3){255.0f, 0, 0});
+	add_to_arr(&objects, &obj);
+
+	obj = new_sphere((t_vec3){0, 0, 1}, .05f, (t_vec3){255.0f, 0, 0});
+	add_to_arr(&objects, &obj);
+
+	obj = new_cylinder((t_vec3){0.0f, 0.0, 1.0f}, (t_vec3){2, -7, 0}, (t_vec3){2, 2, 0}, (t_vec3){10.0f, 125.0f, 70.0f});
+	add_to_arr(&objects, &obj);
+
+	obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){5, -3, 2}, (t_vec3){6, .5f, 0}, (t_vec3){10.0f, 125.0f, 70.0f});
+	add_to_arr(&objects, &obj);
+
+	obj = new_cone((t_vec3){0.0f, 1.0, 0.0f}, (t_vec3){0, 0, 0}, (t_vec3){2, 2, 0}, (t_vec3){150.0f, 25.0f, 170.0f});
+	add_to_arr(&objects, &obj);
+
+	obj = new_light((t_vec3){-1, -2, 2}, .4f, (t_vec3){255.0f, 255.0f, 255.0f});
+	add_to_arr(&objects, &obj);
+
+	obj = new_light((t_vec3){2, -2, 4.0f}, 0.6f, (t_vec3){255.0f, 255.0f, 255.0f});
+	add_to_arr(&objects, &obj);
+
+	obj = new_rect((t_vec3){5, 2, 2}, (t_vec3){0.0, -1.0, -.2}, (t_vec3){255.0f, 255.0f, 255.0f}, (t_vec3){6.0, 4.0, 0.0});
+	add_to_arr(&objects, &obj);
+*/
