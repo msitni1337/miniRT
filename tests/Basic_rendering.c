@@ -50,8 +50,7 @@ int main(int c, char **v)
 		LOG_ERROR("MLX IMG CAN'T GET IMG DATA BUFFER ADDRESS.");
 		return 1;
 	}
-	renderer.scene.camera = new_camera((t_vec3){12, -12, 5}, (t_vec3){-1, 1, -.2f}, (float)renderer.win_height / renderer.win_width, 180);
-	renderer.scene.camera = new_camera((t_vec3){0, -20, 2}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 120);
+	renderer.scene.camera = new_camera((t_vec3){0, -30, 10}, (t_vec3){0, 1, -.3}, (float)renderer.win_height / renderer.win_width, 120);
 	renderer.scene.ambient_color = (t_vec3){1.0f, 1.0f, 1.0f};
 	renderer.scene.ambient_intemsity = 0.5f;
 
@@ -59,7 +58,7 @@ int main(int c, char **v)
 	t_object obj;
 	obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, 50, 0}, (t_vec3){10, 100.5f, 0}, (t_vec3){250.0f, 150.0f, 150.0f});
 	add_to_arr(&objects, &obj);
-	obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, -10, 0}, (t_vec3){4, 5.5f, 0}, (t_vec3){250.0f, 0.0f, 150.0f});
+	obj = new_cone((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, -10, 0}, (t_vec3){4, 5.5f, 0}, (t_vec3){250.0f, 0.0f, 150.0f});
 	add_to_arr(&objects, &obj);
 
 	t_darr lights = init_da(sizeof(t_light));
@@ -81,7 +80,7 @@ int main(int c, char **v)
 		renderer.scene.objects[i].checkerboard = 0;
 	}
 	renderer.scene.objects[0].reflection = .7;
-	renderer.scene.objects[0].checkerboard = 0;
+	renderer.scene.objects[0].checkerboard = 1;
 
 	renderer.tab_mode = FALSE;
 	renderer.redraw = TRUE;

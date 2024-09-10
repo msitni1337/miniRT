@@ -10,9 +10,7 @@ void cylinder_recalculate(t_object *obj)
 	if (vec3_magnitude(obj->orth_normal) <= ZERO)
 		obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 1.0f, 0.0f}));
 
-	obj->uvs_origin = vec3_add_vec3(obj->position, vec3_scale(obj->orth_normal, obj->radius));
-	obj->u_vector = vec3_cross(obj->normal, obj->orth_normal);
-	obj->v_vector = obj->normal;
+	obj->orth_normal2 = vec3_cross(obj->normal, obj->orth_normal);
 }
 
 t_vec3 cylinder_map_uv(t_hit hit, t_object *obj)
@@ -22,11 +20,7 @@ t_vec3 cylinder_map_uv(t_hit hit, t_object *obj)
 
 	point_vector = vec3_sub_vec3(hit.hit_point, obj->position);
 	map.y = vec3_dot(obj->normal, point_vector);
-
-	point_vector = vec3_scale(obj->normal, vec3_dot(hit.hit_point, obj->normal));
-	point_vector = vec3_sub_vec3(hit.hit_point, point_vector);
-	point_vector = vec3_normalize(point_vector);
-	map.x = obj->radius * acos(vec3_dot(obj->orth_normal, point_vector));
+	map.x = obj->radius * atan2f(hit.hit_point.y - obj->position.y, hit.hit_point.x - obj->position.x);
 	return map;
 }
 
@@ -109,18 +103,18 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 		}
 	}
 
-	/*
-	 * Check intersections with other side of the cylinder.
-	 * This step can be optimized out by skipping this
-	 * calculation as we always put caps on the end of
-	 * the cylinder
-	 */
 	if (hit.is_valid)
 	{
 		t_vec3 hitpoint_vector = vec3_sub_vec3(hit.hit_point, object->position);
 		float origin_distance = vec3_dot(hitpoint_vector, object->normal);
 		if (fabs(origin_distance) > object->height / 2)
 		{
+			/*
+			 * Check intersections with other side of the cylinder.
+			 * This step can be optimized out by skipping this
+			 * calculation as we always put caps on the end of
+			 * the cylinder
+			 */
 			if (determinant > ZERO)
 			{
 				float t = (-b + sqrtf(determinant)) / (2 * a);
@@ -162,8 +156,8 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 		hit.hit_point = cap.hit_point;
 		hit.normal = cap.normal;
 		hit.distance = cap.distance;
+		hit.uv_point = plane_map_uv(vec3_sub_vec3(cap.hit_point, object->position), object->orth_normal, object->orth_normal2);
 		hit.is_valid = TRUE;
-		hit.uv_point = plane_map_uv(vec3_sub_vec3(cap.hit_point, object->position), object->u_vector, object->orth_normal);
 	}
 	return hit;
 }
@@ -171,26 +165,16 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 t_object new_cylinder(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_vec3 color)
 {
 	t_object cylinder;
-	t_mat4x4 tmp;
 
 	cylinder.type = OBJ_CYLINDER;
 	cylinder.intersection = &cylinder_intersection;
 	cylinder.recalculate = &cylinder_recalculate;
-	// cylinder.point_normal = &cylinder_point_normal;
-
 	cylinder.position = center;
 	cylinder.normal = vec3_normalize(normal);
 	cylinder.height = height_diameter.x;
 	cylinder.radius = height_diameter.y / 2;
 	cylinder.color = vec3_scale(color, 1.0f / 255.0f);
-
 	cylinder_recalculate(&cylinder);
-
-	// cylinder.SRT_matrix = mat_id();
-	// tmp = get_euler_rotation_matrix(normal);
-	// plane.SRT_matrix = mat_mul(&tmp, &plane.SRT_matrix);
-	// set_object_pos(&cylinder, center);
-	// plane.ISRT_matrix = mat_inv(&plane.SRT_matrix);
 
 	return cylinder;
 }

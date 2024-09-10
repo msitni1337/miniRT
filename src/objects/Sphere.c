@@ -82,7 +82,7 @@ t_object new_sphere(t_vec3 pos, float radius, t_vec3 color)
 	sphere.type = OBJ_SPHERE;
 	sphere.color = vec3_scale(color, 1.0f / 255.0f);
 	sphere.intersection = &sphere_intersection;
-	sphere.uvs_origin = vec3_add_vec3(pos, vec3_scale((t_vec3){1.0f, 0.0f, 0.0f}, radius));
+	// sphere.uvs_origin = vec3_add_vec3(pos, vec3_scale((t_vec3){1.0f, 0.0f, 0.0f}, radius));
 	// sphere.point_normal = &sphere_point_normal;
 	sphere.radius = radius;
 	//sphere.SRT_matrix = mat_id();

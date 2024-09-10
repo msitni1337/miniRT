@@ -24,13 +24,14 @@ typedef struct s_object
 	t_vec3 normal;
 	t_vec3 anti_normal;
 	t_vec3 orth_normal;
+	t_vec3 orth_normal2;
+
 	t_vec3 top_cap_center;
 	t_vec3 bottom_cap_center;
 
 	t_img bump_map;
-	t_vec3 uvs_origin;
-	t_vec3 u_vector;
-	t_vec3 v_vector;
+	t_vec3 cone_tip;
+
 	
 	t_vec3 color;
 	t_vec3 position;
@@ -73,6 +74,9 @@ t_mat4x4 get_y_rotation_matrix(float angle);
 t_mat4x4 get_z_rotation_matrix(float angle);
 // t_vec3 get_object_pos(t_object *object);
 t_object *get_next_object_by_type(t_scene *scene, size_t *i, t_object_type type);
+
+t_hit cap_intersection(t_vec3 cap_normal, t_vec3 cap_center, float radius, t_ray ray);
+t_vec3 plane_map_uv(t_vec3 vec, t_vec3 u, t_vec3 v);
 
 // void set_object_pos(t_object *object, t_vec3 pos);
 #endif // OBJECT_H
