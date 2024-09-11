@@ -20,7 +20,7 @@ t_vec3 cylinder_map_uv(t_hit hit, t_object *obj)
 
 	point_vector = vec3_sub_vec3(hit.hit_point, obj->position);
 	map.y = vec3_dot(obj->normal, point_vector);
-	map.x = obj->radius * atan2f(hit.hit_point.y - obj->position.y, hit.hit_point.x - obj->position.x);
+	map.x = obj->radius * atan2f(vec3_dot(obj->orth_normal, point_vector), vec3_dot(obj->orth_normal2, point_vector));
 	return map;
 }
 
