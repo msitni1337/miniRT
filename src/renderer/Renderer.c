@@ -135,7 +135,7 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			*/
 		}
 		color_vec = vec3_mul(light_color, hit_point_color);
-		t_vec3 color_vec1 = vec3_mul(vec3_scale(scene->ambient_color, scene->ambient_intemsity), hit_point_color);
+		t_vec3 color_vec1 = vec3_mul(vec3_scale(scene->ambient_color, scene->ambient_intensity), hit_point_color);
 		color_vec = vec3_add_vec3(color_vec, color_vec1);
 		color = get_color_vec3(vec3_cap(color_vec, 0.0f, 1.0f));
 	}

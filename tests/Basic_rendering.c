@@ -52,13 +52,16 @@ int main(int c, char **v)
 	}
 	renderer.scene.camera = new_camera((t_vec3){0, -30, 10}, (t_vec3){0, 1, -.3}, (float)renderer.win_height / renderer.win_width, 120);
 	renderer.scene.ambient_color = (t_vec3){1.0f, 1.0f, 1.0f};
-	renderer.scene.ambient_intemsity = 0.5f;
+	renderer.scene.ambient_intensity = 0.5f;
 
 	t_darr objects = init_da(sizeof(t_object));
 	t_object obj;
 	obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, 50, 0}, (t_vec3){10, 100.5f, 0}, (t_vec3){250.0f, 150.0f, 150.0f});
 	add_to_arr(&objects, &obj);
 	obj = new_cone((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, -10, 0}, (t_vec3){4, 5.5f, 0}, (t_vec3){250.0f, 0.0f, 150.0f});
+	add_to_arr(&objects, &obj);
+	
+	obj = new_sphere((t_vec3) {-10, -10, 0}, 10, (t_vec3){255.0f, 255.0f, 255.0f});
 	add_to_arr(&objects, &obj);
 
 	t_darr lights = init_da(sizeof(t_light));
@@ -79,8 +82,11 @@ int main(int c, char **v)
 		renderer.scene.objects[i].reflection = 0;
 		renderer.scene.objects[i].checkerboard = 0;
 	}
-	renderer.scene.objects[0].reflection = .7;
-	renderer.scene.objects[0].checkerboard = 1;
+	//renderer.scene.objects[0].reflection = .7;
+	//renderer.scene.objects[0].checkerboard = 1;
+
+	renderer.scene.objects[2].reflection = .5;
+	renderer.scene.objects[2].checkerboard = 1;
 
 	renderer.tab_mode = FALSE;
 	renderer.redraw = TRUE;

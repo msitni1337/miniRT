@@ -73,6 +73,7 @@ t_object new_rect(t_vec3 centre_point, t_vec3 normal, t_vec3 color, t_vec3 dimen
     t_object rect;
     t_mat4x4 tmp;
 
+	rect = (t_object) {0};
     rect.type = OBJ_RECT;
     rect.color = vec3_scale(color, 1.0f / 255.0f);
     rect.intersection = &rect_intersection;

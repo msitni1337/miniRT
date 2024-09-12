@@ -122,6 +122,7 @@ t_object new_cone(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_vec3 c
 {
 	t_object cone;
 
+	cone = (t_object){0};
 	cone.type = OBJ_CONE;
 	cone.intersection = &cone_intersection;
 	cone.recalculate = &cone_recalculate;

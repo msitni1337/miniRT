@@ -58,7 +58,7 @@ typedef struct s_scene
 	size_t lights_count;
 	t_light *lights;
 	t_vec3 ambient_color;
-	float ambient_intemsity;
+	float ambient_intensity;
 } t_scene;
 
 
