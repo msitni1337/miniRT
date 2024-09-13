@@ -110,7 +110,14 @@ t_hit cap_intersection(t_vec3 cap_normal, t_vec3 cap_center, float radius, t_ray
 	return hit;
 }
 
-t_vec3 plane_map_uv(t_vec3 vec, t_vec3 u, t_vec3 v)
+t_vec4 plane_map_uv(t_vec3 vec, t_vec3 u, t_vec3 v)
 {
-	return (t_vec3){vec3_dot(vec, u), vec3_dot(vec, v), 0};
+    float vec_mag;
+    float u_dot;
+    float v_dot;
+
+    vec_mag = vec3_magnitude(vec);
+    u_dot = vec3_dot(vec, u);
+    v_dot = vec3_dot(vec, v);
+	return (t_vec4){u_dot / vec_mag, v_dot / vec_mag, u_dot, v_dot};
 }

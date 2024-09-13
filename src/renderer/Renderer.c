@@ -11,7 +11,7 @@ t_hit get_ray_hit(t_scene *scene, t_ray ray)
 	hit.is_valid = FALSE;
 	while (i < scene->objects_count)
 	{
-		object = scene->objects + i; 
+		object = scene->objects + i;
 		tmp = object->intersection(object, ray);
 		if (tmp.is_valid && (!hit.is_valid || tmp.distance < hit.distance))
 			hit = tmp;
@@ -95,8 +95,8 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			int x;
 			int y;
 
-			x = ceil(hit_point.uv_point.x);
-			y = ceil(hit_point.uv_point.y);
+			x = ceil(hit_point.uv_map.z);
+			y = ceil(hit_point.uv_map.w);
 			if ((y + x) % 2 == 0)
 				hit_point_color = (t_vec3){0};
 			else

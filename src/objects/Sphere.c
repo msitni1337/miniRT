@@ -5,14 +5,16 @@ void sphere_recalculate(t_object *object)
 {
 }
 
-t_vec3 sphere_map_uv(t_hit hit, t_object *obj)
+t_vec4 sphere_map_uv(t_hit hit, t_object *obj)
 {
-	t_vec3 map;
+	t_vec4 map;
 	t_vec3 point_vector;
 
 	point_vector = vec3_sub_vec3(hit.hit_point, obj->position);
-	map.y = obj->radius * atan((point_vector.x * point_vector.x + point_vector.y * point_vector.y) / point_vector.z);
-	map.x = obj->radius * atan2f(point_vector.y, point_vector.x);
+	map.x = atan2f(point_vector.y, point_vector.x) / PI;
+	map.z = map.x * (obj->radius);
+	map.w = vec3_dot(point_vector, (t_vec3){0.0f, 0.0f, 1.0f});
+	map.y = map.w / (obj->radius);
 	return map;
 }
 
@@ -71,7 +73,7 @@ t_hit sphere_intersection(t_object *object, t_ray ray)
 		}
 	}
 	if (hit.is_valid)
-		hit.uv_point = sphere_map_uv(hit, object);
+		hit.uv_map = sphere_map_uv(hit, object);
 	return hit;
 }
 
