@@ -1,7 +1,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 #include "Object.h"
-#include "../mlx.h"
+#include <mlx.h>
 #include "mlx_utils.h"
 #define WIN_TITLE "miniRT"
 
