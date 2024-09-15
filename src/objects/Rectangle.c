@@ -1,5 +1,16 @@
 #include "Object.h"
 
+<<<<<<< HEAD
+=======
+t_vec3 rect_point_normal(t_hit hit_point)
+{
+    /*
+    return ((t_object *)hit_point.object)->normal;
+    */
+   return (t_vec3){0};
+}
+
+>>>>>>> 9443dd4 (not yet)
 t_hit rect_intersection(t_object *object, t_ray ray)
 {
     /*
@@ -18,10 +29,19 @@ t_hit rect_intersection(t_object *object, t_ray ray)
         dot(n, a) + t dot(n, d) - dot(n, p) = 0
         t = (dot(n, p) - dot(n , a)) / dot(n , d))
     */
+<<<<<<< HEAD
     t_hit hit;
     hit.object = object;
     hit.is_valid = FALSE;
 
+=======
+
+    // t_vec3 map_origine = mat_mul_vec3(&object->ISRT_matrix, &ray.origin);
+    // t_vec3 map_target = mat_mul_vec3(&object->ISRT_matrix, &ray.target);
+    // t_vec3 map_direct = vec3_sub_vec3(map_target, map_origine);
+    // map_direct = vec3_normalize(map_direct);
+/*
+>>>>>>> 9443dd4 (not yet)
     float dot_na = vec3_dot(object->normal, ray.origin);
     float dot_nd = vec3_dot(object->normal, ray.dir);
     float dot_np = vec3_dot(object->normal, object->position);
@@ -48,6 +68,10 @@ t_hit rect_intersection(t_object *object, t_ray ray)
         }
     }
     return hit;
+*/
+
+   return (t_hit){0};
+
 }
 
 void rect_recalculate(t_object *obj)
@@ -69,6 +93,7 @@ t_object new_rect(t_vec3 centre_point, t_vec3 normal, t_vec3 color, t_vec3 dimen
     rect = (t_object){0};
     rect.type = OBJ_RECT;
     rect.intersection = &rect_intersection;
+<<<<<<< HEAD
     rect.recalculate = &rect_recalculate;
     rect.position = centre_point;
     rect.normal = vec3_normalize(normal);
@@ -76,5 +101,21 @@ t_object new_rect(t_vec3 centre_point, t_vec3 normal, t_vec3 color, t_vec3 dimen
     rect.width = dimensions.x;
     rect.color = vec3_scale(color, 1.0f / 255.0f);
     rect_recalculate(&rect);
+=======
+    // rect.uvs_origin = centre_point;
+
+    rect.height = dimensions.y;
+    rect.width = dimensions.x;
+    // rect.point_normal = &rect_point_normal;
+
+    rect.normal = vec3_normalize(normal);
+
+    //rect.SRT_matrix = mat_id();
+    // tmp = get_euler_rotation_matrix(normal);
+    // rect.SRT_matrix = mat_mul(&tmp, &rect.SRT_matrix);
+    //set_object_pos(&rect, centre_point);
+    // rect.ISRT_matrix = mat_inv(&rect.SRT_matrix);
+
+>>>>>>> 9443dd4 (not yet)
     return rect;
 }

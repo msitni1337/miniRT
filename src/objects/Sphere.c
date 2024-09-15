@@ -3,6 +3,7 @@
 
 void sphere_recalculate(t_object *object)
 {
+<<<<<<< HEAD
 }
 
 t_vec4 sphere_map_uv(t_hit hit, t_object *obj)
@@ -16,6 +17,12 @@ t_vec4 sphere_map_uv(t_hit hit, t_object *obj)
 	map.w = vec3_dot(point_vector, (t_vec3){0.0f, 0.0f, 1.0f});
 	map.y = map.w / (obj->radius);
 	return map;
+=======
+	/*
+	return vec3_normalize(vec3_sub_vec3(hit_point.hit_point, get_object_pos(hit_point.object)));
+	*/
+	return (t_vec3){0};
+>>>>>>> 9443dd4 (not yet)
 }
 
 t_hit sphere_intersection(t_object *object, t_ray ray)
@@ -34,6 +41,7 @@ t_hit sphere_intersection(t_object *object, t_ray ray)
 		c = (w.x² + w.y² + w.z² - r²) = dot(w,w) - r² << Can be calculated & stored once instead of always calculating it hum ...
 		t = (-b +/- sqrtf(b² - 4 a c)) / (2 * a)
 	*/
+<<<<<<< HEAD
 	t_hit hit;
 	hit.object = object;
 	hit.is_valid = FALSE;
@@ -75,6 +83,53 @@ t_hit sphere_intersection(t_object *object, t_ray ray)
 	if (hit.is_valid)
 		hit.uv_map = sphere_map_uv(hit, object);
 	return hit;
+=======
+	/*
+		float radius_sq = object->radius * object->radius;
+		t_vec3 map_origine = mat_mul_vec3(&object->ISRT_matrix, &ray.origin);
+		t_vec3 map_target = mat_mul_vec3(&object->ISRT_matrix, &ray.target);
+		t_vec3 map_direct = vec3_sub_vec3(map_target, map_origine);
+		map_direct = vec3_normalize(map_direct);
+
+		float b = 2 * (map_origine.x * map_direct.x + map_origine.y * map_direct.y + map_origine.z * map_direct.z);
+		float c = (map_origine.x * map_origine.x + map_origine.y * map_origine.y + map_origine.z * map_origine.z - radius_sq);
+		float determinant = (b * b) - (4.0f * c);
+
+		t_hit hit;
+		hit.object = NULL;
+		hit.data = INF;
+		if (determinant == ZERO)
+		{
+			float t = -b / 2;
+			if (t <= CAM_CLIP) // near clipping plane
+				return hit;
+			hit.object = object;
+			hit.hit_point = vec3_scale(map_direct, t);
+			hit.hit_point = vec3_add_vec3(hit.hit_point, map_origine);
+			hit.hit_point = mat_mul_vec3(&object->SRT_matrix, &hit.hit_point);
+			hit.data = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
+			hit.normal = sphere_point_normal(hit);
+		}
+		else if (determinant > ZERO)
+		{
+			float t = (-b - sqrtf(determinant)) / 2;
+			if (t <= CAM_CLIP) // near clipping plane
+			{
+				t = (-b + sqrtf(determinant)) / 2;
+				if (t <= CAM_CLIP)
+					return hit;
+			}
+			hit.object = object;
+			hit.hit_point = vec3_scale(map_direct, t);
+			hit.hit_point = vec3_add_vec3(hit.hit_point, map_origine);
+			hit.hit_point = mat_mul_vec3(&object->SRT_matrix, &hit.hit_point);
+			hit.data = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
+			hit.normal = sphere_point_normal(hit);
+		}
+		return hit;
+	*/
+	return (t_hit){0};
+>>>>>>> 9443dd4 (not yet)
 }
 
 t_object new_sphere(t_vec3 pos, float radius, t_vec3 color)
@@ -84,9 +139,18 @@ t_object new_sphere(t_vec3 pos, float radius, t_vec3 color)
 	sphere = (t_object){0};
 	sphere.type = OBJ_SPHERE;
 	sphere.intersection = &sphere_intersection;
+<<<<<<< HEAD
 	sphere.recalculate = &sphere_recalculate;
 	sphere.position = pos;
 	sphere.radius = radius;
 	sphere.color = vec3_scale(color, 1.0f / 255.0f);
+=======
+	// sphere.uvs_origin = vec3_add_vec3(pos, vec3_scale((t_vec3){1.0f, 0.0f, 0.0f}, radius));
+	// sphere.point_normal = &sphere_point_normal;
+	sphere.radius = radius;
+	//sphere.SRT_matrix = mat_id();
+	//set_object_pos(&sphere, pos);
+	//sphere.ISRT_matrix = mat_inv(&sphere.SRT_matrix);
+>>>>>>> 9443dd4 (not yet)
 	return sphere;
 }

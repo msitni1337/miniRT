@@ -1,11 +1,39 @@
 #include "Object.h"
 
 void cylinder_recalculate(t_object *obj)
+<<<<<<< HEAD
+=======
 {
 	obj->anti_normal = vec3_scale(obj->normal, -1);
 	obj->top_cap_center = vec3_add_vec3(obj->position, vec3_scale(obj->normal, obj->height / 2));
 	obj->bottom_cap_center = vec3_add_vec3(obj->position, vec3_scale(obj->anti_normal, obj->height / 2));
 
+	obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 0.0f, 1.0f}));
+	if (vec3_magnitude(obj->orth_normal) <= ZERO)
+		obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 1.0f, 0.0f}));
+
+	obj->orth_normal2 = vec3_cross(obj->normal, obj->orth_normal);
+}
+
+t_vec3 cylinder_map_uv(t_hit hit, t_object *obj)
+{
+	t_vec3 map;
+	t_vec3 point_vector;
+
+	point_vector = vec3_sub_vec3(hit.hit_point, obj->position);
+	map.y = vec3_dot(obj->normal, point_vector);
+	map.x = obj->radius * atan2f(vec3_dot(obj->orth_normal, point_vector), vec3_dot(obj->orth_normal2, point_vector));
+	return map;
+}
+
+t_hit cap_intersection(t_vec3 cap_normal, t_vec3 cap_center, float radius, t_ray ray)
+>>>>>>> 9443dd4 (not yet)
+{
+	obj->anti_normal = vec3_scale(obj->normal, -1);
+	obj->top_cap_center = vec3_add_vec3(obj->position, vec3_scale(obj->normal, obj->height / 2));
+	obj->bottom_cap_center = vec3_add_vec3(obj->position, vec3_scale(obj->anti_normal, obj->height / 2));
+
+<<<<<<< HEAD
 	obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 0.0f, 1.0f}));
 	if (vec3_magnitude(obj->orth_normal) <= ZERO)
 		obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 1.0f, 0.0f}));
@@ -30,11 +58,36 @@ t_vec4 cylinder_map_uv(t_hit hit, t_object *obj)
 
 t_vec3 cylinder_point_normal(t_hit hit_point, t_object *object)
 {
+=======
+	t_hit hit;
+	hit.is_valid = FALSE;
+	if (fabs(dot_nd) > ZERO)
+	{
+		float t = (dot_np - dot_na) / dot_nd;
+		if (t <= CAM_CLIP)
+			return hit;
+		hit.hit_point = vec3_scale(ray.dir, t);
+		hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
+		hit.distance = vec3_magnitude(vec3_sub_vec3(hit.hit_point, ray.origin));
+		if (vec3_magnitude(vec3_sub_vec3(hit.hit_point, cap_center)) <= radius)
+			hit.is_valid = TRUE;
+	}
+	return hit;
+}
+
+t_vec3 cylinder_point_normal(t_hit hit_point, t_object *object)
+{
+>>>>>>> 9443dd4 (not yet)
 	t_vec3 p = vec3_sub_vec3(hit_point.hit_point, object->position);
 	float p_height = vec3_dot(p, object->normal);
 	p = vec3_add_vec3(object->position, vec3_scale(object->normal, p_height));
 
 	return (vec3_normalize(vec3_sub_vec3(hit_point.hit_point, p)));
+}
+
+t_vec3 plane_map_uv(t_vec3 vec, t_vec3 u, t_vec3 v)
+{
+	return (t_vec3){vec3_dot(vec, u), vec3_dot(vec, v), 0};
 }
 
 t_hit cylinder_intersection(t_object *object, t_ray ray)
@@ -110,7 +163,11 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 	}
 
 	if (hit.is_valid)
+<<<<<<< HEAD
 		hit.uv_map = cylinder_map_uv(hit, object);
+=======
+		hit.uv_point = cylinder_map_uv(hit, object);
+>>>>>>> 9443dd4 (not yet)
 
 	t_hit cap;
 	t_hit top_cap;
@@ -133,7 +190,11 @@ t_hit cylinder_intersection(t_object *object, t_ray ray)
 		hit.hit_point = cap.hit_point;
 		hit.normal = cap.normal;
 		hit.distance = cap.distance;
+<<<<<<< HEAD
 		hit.uv_map = cap_map_uv(vec3_sub_vec3(cap.hit_point, object->position), object->orth_normal, object->orth_normal2, object->radius);
+=======
+		hit.uv_point = plane_map_uv(vec3_sub_vec3(cap.hit_point, object->position), object->orth_normal, object->orth_normal2);
+>>>>>>> 9443dd4 (not yet)
 		hit.is_valid = TRUE;
 	}
 	return hit;
