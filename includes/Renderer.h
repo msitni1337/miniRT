@@ -1,14 +1,10 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 #include "Object.h"
-<<<<<<< HEAD
-#include "../mlx.h"
-=======
 #include <unistd.h>
 #include <fcntl.h>
 #include <mlx.h>
 #include <stdio.h>
->>>>>>> 9443dd4 (not yet)
 #include "mlx_utils.h"
 #define WIN_TITLE "miniRT"
 

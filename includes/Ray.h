@@ -7,11 +7,8 @@ typedef struct s_hit
 {
 	int is_valid;
 	t_vec3 normal;
-<<<<<<< HEAD
 	t_vec4 uv_map;
-=======
 	t_vec3 uv_point;
->>>>>>> 9443dd4 (not yet)
 	void *object;
 	t_vec3 hit_point;
 	t_vec3 color;

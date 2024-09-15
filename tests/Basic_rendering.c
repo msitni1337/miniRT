@@ -5,9 +5,6 @@
 #include "dynamic_arrays.h"
 #include "input.h"
 
-<<<<<<< HEAD
-void *set_bump_map(void *mlx_ptr, t_object *obj, char *filename)
-=======
 int	ft_index(const char *s, char c)
 {
 	unsigned int	i;
@@ -223,6 +220,7 @@ int	check_line(char *line, t_scene *scene, int *rep)
 		puts(GREEN"should open fct to fill struct of camera"rst);// TODO
 	else
 		return (ERROR);
+	free(line);
 	return (0);
 }
 
@@ -274,7 +272,6 @@ int parsing(t_scene *scene, int ac, char **av)
 	return (ERROR);
 }
 void *set_bump_map(void*mlx_ptr, t_object*obj, char*filename)
->>>>>>> 9443dd4 (not yet)
 {
 	obj->bump_map.handle = mlx_xpm_file_to_image(mlx_ptr, filename, &obj->bump_map.width, &obj->bump_map.height);
 	if (obj->bump_map.handle == NULL)
@@ -322,17 +319,12 @@ int main(int ac, char **av)
 		LOG_ERROR("MLX IMG CAN'T GET IMG DATA BUFFER ADDRESS.");
 		return 1;
 	}
-<<<<<<< HEAD
-=======
 	renderer.scene.camera = new_camera((t_vec3){0, -30, 10}, (t_vec3){0, 1, -.3}, (float)renderer.win_height / renderer.win_width, 120);
->>>>>>> 9443dd4 (not yet)
 	renderer.scene.ambient_color = (t_vec3){1.0f, 1.0f, 1.0f};
 	renderer.scene.ambient_intensity = 0.5f;
 
 	t_darr objects = init_da(sizeof(t_object));
 	t_object obj;
-<<<<<<< HEAD
-
 	/*  Rocket
 	 */
 	renderer.scene.camera = new_camera((t_vec3){0, -30, 5}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 120);
@@ -398,18 +390,14 @@ int main(int ac, char **av)
 	light = new_light((t_vec3){20, 0, 10}, .5f, (t_vec3){255.0f, 0.0f, 0.0f});
 	add_to_arr(&lights, &light);
 	light = new_light((t_vec3){-20, 0, 10}, .7f, (t_vec3){0.0f, 255.0f, 0.0f});
-=======
 	obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, 50, 0}, (t_vec3){10, 100.5f, 0}, (t_vec3){250.0f, 150.0f, 150.0f});
 	add_to_arr(&objects, &obj);
 	obj = new_cone((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, -10, 0}, (t_vec3){4, 5.5f, 0}, (t_vec3){250.0f, 0.0f, 150.0f});
 	add_to_arr(&objects, &obj);
 
-	t_darr lights = init_da(sizeof(t_light));
-	t_light light;
 	light = new_light((t_vec3){20, 0, 10}, .5f, (t_vec3){255.0f, 255.0f, 255.0f});
 	add_to_arr(&lights, &light);
 	light = new_light((t_vec3){-20, 0, 10}, .7f, (t_vec3){255.0f, 255.0f, 255.0f});
->>>>>>> 9443dd4 (not yet)
 	add_to_arr(&lights, &light);
 
 	renderer.scene.objects = objects.data;
@@ -418,8 +406,6 @@ int main(int ac, char **av)
 	renderer.scene.lights = lights.data;
 	renderer.scene.lights_count = lights.count;
 
-<<<<<<< HEAD
-=======
 	for (size_t i = 0; i < renderer.scene.objects_count; i++)
 	{
 		renderer.scene.objects[i].reflection = 0;
@@ -428,16 +414,12 @@ int main(int ac, char **av)
 	renderer.scene.objects[0].reflection = .7;
 	renderer.scene.objects[0].checkerboard = 1;
 
->>>>>>> 9443dd4 (not yet)
 	renderer.tab_mode = FALSE;
 	renderer.redraw = TRUE;
 	renderer.selected_obj = NULL;
 
-<<<<<<< HEAD
 	// set_bump_map(renderer.mlx_context, &renderer.scene.objects[0], "");
-=======
 	set_bump_map(renderer.mlx_context, &renderer.scene.objects[0], "");
->>>>>>> 9443dd4 (not yet)
 
 	mlx_hook(renderer.window, ON_KEYDOWN, 1L << 0, key_hook_down, &renderer);
 	mlx_hook(renderer.window, ON_KEYUP, 1L << 1, key_hook_up, &renderer);
