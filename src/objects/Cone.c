@@ -12,19 +12,6 @@ void cone_recalculate(t_object *obj)
 	obj->cone_tip = vec3_add_vec3(obj->position, vec3_scale(obj->normal, obj->height));
 }
 
-<<<<<<< HEAD
-t_vec4 cone_map_uv(t_hit hit, t_object *obj)
-{
-	t_vec4 map;
-	t_vec3 point_vector;
-
-	point_vector = vec3_sub_vec3(hit.hit_point, obj->position);
-	map.z = obj->radius * atan2f(vec3_dot(obj->orth_normal, point_vector), vec3_dot(obj->orth_normal2, point_vector));
-	map.x = map.z / (obj->radius * PI);
-
-	map.w = vec3_dot(obj->normal, point_vector);
-	map.y = map.w / obj->height;
-=======
 t_vec3 cone_map_uv(t_hit hit, t_object *obj)
 {
 	t_vec3 map;
@@ -35,7 +22,6 @@ t_vec3 cone_map_uv(t_hit hit, t_object *obj)
 	point_vector = vec3_add_vec3(obj->position, vec3_scale(obj->normal, map.y));
 	point_vector = vec3_sub_vec3(hit.hit_point, point_vector);
 	map.x = obj->radius * atan2f(hit.hit_point.y - obj->position.y, hit.hit_point.x - obj->position.x);
->>>>>>> 9443dd4 (not yet)
 	return map;
 }
 
@@ -116,11 +102,7 @@ t_hit cone_intersection(t_object *object, t_ray ray)
 	}
 
 	if (hit.is_valid)
-<<<<<<< HEAD
-		hit.uv_map = cone_map_uv(hit, object);
-=======
 		hit.uv_point = cone_map_uv(hit, object);
->>>>>>> 9443dd4 (not yet)
 
 	t_hit cap;
 	cap = cap_intersection(object->anti_normal, object->position, object->radius, ray);
@@ -130,11 +112,7 @@ t_hit cone_intersection(t_object *object, t_ray ray)
 		hit.hit_point = cap.hit_point;
 		hit.normal = object->anti_normal;
 		hit.distance = cap.distance;
-<<<<<<< HEAD
-		hit.uv_map = cap_map_uv(vec3_sub_vec3(cap.hit_point, object->position), object->orth_normal, object->orth_normal2, object->radius);
-=======
 		hit.uv_point = plane_map_uv(vec3_sub_vec3(cap.hit_point, object->position), object->orth_normal, object->orth_normal2);
->>>>>>> 9443dd4 (not yet)
 		hit.is_valid = TRUE;
 	}
 	return hit;
@@ -144,7 +122,6 @@ t_object new_cone(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_vec3 c
 {
 	t_object cone;
 
-	cone = (t_object){0};
 	cone.type = OBJ_CONE;
 	cone.intersection = &cone_intersection;
 	cone.recalculate = &cone_recalculate;

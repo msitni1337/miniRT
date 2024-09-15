@@ -53,12 +53,12 @@ typedef struct s_light
 typedef struct s_scene
 {
 	t_camera camera;
-	t_object *objects;
 	size_t objects_count;
+	t_object *objects;
 	size_t lights_count;
 	t_light *lights;
 	t_vec3 ambient_color;
-	float ambient_intensity;
+	float ambient_intemsity;
 } t_scene;
 
 
@@ -76,7 +76,6 @@ t_mat4x4 get_z_rotation_matrix(float angle);
 t_object *get_next_object_by_type(t_scene *scene, size_t *i, t_object_type type);
 
 t_hit cap_intersection(t_vec3 cap_normal, t_vec3 cap_center, float radius, t_ray ray);
-t_vec4 cap_map_uv(t_vec3 vec, t_vec3 u, t_vec3 v, float radius);
 t_vec3 plane_map_uv(t_vec3 vec, t_vec3 u, t_vec3 v);
 
 // void set_object_pos(t_object *object, t_vec3 pos);

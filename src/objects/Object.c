@@ -87,35 +87,3 @@ t_mat4x4 get_z_rotation_matrix(float angle)
     *mat_at(&z_rot, 1, 1) = cos;
     return z_rot;
 }
-
-t_hit cap_intersection(t_vec3 cap_normal, t_vec3 cap_center, float radius, t_ray ray)
-{
-	float dot_na = vec3_dot(cap_normal, ray.origin);
-	float dot_nd = vec3_dot(cap_normal, ray.dir);
-	float dot_np = vec3_dot(cap_normal, cap_center);
-
-	t_hit hit;
-	hit.is_valid = FALSE;
-	if (fabs(dot_nd) > ZERO)
-	{
-		float t = (dot_np - dot_na) / dot_nd;
-		if (t <= CAM_CLIP)
-			return hit;
-		hit.hit_point = vec3_scale(ray.dir, t);
-		hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
-		hit.distance = vec3_magnitude(vec3_sub_vec3(hit.hit_point, ray.origin));
-		if (vec3_magnitude(vec3_sub_vec3(hit.hit_point, cap_center)) <= radius)
-			hit.is_valid = TRUE;
-	}
-	return hit;
-}
-
-t_vec4 cap_map_uv(t_vec3 vec, t_vec3 u, t_vec3 v, float radius)
-{
-    float u_dot;
-    float v_dot;
-
-    u_dot = vec3_dot(vec, u);
-    v_dot = vec3_dot(vec, v);
-	return (t_vec4){u_dot / radius, v_dot / radius, u_dot, v_dot};
-}

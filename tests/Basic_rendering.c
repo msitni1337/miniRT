@@ -220,7 +220,6 @@ int	check_line(char *line, t_scene *scene, int *rep)
 		puts(GREEN"should open fct to fill struct of camera"rst);// TODO
 	else
 		return (ERROR);
-	free(line);
 	return (0);
 }
 
@@ -321,80 +320,17 @@ int main(int ac, char **av)
 	}
 	renderer.scene.camera = new_camera((t_vec3){0, -30, 10}, (t_vec3){0, 1, -.3}, (float)renderer.win_height / renderer.win_width, 120);
 	renderer.scene.ambient_color = (t_vec3){1.0f, 1.0f, 1.0f};
-	renderer.scene.ambient_intensity = 0.5f;
+	renderer.scene.ambient_intemsity = 0.5f;
 
 	t_darr objects = init_da(sizeof(t_object));
 	t_object obj;
-	/*  Rocket
-	 */
-	renderer.scene.camera = new_camera((t_vec3){0, -30, 5}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 120);
-	obj = new_plane((t_vec3){0, 0, 0}, (t_vec3){0, 0, 1}, (t_vec3){100.0f, 50.0f, 255.0f});
-	add_to_arr(&objects, &obj);
-	obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, 0, 5}, (t_vec3){7, 10.5f, 0}, (t_vec3){250.0f, 150.0f, 150.0f});
-	obj.checkerboard = 1.0f;
-	add_to_arr(&objects, &obj);
-	obj = new_cone((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, 0, 8.5}, (t_vec3){4, 10.5f, 0}, (t_vec3){250.0f, 0.0f, 150.0f});
-	obj.checkerboard = 1.0f;
-	add_to_arr(&objects, &obj);
-
-	/*	Pool Table
-		renderer.scene.camera = new_camera((t_vec3){0, -30, 20}, (t_vec3){0, 1, -.7}, (float)renderer.win_height / renderer.win_width, 120);
-		obj = new_plane((t_vec3){0, 0, 0}, (t_vec3){0, 0, 1}, (t_vec3){255.0f, 255.0f, 255.0f});
-		obj.checkerboard = 1;
-		add_to_arr(&objects, &obj);
-		obj = new_rect((t_vec3){0, 0, 5}, (t_vec3){0, 0, 1}, (t_vec3){0.0f, 255.0f, 0.0f}, (t_vec3){30, 10, 0});
-		obj.reflection = 0.6f;
-		add_to_arr(&objects, &obj);
-
-		obj = new_rect((t_vec3){0, 5, 5.25}, (t_vec3){0, -1, 0}, (t_vec3){0.0f, 255.0f, 0.0f}, (t_vec3){30, .5, 0});
-		add_to_arr(&objects, &obj);
-
-		obj = new_rect((t_vec3){0, -5, 5.25}, (t_vec3){0, -1, 0}, (t_vec3){0.0f, 255.0f, 0.0f}, (t_vec3){30, .5, 0});
-		add_to_arr(&objects, &obj);
-
-		obj = new_rect((t_vec3){15, 0, 5.25}, (t_vec3){-1, 0, 0}, (t_vec3){0.0f, 255.0f, 0.0f}, (t_vec3){10, .5, 0});
-		add_to_arr(&objects, &obj);
-
-		obj = new_rect((t_vec3){-15, 0, 5.25}, (t_vec3){1, 0, 0}, (t_vec3){0.0f, 255.0f, 0.0f}, (t_vec3){10, .5, 0});
-		add_to_arr(&objects, &obj);
-
-		obj = new_rect((t_vec3){0, 0, 5}, (t_vec3){0, 0, 1}, (t_vec3){0.0f, 255.0f, 0.0f}, (t_vec3){30, 10, 0});
-		add_to_arr(&objects, &obj);
-
-		obj = new_rect((t_vec3){0, 0, 5}, (t_vec3){0, 0, 1}, (t_vec3){0.0f, 255.0f, 0.0f}, (t_vec3){30, 10, 0});
-		add_to_arr(&objects, &obj);
-		obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){14.7, -4.7, 2.5}, (t_vec3){5, 0.5f, 0}, (t_vec3){250.0f, 150.0f, 150.0f});
-		add_to_arr(&objects, &obj);
-		obj.position.x = -obj.position.x;
-		add_to_arr(&objects, &obj);
-		obj.position.y = -obj.position.y;
-		add_to_arr(&objects, &obj);
-		obj.position.x = -obj.position.x;
-		add_to_arr(&objects, &obj);
-		obj = new_sphere((t_vec3){0, 0, 5.3}, .3, (t_vec3){255.0f, 0.0f, 255.0f});
-		add_to_arr(&objects, &obj);
-		obj.position.x = 2;
-		obj.position.y = 5;
-		add_to_arr(&objects, &obj);
-		obj.position.y = -3;
-		obj.color = (t_vec3){70.0f, 180.0f, 0.0f};
-		add_to_arr(&objects, &obj);
-		obj = new_sphere((t_vec3){10, 4.5, 5.3}, .3, (t_vec3){255.0f, 0.0f, 255.0f});
-		add_to_arr(&objects, &obj);
-		obj = new_sphere((t_vec3){-13, -1.5, 5.3}, .3, (t_vec3){10.0f, 10.0f, 10.0f});
-		add_to_arr(&objects, &obj);
-	*/
-
-	t_darr lights = init_da(sizeof(t_light));
-	t_light light;
-	light = new_light((t_vec3){20, 0, 10}, .5f, (t_vec3){255.0f, 0.0f, 0.0f});
-	add_to_arr(&lights, &light);
-	light = new_light((t_vec3){-20, 0, 10}, .7f, (t_vec3){0.0f, 255.0f, 0.0f});
 	obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, 50, 0}, (t_vec3){10, 100.5f, 0}, (t_vec3){250.0f, 150.0f, 150.0f});
 	add_to_arr(&objects, &obj);
 	obj = new_cone((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, -10, 0}, (t_vec3){4, 5.5f, 0}, (t_vec3){250.0f, 0.0f, 150.0f});
 	add_to_arr(&objects, &obj);
 
+	t_darr lights = init_da(sizeof(t_light));
+	t_light light;
 	light = new_light((t_vec3){20, 0, 10}, .5f, (t_vec3){255.0f, 255.0f, 255.0f});
 	add_to_arr(&lights, &light);
 	light = new_light((t_vec3){-20, 0, 10}, .7f, (t_vec3){255.0f, 255.0f, 255.0f});
@@ -418,7 +354,6 @@ int main(int ac, char **av)
 	renderer.redraw = TRUE;
 	renderer.selected_obj = NULL;
 
-	// set_bump_map(renderer.mlx_context, &renderer.scene.objects[0], "");
 	set_bump_map(renderer.mlx_context, &renderer.scene.objects[0], "");
 
 	mlx_hook(renderer.window, ON_KEYDOWN, 1L << 0, key_hook_down, &renderer);

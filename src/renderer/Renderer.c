@@ -11,11 +11,7 @@ t_hit get_ray_hit(t_scene *scene, t_ray ray)
 	hit.is_valid = FALSE;
 	while (i < scene->objects_count)
 	{
-<<<<<<< HEAD
-		object = scene->objects + i;
-=======
 		object = scene->objects + i; 
->>>>>>> 9443dd4 (not yet)
 		tmp = object->intersection(object, ray);
 		if (tmp.is_valid && (!hit.is_valid || tmp.distance < hit.distance))
 			hit = tmp;
@@ -99,13 +95,8 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			int x;
 			int y;
 
-<<<<<<< HEAD
-			x = ceil(hit_point.uv_map.z);
-			y = ceil(hit_point.uv_map.w);
-=======
 			x = ceil(hit_point.uv_point.x);
 			y = ceil(hit_point.uv_point.y);
->>>>>>> 9443dd4 (not yet)
 			if ((y + x) % 2 == 0)
 				hit_point_color = (t_vec3){0};
 			else
@@ -133,15 +124,8 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			{
 				t_object *ref_obj = ref_hit.object;
 				t_vec3 shaded_ref_color = get_light_color(scene, ref_hit);
-<<<<<<< HEAD
-				t_vec3 ambient = vec3_mul(vec3_scale(scene->ambient_color, scene->ambient_intensity), ref_obj->color);
 				hit_point_color = vec3_scale(hit_point_color, 1.0f - obj->reflection);
 				hit_point_color = vec3_add_vec3(hit_point_color, vec3_scale(vec3_mul(ref_obj->color, shaded_ref_color), obj->reflection));
-				hit_point_color = vec3_add_vec3(ambient, hit_point_color);
-=======
-				hit_point_color = vec3_scale(hit_point_color, 1.0f - obj->reflection);
-				hit_point_color = vec3_add_vec3(hit_point_color, vec3_scale(vec3_mul(ref_obj->color, shaded_ref_color), obj->reflection));
->>>>>>> 9443dd4 (not yet)
 			}
 			/*
 			else
@@ -151,7 +135,7 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			*/
 		}
 		color_vec = vec3_mul(light_color, hit_point_color);
-		t_vec3 color_vec1 = vec3_mul(vec3_scale(scene->ambient_color, scene->ambient_intensity), hit_point_color);
+		t_vec3 color_vec1 = vec3_mul(vec3_scale(scene->ambient_color, scene->ambient_intemsity), hit_point_color);
 		color_vec = vec3_add_vec3(color_vec, color_vec1);
 		color = get_color_vec3(vec3_cap(color_vec, 0.0f, 1.0f));
 	}
