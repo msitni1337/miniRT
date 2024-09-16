@@ -21,7 +21,7 @@ t_vec4 cone_map_uv(t_hit hit, t_object *obj)
 	map.z = obj->radius * atan2f(vec3_dot(obj->orth_normal, point_vector), vec3_dot(obj->orth_normal2, point_vector));
 	map.x = map.z / (obj->radius * PI);
 
-	map.w = vec3_dot(obj->normal, point_vector);
+	map.w = vec3_dot(obj->anti_normal, point_vector);
 	map.y = map.w / obj->height;
 	return map;
 }
