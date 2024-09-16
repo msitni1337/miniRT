@@ -29,6 +29,7 @@ typedef struct s_object
 	t_vec3 top_cap_center;
 	t_vec3 bottom_cap_center;
 
+	t_img texture;
 	t_img bump_map;
 	t_vec3 cone_tip;
 
@@ -41,6 +42,7 @@ typedef struct s_object
 	float radius;
 	float intensity;
 	int checkerboard;
+	int cast_shadow;
 } t_object;
 
 typedef struct s_light

@@ -21,8 +21,8 @@ typedef struct s_renderer
 } t_renderer;
 
 t_hit get_ray_hit(t_scene *scene, t_ray ray);
+t_vec3 get_vec3_color(unsigned int color);
 
-void set_img_pixel_at(t_img *img, int x, int y, int color);
 int render(t_renderer *renderer);
 
 // Debug

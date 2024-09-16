@@ -5,13 +5,13 @@
 #include "dynamic_arrays.h"
 #include "input.h"
 
-void *set_bump_map(void *mlx_ptr, t_object *obj, char *filename)
+void *set_texture(void *mlx_ptr, t_img *texture, char *filename)
 {
-	obj->bump_map.handle = mlx_xpm_file_to_image(mlx_ptr, filename, obj->bump_map.width, obj->bump_map.height);
-	if (obj->bump_map.handle == NULL)
+	texture->handle = mlx_xpm_file_to_image(mlx_ptr, filename, &texture->width, &texture->height);
+	if (texture->handle == NULL)
 		return NULL;
-	obj->bump_map.data = mlx_get_data_addr(obj->bump_map.handle, &obj->bump_map.bpp, &obj->bump_map.size_line, &obj->bump_map.endian);
-	return obj->bump_map.handle;
+	texture->data = mlx_get_data_addr(texture->handle, &texture->bpp, &texture->size_line, &texture->endian);
+	return texture->data;
 }
 
 int main(int c, char **v)
@@ -56,8 +56,18 @@ int main(int c, char **v)
 	t_darr objects = init_da(sizeof(t_object));
 	t_object obj;
 
-	/*  Rocket
+	/*  Planet
 	 */
+	renderer.scene.camera = new_camera((t_vec3){15, 15, 0}, (t_vec3){-1, -1, 0}, (float)renderer.win_height / renderer.win_width, 120);
+	obj = new_sphere((t_vec3){0, 0, 0}, 3, (t_vec3){255.0f, 255.0f, 255.0f});
+	if (set_texture(renderer.mlx_context, &obj.texture, "planet.xpm") == NULL)
+	{
+		LOG_ERROR("MLX IMG CAN'T SET OBJ TEXTURE.");
+		return 1;
+	}
+	add_to_arr(&objects, &obj);
+
+	/*  Rocket
 	renderer.scene.camera = new_camera((t_vec3){0, -30, 5}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 120);
 	obj = new_plane((t_vec3){0, 0, 0}, (t_vec3){0, 0, 1}, (t_vec3){100.0f, 50.0f, 255.0f});
 	add_to_arr(&objects, &obj);
@@ -67,6 +77,7 @@ int main(int c, char **v)
 	obj = new_cone((t_vec3){0.0f, 0, 1.0f}, (t_vec3){0, 0, 8.5}, (t_vec3){4, 10.5f, 0}, (t_vec3){250.0f, 0.0f, 150.0f});
 	obj.checkerboard = 1.0f;
 	add_to_arr(&objects, &obj);
+	 */
 
 	/*	Pool Table
 		renderer.scene.camera = new_camera((t_vec3){0, -30, 20}, (t_vec3){0, 1, -.7}, (float)renderer.win_height / renderer.win_width, 120);

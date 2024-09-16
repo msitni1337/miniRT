@@ -20,6 +20,29 @@ t_hit get_ray_hit(t_scene *scene, t_ray ray)
 	return hit;
 }
 
+t_hit get_lighray_hit(t_scene *scene, t_ray ray)
+{
+	t_object *object;
+	size_t i;
+	t_hit hit;
+	t_hit tmp;
+
+	i = 0;
+	hit.is_valid = FALSE;
+	while (i < scene->objects_count)
+	{
+		object = scene->objects + i;
+		if (!object->cast_shadow)
+		{
+			tmp = object->intersection(object, ray);
+			if (tmp.is_valid && (!hit.is_valid || tmp.distance < hit.distance))
+				hit = tmp;
+		}
+		i++;
+	}
+	return hit;
+}
+
 unsigned int get_color_vec3(t_vec3 vec)
 {
 	unsigned char r;
@@ -30,6 +53,18 @@ unsigned int get_color_vec3(t_vec3 vec)
 	g = vec.y * 255.0f;
 	b = vec.z * 255.0f;
 	return (0x00 << 24 | r << 16 | g << 8 | b);
+}
+
+t_vec3 get_vec3_color(unsigned int color)
+{
+	unsigned char r;
+	unsigned char g;
+	unsigned char b;
+
+	r = color >> 16;
+	g = color >> 8;
+	b = color;
+	return (t_vec3){r, g, b};
 }
 
 t_vec3 get_light_color(t_scene *scene, t_hit hit_point)
@@ -64,7 +99,7 @@ t_vec3 get_light_color(t_scene *scene, t_hit hit_point)
 		light_ray.target = hit_point.hit_point;
 		light_ray.dir = vec3_normalize(vec3_sub_vec3(light_ray.target, light_ray.origin));
 
-		t_hit shadow_hit = get_ray_hit(scene, light_ray);
+		t_hit shadow_hit = get_lighray_hit(scene, light_ray);
 		if (!shadow_hit.is_valid || shadow_hit.object == hit_point.object)
 		{
 			color = vec3_add_vec3(color, vec3_scale(light->color, intensity));
@@ -101,6 +136,17 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 				hit_point_color = (t_vec3){0};
 			else
 				hit_point_color = (t_vec3){1, 1, 1};
+		}
+		else if (obj->texture.handle != NULL)
+		{
+			int x;
+			int y;
+
+			x = (hit_point.uv_map.x / 2 + 0.5) * obj->texture.width;
+			y = (hit_point.uv_map.y / 2 + 0.5) * obj->texture.height;
+			assert(x < obj->texture.width && y < obj->texture.height);
+			unsigned int tex_color = get_img_pixel_at(&obj->texture, x, y);
+			hit_point_color = vec3_scale(get_vec3_color(tex_color), 1 / 255.0f);
 		}
 
 		/* Reflection Calculations */

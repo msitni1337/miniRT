@@ -11,4 +11,8 @@ typedef struct s_img
 	int endian;
 } t_img;
 
+void set_img_pixel_at(t_img *img, int x, int y, int color);
+unsigned int get_img_pixel_at(t_img*img, int x, int y);
+
+
 #endif // MLX_UTILS_H
