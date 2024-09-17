@@ -8,7 +8,7 @@
 #define TRUE 1
 #define FALSE 0
 #define ZERO 1e-10
-#define PI 3.1415926f
+#define PI 3.14159265358979323846264
 #define CAM_CLIP 0.1f
 #define INF 1e8f
 #define FLT_MAX 3.402823466e+38F
@@ -45,6 +45,7 @@ t_vec3 vec4_to_vec3(t_vec4 a);
 void print_vec3(t_vec3 u);
 void print_vec4(t_vec4 u);
 
+int int_cap(int val, int min, int max);
 float float_cap(float val, float min, float max);
 t_vec3 vec3_cap(t_vec3 a, float min, float max);
 t_vec3 vec3_mul(t_vec3 a, t_vec3 b);

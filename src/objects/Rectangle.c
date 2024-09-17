@@ -40,10 +40,15 @@ t_hit rect_intersection(t_object *object, t_ray ray)
             float x_dis = vec3_dot(object->orth_normal, point_vec);
             float y_dis = vec3_dot(object->orth_normal2, point_vec);
 
-            if (fabs(x_dis) <= object->width / 2 && fabs(y_dis) <= object->height / 2)
+            if (fabs(x_dis) < object->width / 2 && fabs(y_dis) < object->height / 2)
             {
                 hit.is_valid = TRUE;
-                hit.uv_map = (t_vec4){x_dis / (object->width / 2), y_dis / (object->height / 2), x_dis, y_dis};
+                hit.uv_map.x = x_dis / (object->width / 2);
+                hit.uv_map.x = hit.uv_map.x * 0.5f + 0.5f;
+                hit.uv_map.y = y_dis / (object->height / 2);
+                hit.uv_map.y = hit.uv_map.y * 0.5f + 0.5f;
+                hit.uv_map.z = x_dis;
+                hit.uv_map.w = y_dis;
             }
         }
     }
@@ -56,7 +61,7 @@ void rect_recalculate(t_object *obj)
 
     obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 0.0f, 1.0f}));
     if (vec3_magnitude(obj->orth_normal) <= ZERO)
-        obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 1.0f, 0.0f}));
+        obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){1.0f, 0.0f, 0.0f}));
 
     obj->orth_normal2 = vec3_cross(obj->normal, obj->orth_normal);
 }

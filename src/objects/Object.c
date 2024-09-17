@@ -47,7 +47,7 @@ t_mat4x4 get_x_rotation_matrix(float angle)
 
     float cos = cosf((angle / 180) * PI);
     float sin = sinf((angle / 180) * PI);
-    
+
     x_rot = mat_id();
     *mat_at(&x_rot, 1, 1) = cos;
     *mat_at(&x_rot, 1, 2) = -sin;
@@ -69,7 +69,7 @@ t_mat4x4 get_y_rotation_matrix(float angle)
     *mat_at(&y_rot, 0, 2) = sin;
     *mat_at(&y_rot, 2, 0) = -sin;
     *mat_at(&y_rot, 2, 2) = cos;
-    
+
     return y_rot;
 }
 
@@ -90,32 +90,33 @@ t_mat4x4 get_z_rotation_matrix(float angle)
 
 t_hit cap_intersection(t_vec3 cap_normal, t_vec3 cap_center, float radius, t_ray ray)
 {
-	float dot_na = vec3_dot(cap_normal, ray.origin);
-	float dot_nd = vec3_dot(cap_normal, ray.dir);
-	float dot_np = vec3_dot(cap_normal, cap_center);
+    float dot_na = vec3_dot(cap_normal, ray.origin);
+    float dot_nd = vec3_dot(cap_normal, ray.dir);
+    float dot_np = vec3_dot(cap_normal, cap_center);
 
-	t_hit hit;
-	hit.is_valid = FALSE;
-	if (fabs(dot_nd) > ZERO)
-	{
-		float t = (dot_np - dot_na) / dot_nd;
-		if (t <= CAM_CLIP)
-			return hit;
-		hit.hit_point = vec3_scale(ray.dir, t);
-		hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
-		hit.distance = vec3_magnitude(vec3_sub_vec3(hit.hit_point, ray.origin));
-		if (vec3_magnitude(vec3_sub_vec3(hit.hit_point, cap_center)) <= radius)
-			hit.is_valid = TRUE;
-	}
-	return hit;
+    t_hit hit;
+    hit.is_valid = FALSE;
+    if (fabs(dot_nd) > ZERO)
+    {
+        float t = (dot_np - dot_na) / dot_nd;
+        if (t <= CAM_CLIP)
+            return hit;
+        hit.hit_point = vec3_scale(ray.dir, t);
+        hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
+        hit.distance = vec3_magnitude(vec3_sub_vec3(hit.hit_point, ray.origin));
+        if (vec3_magnitude(vec3_sub_vec3(hit.hit_point, cap_center)) <= radius)
+            hit.is_valid = TRUE;
+    }
+    return hit;
 }
 
 t_vec4 cap_map_uv(t_vec3 vec, t_vec3 u, t_vec3 v, float radius)
 {
-    float u_dot;
-    float v_dot;
+    t_vec4 uv_map;
 
-    u_dot = vec3_dot(vec, u);
-    v_dot = vec3_dot(vec, v);
-	return (t_vec4){u_dot / radius, v_dot / radius, u_dot, v_dot};
+    uv_map.z = vec3_dot(vec, u);
+    uv_map.w = vec3_dot(vec, v);
+    uv_map.x = (uv_map.z / radius) * 0.5f + 0.5f;
+    uv_map.y = (uv_map.w / radius) * 0.5f + 0.5f;
+    return uv_map;
 }

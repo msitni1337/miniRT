@@ -41,7 +41,12 @@ t_hit plane_intersection(t_object *object, t_ray ray)
             float x_dis = vec3_dot(object->orth_normal, point_vec);
             float y_dis = vec3_dot(object->orth_normal2, point_vec);
 
-            hit.uv_map = (t_vec4){x_dis / INF, y_dis / INF, x_dis, y_dis};
+            hit.uv_map.x = x_dis / INF;
+            hit.uv_map.x = hit.uv_map.x * 0.5f + 0.5f;
+            hit.uv_map.y = y_dis / INF;
+            hit.uv_map.y = hit.uv_map.y * 0.5f + 0.5f;
+            hit.uv_map.z = x_dis;
+            hit.uv_map.w = y_dis;
         }
     }
     return hit;

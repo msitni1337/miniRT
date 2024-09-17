@@ -1,12 +1,14 @@
 #include "Camera.h"
 
-void calculate_camera_uv(t_camera*camera)
+void calculate_camera_uv(t_camera *camera)
 {
 	camera->forward = vec3_normalize(camera->forward);
 	// Constructing uvs vectors
 	camera->U = vec3_cross(camera->forward, (t_vec3){0.0f, 0.0f, 1.0f});
+	if (vec3_magnitude(camera->U) <= ZERO)
+		camera->U = vec3_cross(camera->forward, (t_vec3){0.0f, 1.0f, 0.0f});
 	camera->U = vec3_scale(camera->U, sinf((camera->fov / 180.0f) * (PI / 2.0f)));
-	
+
 	// scaling uvs vectors
 	camera->V = vec3_cross(camera->U, camera->forward);
 	camera->V = vec3_scale(camera->V, camera->aspect_ratio);

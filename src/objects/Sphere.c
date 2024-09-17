@@ -13,8 +13,10 @@ t_vec4 sphere_map_uv(t_hit hit, t_object *obj)
 	point_vector = vec3_sub_vec3(hit.hit_point, obj->position);
 	map.x = atan2f(point_vector.y, point_vector.x) / PI;
 	map.z = map.x * (obj->radius);
+	map.x = map.x * 0.5f + 0.5f;
+	
 	map.w = vec3_dot(point_vector, (t_vec3){0.0f, 0.0f, -1.0f});
-	map.y = map.w / (obj->radius);
+	map.y = (map.w / (obj->radius)) * 0.5f + 0.5f;
 	return map;
 }
 

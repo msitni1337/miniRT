@@ -139,12 +139,16 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 		}
 		else if (obj->texture.handle != NULL)
 		{
+			t_vec3 pixel_coord;
 			int x;
 			int y;
 
-			x = (hit_point.uv_map.x / 2 + 0.5) * obj->texture.width;
-			y = (hit_point.uv_map.y / 2 + 0.5) * obj->texture.height;
-			assert(x < obj->texture.width && y < obj->texture.height);
+			x = hit_point.uv_map.x * obj->texture.width;
+			y = hit_point.uv_map.y * obj->texture.height;
+			assert(x >= 0 && y >= 0);
+			//assert(x < obj->texture.width && y < obj->texture.height);
+			x = int_cap(x, 0, obj->texture.width - 1);
+			y = int_cap(y, 0, obj->texture.height - 1);
 			unsigned int tex_color = get_img_pixel_at(&obj->texture, x, y);
 			hit_point_color = vec3_scale(get_vec3_color(tex_color), 1 / 255.0f);
 		}
