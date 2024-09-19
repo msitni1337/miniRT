@@ -43,7 +43,7 @@ t_hit rect_intersection(t_object *object, t_ray ray)
             if (fabs(x_dis) < object->width / 2 && fabs(y_dis) < object->height / 2)
             {
                 hit.is_valid = TRUE;
-                hit.uv_map.x = x_dis / (object->width / 2);
+                hit.uv_map.x = -x_dis / (object->width / 2);
                 hit.uv_map.x = hit.uv_map.x * 0.5f + 0.5f;
                 hit.uv_map.y = y_dis / (object->height / 2);
                 hit.uv_map.y = hit.uv_map.y * 0.5f + 0.5f;

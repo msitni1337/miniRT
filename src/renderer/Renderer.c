@@ -67,7 +67,7 @@ t_vec3 get_vec3_color(unsigned int color)
 	return (t_vec3){r, g, b};
 }
 
-t_vec3 get_light_color(t_scene *scene, t_hit hit_point)
+t_vec3 get_light_color(t_scene *scene, t_hit hit_point, t_ray ray)
 {
 	t_vec3 color = {0};
 	t_light *light;
@@ -82,7 +82,32 @@ t_vec3 get_light_color(t_scene *scene, t_hit hit_point)
 	while (i < scene->lights_count)
 	{
 		light = scene->lights + i;
-		t_vec3 hit_normal = hit_point.normal; //((t_object *)hit_point.object)->point_normal(hit_point);
+		t_vec3 hit_normal = hit_point.normal;
+		t_object *obj = hit_point.object;
+		if (obj->bump_map.data != NULL)
+		{
+			t_vec3 u_vec = vec3_cross(hit_point.normal, ray.dir);
+			if (vec3_magnitude(u_vec) > ZERO)
+			{
+				t_vec3 v_vec = vec3_cross(hit_point.normal, u_vec);
+				t_vec3 pixel_coord;
+				int x;
+				int y;
+
+				x = hit_point.uv_map.x * obj->bump_map.width;
+				y = hit_point.uv_map.y * obj->bump_map.height;
+				assert(x >= 0 && y >= 0);
+				// assert(x < obj->texture.width && y < obj->texture.height);
+				x = int_cap(x, 0, obj->bump_map.width - 1);
+				y = int_cap(y, 0, obj->bump_map.height - 1);
+				t_vec3 tex_color = vec3_scale(get_vec3_color(get_img_pixel_at(&obj->bump_map, x, y)), 1 / 255.0f);
+
+				hit_normal = vec3_add_vec3(vec3_scale(u_vec, (tex_color.x * 2 - 1)), vec3_scale(v_vec, (tex_color.y * 2 - 1)));
+				hit_normal = vec3_add_vec3(hit_normal, vec3_scale(hit_point.normal, tex_color.z));
+				hit_normal = vec3_add_vec3(hit_normal, hit_point.hit_point);
+				hit_normal = vec3_sub_vec3(hit_normal, hit_point.hit_point);
+			}
+		}
 
 		t_vec3 light_normal = vec3_sub_vec3(light->position, hit_point.hit_point);
 		light_normal = vec3_normalize(light_normal);
@@ -120,7 +145,7 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 	if (hit_point.is_valid)
 	{
 		t_object *obj = hit_point.object;
-		light_color = get_light_color(scene, hit_point);
+		light_color = get_light_color(scene, hit_point, ray);
 		t_vec3 color_vec;
 		t_vec3 hit_point_color = obj->color;
 
@@ -137,7 +162,7 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			else
 				hit_point_color = (t_vec3){1, 1, 1};
 		}
-		else if (obj->texture.handle != NULL)
+		else if (obj->texture.data != NULL)
 		{
 			t_vec3 pixel_coord;
 			int x;
@@ -146,7 +171,7 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			x = hit_point.uv_map.x * obj->texture.width;
 			y = hit_point.uv_map.y * obj->texture.height;
 			assert(x >= 0 && y >= 0);
-			//assert(x < obj->texture.width && y < obj->texture.height);
+			// assert(x < obj->texture.width && y < obj->texture.height);
 			x = int_cap(x, 0, obj->texture.width - 1);
 			y = int_cap(y, 0, obj->texture.height - 1);
 			unsigned int tex_color = get_img_pixel_at(&obj->texture, x, y);
@@ -173,7 +198,7 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			if (ref_hit.is_valid && ref_hit.object != hit_point.object)
 			{
 				t_object *ref_obj = ref_hit.object;
-				t_vec3 shaded_ref_color = get_light_color(scene, ref_hit);
+				t_vec3 shaded_ref_color = get_light_color(scene, ref_hit, ray);
 				t_vec3 ambient = vec3_mul(vec3_scale(scene->ambient_color, scene->ambient_intensity), ref_obj->color);
 				hit_point_color = vec3_scale(hit_point_color, 1.0f - obj->reflection);
 				hit_point_color = vec3_add_vec3(hit_point_color, vec3_scale(vec3_mul(ref_obj->color, shaded_ref_color), obj->reflection));

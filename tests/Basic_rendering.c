@@ -55,28 +55,57 @@ int main(int c, char **v)
 
 	t_darr objects = init_da(sizeof(t_object));
 	t_object obj;
+	t_darr lights = init_da(sizeof(t_light));
+	t_light light;
 
 	/*  Planet
+	renderer.scene.camera = new_camera((t_vec3){0, 25, 0}, (t_vec3){0, -1, 0}, (float)renderer.win_height / renderer.win_width, 180);
+	obj = new_sphere((t_vec3){0, 0, 0}, 7, (t_vec3){255.0f, 255.0f, 255.0f});
+	if (set_texture(renderer.mlx_context, &obj.texture, "planet_hd.xpm") == NULL)
+	{
+		LOG_ERROR("MLX IMG CAN'T SET OBJ TEXTURE.");
+		return 1;
+	}
+	if (set_texture(renderer.mlx_context, &obj.bump_map, "planet_bump_hd.xpm") == NULL)
+	{
+		LOG_ERROR("MLX IMG CAN'T SET OBJ TEXTURE.");
+		return 1;
+	}
+	add_to_arr(&objects, &obj);
 	 */
-	renderer.scene.camera = new_camera((t_vec3){0, -25, 0}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 120);
-	obj = new_sphere((t_vec3){10, 0, 0}, 7, (t_vec3){255.0f, 255.0f, 255.0f});
+
+	/*  Scene 01
+	 */
+	renderer.scene.camera = new_camera((t_vec3){0, -40, 5}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 180);
+	obj = new_plane((t_vec3){0, 0, -5}, (t_vec3){0, 0, 1}, (t_vec3){100.0f, 50.0f, 255.0f});
+	obj.checkerboard = TRUE;
+	add_to_arr(&objects, &obj);
+
+	obj = new_sphere((t_vec3){0, 0, 3}, 5, (t_vec3){255.0f, 255.0f, 255.0f});
 	if (set_texture(renderer.mlx_context, &obj.texture, "planet.xpm") == NULL)
+	{
+		LOG_ERROR("MLX IMG CAN'T SET OBJ TEXTURE.");
+		return 1;
+	}
+	if (set_texture(renderer.mlx_context, &obj.bump_map, "planet_normal.xpm") == NULL)
 	{
 		LOG_ERROR("MLX IMG CAN'T SET OBJ TEXTURE.");
 		return 1;
 	}
 	add_to_arr(&objects, &obj);
 
-	/*  Rocket
-	renderer.scene.camera = new_camera((t_vec3){0, -30, 5}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 120);
-	 */
-	obj = new_plane((t_vec3){0, 0, -10}, (t_vec3){0, 0, 1}, (t_vec3){100.0f, 50.0f, 255.0f});
-	obj.checkerboard = TRUE;
+	obj = new_cone((t_vec3){-0.5f, 0, 1.0f}, (t_vec3){-10, 0, 8}, (t_vec3){4, 2, 0}, (t_vec3){120.0f, 150.0f, 50.0f});
+	light = new_light(vec3_add_vec3((t_vec3){-10, 0, 8}, vec3_scale((t_vec3){-0.5f, 0, 1.0f}, 0.9)), 1.0f, (t_vec3){255.0f, 0.0f, 0.0f});
 	add_to_arr(&objects, &obj);
-	obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){-10, 0, 0}, (t_vec3){7, 10.5f, 0}, (t_vec3){120.0f, 150.0f, 50.0f});
+	add_to_arr(&lights, &light);
+	obj = new_cone((t_vec3){0.5f, 0, 1.0f}, (t_vec3){10, 0, 8}, (t_vec3){4, 2, 0}, (t_vec3){120.0f, 150.0f, 50.0f});
+	light = new_light(vec3_add_vec3((t_vec3){10, 0, 8}, vec3_scale((t_vec3){0.5f, 0, 1.0f}, 0.9)), 1.0f, (t_vec3){0.0f, 0.0f, 255.0f});
 	add_to_arr(&objects, &obj);
-	obj = new_cone((t_vec3){0.0f, 0, 1.0f}, (t_vec3){-10, 0, 3.5}, (t_vec3){4, 10.5f, 0}, (t_vec3){120.0f, 150.0f, 50.0f});
+	add_to_arr(&lights, &light);
+	obj = new_cone((t_vec3){0, 0, 1.0f}, (t_vec3){0, 0, 16}, (t_vec3){4, 4, 0}, (t_vec3){255.0f, 150.0f, 50.0f});
+	light = new_light((t_vec3){0, 0, 12}, 1.0f, (t_vec3){0.0f, 255.0f, 0.0f});
 	add_to_arr(&objects, &obj);
+	add_to_arr(&lights, &light);
 
 	/*	Pool Table
 		renderer.scene.camera = new_camera((t_vec3){0, -30, 20}, (t_vec3){0, 1, -.7}, (float)renderer.win_height / renderer.win_width, 120);
@@ -126,12 +155,8 @@ int main(int c, char **v)
 		add_to_arr(&objects, &obj);
 	*/
 
-	t_darr lights = init_da(sizeof(t_light));
-	t_light light;
-	light = new_light((t_vec3){80, 0, 50}, .5f, (t_vec3){255.0f, 0.0f, 0.0f});
-	add_to_arr(&lights, &light);
-	light = new_light((t_vec3){-80, 0, 50}, .7f, (t_vec3){0.0f, 255.0f, 0.0f});
-	add_to_arr(&lights, &light);
+	// light = new_light((t_vec3){-80, 0, 50}, .7f, (t_vec3){0.0f, 255.0f, 0.0f});
+	// add_to_arr(&lights, &light);
 
 	renderer.scene.objects = objects.data;
 	renderer.scene.objects_count = objects.count;
