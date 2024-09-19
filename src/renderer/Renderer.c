@@ -198,18 +198,43 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			if (ref_hit.is_valid && ref_hit.object != hit_point.object)
 			{
 				t_object *ref_obj = ref_hit.object;
-				t_vec3 shaded_ref_color = get_light_color(scene, ref_hit, ray);
-				t_vec3 ambient = vec3_mul(vec3_scale(scene->ambient_color, scene->ambient_intensity), ref_obj->color);
+				t_vec3 ref_color;
+
+				ref_color = ref_obj->color;
+				if (ref_obj->checkerboard)
+				{
+					int x;
+					int y;
+
+					x = ceil(ref_hit.uv_map.z);
+					y = ceil(ref_hit.uv_map.w);
+					if ((y + x) % 2 == 0)
+						ref_color = (t_vec3){0};
+					else
+						ref_color = (t_vec3){1, 1, 1};
+				}
+				else if (ref_obj->texture.data != NULL)
+				{
+					t_vec3 pixel_coord;
+					int x;
+					int y;
+
+					x = ref_hit.uv_map.x * ref_obj->texture.width;
+					y = ref_hit.uv_map.y * ref_obj->texture.height;
+					assert(x >= 0 && y >= 0);
+					// assert(x < ref_obj->texture.width && y < ref_obj->texture.height);
+					x = int_cap(x, 0, ref_obj->texture.width - 1);
+					y = int_cap(y, 0, ref_obj->texture.height - 1);
+					unsigned int tex_color = get_img_pixel_at(&ref_obj->texture, x, y);
+					ref_color = vec3_scale(get_vec3_color(tex_color), 1 / 255.0f);
+				}
+
+				t_vec3 ref_light = get_light_color(scene, ref_hit, ray);
+				t_vec3 ambient = vec3_mul(vec3_scale(scene->ambient_color, scene->ambient_intensity), ref_color);
 				hit_point_color = vec3_scale(hit_point_color, 1.0f - obj->reflection);
-				hit_point_color = vec3_add_vec3(hit_point_color, vec3_scale(vec3_mul(ref_obj->color, shaded_ref_color), obj->reflection));
+				hit_point_color = vec3_add_vec3(hit_point_color, vec3_scale(vec3_mul(ref_color, ref_light), obj->reflection));
 				hit_point_color = vec3_add_vec3(ambient, hit_point_color);
 			}
-			/*
-			else
-			{
-				hit_point_color = (t_vec3){0};
-			}
-			*/
 		}
 		color_vec = vec3_mul(light_color, hit_point_color);
 		t_vec3 color_vec1 = vec3_mul(vec3_scale(scene->ambient_color, scene->ambient_intensity), hit_point_color);
@@ -234,10 +259,10 @@ int render(t_renderer *renderer)
 			t_ray ray;
 			ray = get_ray(&renderer->scene.camera, (t_vec3){x, y}, (t_vec3){img->width, img->height});
 			unsigned int color = calculate_intersections(&renderer->scene, ray);
-			mlx_pixel_put(renderer->mlx_context, renderer->window, x, renderer->mlx_texture.height - y, color);
-			// set_img_pixel_at(&renderer->mlx_texture, x, renderer->mlx_texture.height - y, color);
+			// mlx_pixel_put(renderer->mlx_context, renderer->window, x, renderer->mlx_texture.height - y, color);
+			set_img_pixel_at(&renderer->mlx_texture, x, renderer->mlx_texture.height - y, color);
 		}
-		// mlx_put_image_to_window(renderer->mlx_context, renderer->window, renderer->mlx_texture.handle, 0, 0);
+		mlx_put_image_to_window(renderer->mlx_context, renderer->window, renderer->mlx_texture.handle, 0, 0);
 	}
 	LOG_INFO("Finished Image..");
 	renderer->redraw = FALSE;

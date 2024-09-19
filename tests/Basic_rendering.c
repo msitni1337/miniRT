@@ -58,27 +58,18 @@ int main(int c, char **v)
 	t_darr lights = init_da(sizeof(t_light));
 	t_light light;
 
-	/*  Planet
-	renderer.scene.camera = new_camera((t_vec3){0, 25, 0}, (t_vec3){0, -1, 0}, (float)renderer.win_height / renderer.win_width, 180);
-	obj = new_sphere((t_vec3){0, 0, 0}, 7, (t_vec3){255.0f, 255.0f, 255.0f});
-	if (set_texture(renderer.mlx_context, &obj.texture, "planet_hd.xpm") == NULL)
-	{
-		LOG_ERROR("MLX IMG CAN'T SET OBJ TEXTURE.");
-		return 1;
-	}
-	if (set_texture(renderer.mlx_context, &obj.bump_map, "planet_bump_hd.xpm") == NULL)
-	{
-		LOG_ERROR("MLX IMG CAN'T SET OBJ TEXTURE.");
-		return 1;
-	}
-	add_to_arr(&objects, &obj);
-	 */
-
-	/*  Scene 01
+	/*  Scene 01:
 	 */
 	renderer.scene.camera = new_camera((t_vec3){0, -40, 5}, (t_vec3){0, 1, 0}, (float)renderer.win_height / renderer.win_width, 180);
 	obj = new_plane((t_vec3){0, 0, -5}, (t_vec3){0, 0, 1}, (t_vec3){100.0f, 50.0f, 255.0f});
 	obj.checkerboard = TRUE;
+	add_to_arr(&objects, &obj);
+	obj = new_rect((t_vec3){15, 15, 5}, (t_vec3){-1, -1, 0}, (t_vec3){255.0f, 255.0f, 255.0f}, (t_vec3){40, 20, 0});
+	obj.checkerboard = TRUE;
+	obj.reflection = .7;
+	add_to_arr(&objects, &obj);
+	obj = new_rect((t_vec3){-15, 15, 5}, (t_vec3){1, -1, 0}, (t_vec3){255.0f, 255.0f, 255.0f}, (t_vec3){40, 20, 0});
+	obj.reflection = .7;
 	add_to_arr(&objects, &obj);
 
 	obj = new_sphere((t_vec3){0, 0, 3}, 5, (t_vec3){255.0f, 255.0f, 255.0f});
@@ -94,20 +85,14 @@ int main(int c, char **v)
 	}
 	add_to_arr(&objects, &obj);
 
-	obj = new_cone((t_vec3){-0.5f, 0, 1.0f}, (t_vec3){-10, 0, 8}, (t_vec3){4, 2, 0}, (t_vec3){120.0f, 150.0f, 50.0f});
-	light = new_light(vec3_add_vec3((t_vec3){-10, 0, 8}, vec3_scale((t_vec3){-0.5f, 0, 1.0f}, 0.9)), 1.0f, (t_vec3){255.0f, 0.0f, 0.0f});
-	add_to_arr(&objects, &obj);
+	light = new_light((t_vec3){-10, 0, 8}, 1.0f, (t_vec3){255.0f, 0.0f, 0.0f});
 	add_to_arr(&lights, &light);
-	obj = new_cone((t_vec3){0.5f, 0, 1.0f}, (t_vec3){10, 0, 8}, (t_vec3){4, 2, 0}, (t_vec3){120.0f, 150.0f, 50.0f});
-	light = new_light(vec3_add_vec3((t_vec3){10, 0, 8}, vec3_scale((t_vec3){0.5f, 0, 1.0f}, 0.9)), 1.0f, (t_vec3){0.0f, 0.0f, 255.0f});
-	add_to_arr(&objects, &obj);
+	light = new_light((t_vec3){10, 0, 8}, 1.0f, (t_vec3){0.0f, 255.0f, 0.0f});
 	add_to_arr(&lights, &light);
-	obj = new_cone((t_vec3){0, 0, 1.0f}, (t_vec3){0, 0, 16}, (t_vec3){4, 4, 0}, (t_vec3){255.0f, 150.0f, 50.0f});
-	light = new_light((t_vec3){0, 0, 12}, 1.0f, (t_vec3){0.0f, 255.0f, 0.0f});
-	add_to_arr(&objects, &obj);
+	light = new_light((t_vec3){0, -10, 0}, 1.0f, (t_vec3){0.0f, 0.0f, 255.0f});
 	add_to_arr(&lights, &light);
 
-	/*	Pool Table
+	/*	Pool Table:
 		renderer.scene.camera = new_camera((t_vec3){0, -30, 20}, (t_vec3){0, 1, -.7}, (float)renderer.win_height / renderer.win_width, 120);
 		obj = new_plane((t_vec3){0, 0, 0}, (t_vec3){0, 0, 1}, (t_vec3){255.0f, 255.0f, 255.0f});
 		obj.checkerboard = 1;
@@ -168,7 +153,6 @@ int main(int c, char **v)
 	renderer.redraw = TRUE;
 	renderer.selected_obj = NULL;
 
-	// set_bump_map(renderer.mlx_context, &renderer.scene.objects[0], "");
 
 	mlx_hook(renderer.window, ON_KEYDOWN, 1L << 0, key_hook_down, &renderer);
 	mlx_hook(renderer.window, ON_KEYUP, 1L << 1, key_hook_up, &renderer);
@@ -178,53 +162,3 @@ int main(int c, char **v)
 	mlx_loop(renderer.mlx_context);
 	return 0;
 }
-
-/*
-		obj = new_plane((t_vec3){0, 0, -1}, (t_vec3){0.0, 0.0, 1.0}, (t_vec3){130.0f, 20.0f, 200.0f});
-		add_to_arr(&objects, &obj);
-
-		obj = new_plane((t_vec3){0, 10, 0}, (t_vec3){0.0, -1.0, 0.0}, (t_vec3){10.0f, 50.0f, 100.0f});
-		add_to_arr(&objects, &obj);
-
-		obj = new_cone((t_vec3){0.0f, 0.0, 1.0f}, (t_vec3){0, 0, 0}, (t_vec3){2, 2, 0}, (t_vec3){150.0f, 25.0f, 170.0f});
-		add_to_arr(&objects, &obj);
-
-
-		obj = new_rect((t_vec3){5, 2, 2}, (t_vec3){0.0, -1.0, -.2}, (t_vec3){255.0f, 255.0f, 255.0f}, (t_vec3){6.0, 4.0, 0.0});
-		add_to_arr(&objects, &obj);
-	obj = new_plane((t_vec3){0, 0, -1}, (t_vec3){0.0, 0.0, 1.0}, (t_vec3){130.0f, 20.0f, 200.0f});
-	add_to_arr(&objects, &obj);
-
-	obj = new_plane((t_vec3){0, 10, 0}, (t_vec3){0.0, -1.0, 0.0}, (t_vec3){10.0f, 50.0f, 100.0f});
-	add_to_arr(&objects, &obj);
-
-	obj = new_sphere((t_vec3){-6, -2, 1}, 4.0f, (t_vec3){255.0f, 0, 0});
-	add_to_arr(&objects, &obj);
-
-	obj = new_sphere((t_vec3){0, 0, 0}, .05f, (t_vec3){255.0f, 0, 0});
-	add_to_arr(&objects, &obj);
-
-	obj = new_sphere((t_vec3){1, 0, 0}, .05f, (t_vec3){255.0f, 0, 0});
-	add_to_arr(&objects, &obj);
-
-	obj = new_sphere((t_vec3){0, 0, 1}, .05f, (t_vec3){255.0f, 0, 0});
-	add_to_arr(&objects, &obj);
-
-	obj = new_cylinder((t_vec3){0.0f, 0.0, 1.0f}, (t_vec3){2, -7, 0}, (t_vec3){2, 2, 0}, (t_vec3){10.0f, 125.0f, 70.0f});
-	add_to_arr(&objects, &obj);
-
-	obj = new_cylinder((t_vec3){0.0f, 0, 1.0f}, (t_vec3){5, -3, 2}, (t_vec3){6, .5f, 0}, (t_vec3){10.0f, 125.0f, 70.0f});
-	add_to_arr(&objects, &obj);
-
-	obj = new_cone((t_vec3){0.0f, 1.0, 0.0f}, (t_vec3){0, 0, 0}, (t_vec3){2, 2, 0}, (t_vec3){150.0f, 25.0f, 170.0f});
-	add_to_arr(&objects, &obj);
-
-	obj = new_light((t_vec3){-1, -2, 2}, .4f, (t_vec3){255.0f, 255.0f, 255.0f});
-	add_to_arr(&objects, &obj);
-
-	obj = new_light((t_vec3){2, -2, 4.0f}, 0.6f, (t_vec3){255.0f, 255.0f, 255.0f});
-	add_to_arr(&objects, &obj);
-
-	obj = new_rect((t_vec3){5, 2, 2}, (t_vec3){0.0, -1.0, -.2}, (t_vec3){255.0f, 255.0f, 255.0f}, (t_vec3){6.0, 4.0, 0.0});
-	add_to_arr(&objects, &obj);
-*/
