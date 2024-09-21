@@ -30,5 +30,8 @@ typedef struct s_parser
 } t_parser;
 
 int parsing(t_scene *scene, int ac, char **av, t_parser*parser);
+int ft_isspace(char c);
+char **ft_split(char const *s, size_t *count, int (*delim)(char));
+size_t ft_strlen(const char *s);
 
 #endif

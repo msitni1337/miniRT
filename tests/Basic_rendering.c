@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "dynamic_arrays.h"
+#include "parser.h"
 #include "input.h"
 
 void *set_texture(void *mlx_ptr, t_img *texture, char *filename)
@@ -152,7 +153,6 @@ int main(int c, char **v)
 	renderer.tab_mode = FALSE;
 	renderer.redraw = TRUE;
 	renderer.selected_obj = NULL;
-
 
 	mlx_hook(renderer.window, ON_KEYDOWN, 1L << 0, key_hook_down, &renderer);
 	mlx_hook(renderer.window, ON_KEYUP, 1L << 1, key_hook_up, &renderer);
