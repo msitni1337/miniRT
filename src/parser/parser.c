@@ -334,10 +334,10 @@ int	check_line(char *line, t_scene *scene, t_parser* parser)
  	}
 	else
 	{
-		//return (1);
+		free_array(param);
+		return(1);
 	}
 	free_array(param);
-
 }
 
 
@@ -359,6 +359,8 @@ int	read_file(char *file, t_scene *scene, t_parser* parser)
 			puts(RED"parsing error!"rst), free(line), exit(1);
 	free(line);
 	}
+	if (!parser->ambient_count || !parser->camera_count || !parser->light_count)
+		puts(RED"item missed!"rst), free(line), exit(1);
 	free(line);
 	close(fd);
 	return (0);
