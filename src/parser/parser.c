@@ -1,7 +1,4 @@
-#include "parser.h"
-
-
-//split 
+#include "parser.h" 
 #include <stdlib.h>
 
 int			ft_isspace(char c)
@@ -47,11 +44,12 @@ char	*malloc_word(char *str)
 	return (word);
 }
 
-char	**ft_split(char *str)
+char	**ft_split(char *str, size_t *count)
 {
 	char **arr = (char **)malloc(sizeof(char *) * (count_words(str) + 1));
-
-	int i = 0;
+	
+    size_t i = 0;
+    *count = 0;
 	while (*str)
 	{
 		while (*str && ft_isspace(*str))
@@ -65,6 +63,7 @@ char	**ft_split(char *str)
 		}
 	}
 	arr[i] = NULL;
+    *count = i;
 	return (arr);
 }
 //
@@ -269,19 +268,76 @@ int f_is_rt_file(char *s, char *type)
 	return (1);
 }
 
+t_vec3 get_vec3(char *p)
+{
+    (void)p;
+    t_vec3  t;
+    return (t);
+}
+
+// int    fill_camera(char **param, size_t count)
+// {
+//     t_vec3  position;
+//     t_vec3  direction;
+//     float   fov;
+    
+//     if (count != 4)
+//         puts(RED"invalid nbrs for camera"rst), exit(1);
+//     position = get_vec3(param[0]); 
+//     direction = get_vect3(param[1]);
+//     get_float(param[2]);
+//     new_camera(position, direction, 1280.0f / 720, fov);
+//     return (0);
+// }
+
+void	free_array(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
+}
+
 int	check_line(char *line, t_scene *scene, t_parser* parser)
 {
 	char **param;
+    size_t count;
 
 	while (ft_isspace(*line))
 		line++;
-	param = ft_split(line);
-	if (!strcmp(param[0], "A"))
+	param = ft_split(line, &count);
+    if (count == 0)
+        puts(RED"empty line"rst);
+    if (parser->camera_count == 0 && !strcmp(param[0], "C"))
 	{
-		parser->
+		puts(GREEN"here is a camera"rst);
+        // fill_camera(param, count);
+		parser->camera_count = 1;
+ 	}
+	else if (parser->ambient_count != 1 && !strcmp(param[0], "A"))
+	{
+    	puts(GREEN"here is an ambient light"rst);
+        // fill_ambient(param, count);
+
+		parser->ambient_count = 1;
+ 	}
+    else if (parser->light_count == 0 && !strcmp(param[0], "L"))
+	{
+        puts(GREEN"here is a light"rst);
+        // fill_light(param, count);
+		parser->light_count = 1;   
  	}
 	else
-		puts(RED"invalid input"rst), exit(1);
+	{
+		//return (1);
+	}
+	free_array(param);
+
 }
 
 
@@ -298,10 +354,7 @@ int	read_file(char *file, t_scene *scene, t_parser* parser)
 	{
 		line = get_next_line(fd);
 		if (!line || line[0] == '\n')
-		{
-			puts(RED"empty file fill it :)rm "rst);
 			break ;
-		}
 		if (check_line(line, scene, parser) == ERROR)
 			puts(RED"parsing error!"rst), free(line), exit(1);
 	free(line);
