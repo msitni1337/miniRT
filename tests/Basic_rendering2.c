@@ -24,9 +24,7 @@ int main(int c, char **v)
 	t_renderer renderer;
 	if (c > 1)
 	{
-		t_parser parser;
-		parser = (t_parser) {0};
-		if (parsing(&renderer.scene, c, v, &parser) == ERROR)
+		if (parsing(&renderer.scene, c, v) == ERROR)
 		{
 			puts(RED"ERROR"rst);
 				exit(1);

@@ -1,15 +1,15 @@
 #include "Object.h"
 
-t_object *get_next_object_by_type(t_scene *scene, size_t *i, t_object_type type)
-{
-    while (scene->objects && *i < scene->objects_count)
-    {
-        if (scene->objects[*i].type & type)
-            return &scene->objects[*i];
-        (*i)++;
-    }
-    return NULL;
-}
+// t_object *get_next_object_by_type(t_scene *scene, size_t *i, t_object_type type)
+// {
+//     while (scene->objects.data && *i < scene->objects.count)
+//     {
+//         if (scene->objects.data[*i].type & type)
+//             return &scene->objects.data[*i];
+//         (*i)++;
+//     }
+//     return NULL;
+// }
 
 /*
 t_vec3 get_object_pos(t_object *object)

@@ -3,6 +3,7 @@
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <stddef.h>
 #include "logging.h"
 #define TRUE 1

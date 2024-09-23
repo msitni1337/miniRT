@@ -26,8 +26,8 @@ int main(int c, char **v)
 		LOG_ERROR("MLX INIT FAILED.");
 		return 1;
 	}
-	renderer.win_width = 1280;
-	renderer.win_height = 720;
+	renderer.win_width = WIN_WIDTH;
+	renderer.win_height = WIN_HEIGHT;
 	renderer.window = mlx_new_window(renderer.mlx_context, renderer.win_width, renderer.win_height, WIN_TITLE);
 	if (renderer.window == NULL)
 	{

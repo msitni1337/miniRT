@@ -12,7 +12,7 @@ LDFLAGS = -Lmlx_Linux -lmlx_Linux -lXext -lX11 -lm
 .PHONY : re fclean clean all bonus
 .SECONDARY : ${OBJ}
 
-all : basic_rendering
+all : mandatory
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LDFLAGS)
@@ -23,8 +23,8 @@ clean :
 fclean : clean
 	rm -f $(NAME)
 
-parsing: $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) tests/parsing.c -o $(NAME) $(LDFLAGS)
+mandatory: $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) tests/main.c -o $(NAME) $(LDFLAGS)
 
 basic_rendering: $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) tests/Basic_rendering.c -o $(NAME) $(LDFLAGS)

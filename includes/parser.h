@@ -3,7 +3,9 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
+#include "dynamic_arrays.h"
 #include "Renderer.h"
+#include "utils.h"
 
 
 # define BUFFER_SIZE 42
@@ -24,12 +26,11 @@ typedef struct s_parser
 	int camera_count;
 	int ambient_count;
 	int light_count;
-	int pl_count;
-	int sp_count;
-	int cy_count;
+	t_darr objects;
+	t_darr lights;
 } t_parser;
 
-int parsing(t_scene *scene, int ac, char **av, t_parser*parser);
+int parsing(t_scene *scene, int ac, char **av);
 int ft_isspace(char c);
 char **ft_split(char const *s, size_t *count, int (*delim)(char));
 size_t ft_strlen(const char *s);

@@ -4,8 +4,10 @@
 #include <mlx.h>
 // #include "../mlx.h"
 #include "mlx_utils.h"
-#define WIN_TITLE "miniRT"
 
+#define WIN_TITLE "miniRT"
+#define WIN_WIDTH 1280
+#define WIN_HEIGHT 720
 #define BG_COLOR 0xFF020506
 
 typedef struct s_renderer
