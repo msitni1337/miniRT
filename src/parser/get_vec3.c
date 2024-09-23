@@ -1,6 +1,6 @@
-#include "parser.h" 
+#include "parser.h"
 
-int contains_other_than(char* str, char*allowed)
+int contains_other_than(char *str, char *allowed)
 {
 	int i;
 	int j;
@@ -14,86 +14,91 @@ int contains_other_than(char* str, char*allowed)
 		while (allowed[j])
 		{
 			if (str[i] == allowed[j])
-			{
-				i++;
-				continue;
-			}
+				break;
 			j++;
 		}
-		return 1;
+		if (str[i] != allowed[j])
+			return 1;
+		i++;
 	}
 	return 0;
 }
 
-void	ft_atold_fill_precision(const char *nptr, size_t*i, long double *result)
+size_t ft_atof_fill_precision(const char *nptr, size_t i, float *result, int sign)
 {
-	long double	divisor;
+	long double divisor;
 
+	i++;
+	if (!(nptr[i] >= '0' && nptr[i] <= '9'))
+		return (0);
 	divisor = 10.0f;
-	while (nptr[*i] >= '0' && nptr[*i] <= '9')
+	while (nptr[i] >= '0' && nptr[i] <= '9')
 	{
-		*result = *result + (nptr[*i] - '0') / divisor;
-		(*i)++;
+		*result = *result + (nptr[i] - '0') / divisor;
+		i++;
 		divisor *= 10.0f;
 	}
+	*result *= sign;
+	return i;
 }
 
-long double	ft_atold(const char *nptr, size_t *i)
-{
-	long double	result;
-	int			sign;
-
-	sign = 1;
-	while (nptr[*i] == '-' || nptr[*i] == '+')
-	{
-		if (nptr[*i] == '-')
-			sign = -1;
-		(*i)++;
-	}
-	result = 0;
-	while (nptr[*i] >= '0' && nptr[*i] <= '9')
-	{
-		result = result * 10.0f + (nptr[*i] - '0');
-		(*i)++;
-	}
-	if (nptr[*i] != '.')
-		return (result * sign);
-	(*i)++;
-	ft_atold_fill_precision(nptr, i, &result);
-	return result * sign;
-}
-
-
-int get_vec3(t_vec3*vec3, char*str)
+size_t ft_atof(const char *nptr, float *result)
 {
 	size_t i;
+	int sign;
 
-	if(contains_other_than(str, "0123456789.,+-"))
+	i = 0;
+	sign = 1;
+	while (nptr[i] == '-' || nptr[i] == '+')
+	{
+		if (nptr[i] == '-')
+			sign = -sign;
+		i++;
+	}
+	if (!(nptr[i] >= '0' && nptr[i] <= '9'))
+		return (0);
+	*result = 0;
+	while (nptr[i] >= '0' && nptr[i] <= '9')
+	{
+		*result = *result * 10.0f + (nptr[i] - '0');
+		i++;
+	}
+	if (nptr[i] == '.')
+		return ft_atof_fill_precision(nptr, i, result, sign);
+	*result *= sign;
+	return (i);
+}
+
+int get_vec3(t_vec3 *vec3, char *str)
+{
+	size_t parsed;
+	size_t i;
+
+	if (contains_other_than(str, "0123456789.,+-"))
 		return 1;
 	i = 0;
-	vec3->x = ft_atold(str, &i);
-	if (str[i] != ',')
+	parsed = ft_atof(str, &vec3->x);
+	if (parsed == 0 || str[i + parsed] != ',')
 		return 1;
-	i++;
-	vec3->y = ft_atold(str, &i);
-	if (str[i] != ',')
+	i += parsed + 1;
+	parsed = ft_atof(str + i, &vec3->y);
+	if (parsed == 0 || str[i + parsed] != ',')
 		return 1;
-	i++;
-	vec3->z = ft_atold(str, &i);
-	if (str[i])
+	i += parsed + 1;
+	parsed = ft_atof(str + i, &vec3->z);
+	if (parsed == 0 || str[i + parsed])
 		return 1;
 	return 0;
 }
 
-int get_float(float*f, char*str)
+int get_float(float *f, char *str)
 {
-	size_t i;
+	size_t parsed;
 
-	if(contains_other_than(str, "0123456789.+-"))
+	if (contains_other_than(str, "0123456789.+-"))
 		return 1;
-	i = 0;
-	*f = ft_atold(str, &i);
-	if (str[i])
+	parsed = ft_atof(str, f);
+	if (parsed == 0 || str[parsed])
 		return 1;
 	return 0;
 }

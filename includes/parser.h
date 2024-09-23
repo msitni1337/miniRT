@@ -33,5 +33,7 @@ int parsing(t_scene *scene, int ac, char **av, t_parser*parser);
 int ft_isspace(char c);
 char **ft_split(char const *s, size_t *count, int (*delim)(char));
 size_t ft_strlen(const char *s);
+int get_vec3(t_vec3*vec3, char*str);
+int get_float(float*f, char*str);
 
 #endif

@@ -17,9 +17,6 @@ void *set_texture(void *mlx_ptr, t_img *texture, char *filename)
 
 int main(int c, char **v)
 {
-	(void)c;
-	(void)v;
-
 	srand(0);
 	t_renderer renderer;
 

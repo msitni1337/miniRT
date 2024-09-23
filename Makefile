@@ -23,6 +23,9 @@ clean :
 fclean : clean
 	rm -f $(NAME)
 
+parsing: $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) tests/parsing.c -o $(NAME) $(LDFLAGS)
+
 basic_rendering: $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) tests/Basic_rendering.c -o $(NAME) $(LDFLAGS)
 
