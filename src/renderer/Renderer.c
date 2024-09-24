@@ -32,7 +32,7 @@ t_hit get_lighray_hit(t_scene *scene, t_ray ray)
 	while (i < scene->objects_count)
 	{
 		object = scene->objects + i;
-		if (!object->cast_shadow)
+		if (!object->hidden)
 		{
 			tmp = object->intersection(object, ray);
 			if (tmp.is_valid && (!hit.is_valid || tmp.distance < hit.distance))
@@ -84,7 +84,7 @@ t_vec3 get_light_color(t_scene *scene, t_hit hit_point, t_ray ray)
 		light = scene->lights + i;
 		t_vec3 hit_normal = hit_point.normal;
 		t_object *obj = hit_point.object;
-		if (obj->bump_map.data != NULL)
+		if (obj->normal_map.data != NULL)
 		{
 			t_vec3 u_vec = vec3_cross(hit_point.normal, ray.dir);
 			if (vec3_magnitude(u_vec) > ZERO)
@@ -94,13 +94,13 @@ t_vec3 get_light_color(t_scene *scene, t_hit hit_point, t_ray ray)
 				int x;
 				int y;
 
-				x = hit_point.uv_map.x * obj->bump_map.width;
-				y = hit_point.uv_map.y * obj->bump_map.height;
+				x = hit_point.uv_map.x * obj->normal_map.width;
+				y = hit_point.uv_map.y * obj->normal_map.height;
 				assert(x >= 0 && y >= 0);
 				// assert(x < obj->texture.width && y < obj->texture.height);
-				x = int_cap(x, 0, obj->bump_map.width - 1);
-				y = int_cap(y, 0, obj->bump_map.height - 1);
-				t_vec3 tex_color = vec3_scale(get_vec3_color(get_img_pixel_at(&obj->bump_map, x, y)), 1 / 255.0f);
+				x = int_cap(x, 0, obj->normal_map.width - 1);
+				y = int_cap(y, 0, obj->normal_map.height - 1);
+				t_vec3 tex_color = vec3_scale(get_vec3_color(get_img_pixel_at(&obj->normal_map, x, y)), 1 / 255.0f);
 
 				hit_normal = vec3_add_vec3(vec3_scale(u_vec, (tex_color.x * 2 - 1)), vec3_scale(v_vec, (tex_color.y * 2 - 1)));
 				hit_normal = vec3_add_vec3(hit_normal, vec3_scale(hit_point.normal, tex_color.z));

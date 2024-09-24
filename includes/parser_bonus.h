@@ -1,5 +1,5 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef PARSER_BONUS_H
+#define PARSER_BONUS_H
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
@@ -8,8 +8,7 @@
 #include "utils.h"
 
 
-# define BUFFER_SIZE 42
-
+#define BUFFER_SIZE 42
 #define rst   "\x1b[0m"
 #define RED     "\x1b[31m"
 #define GREEN   "\x1b[32m"

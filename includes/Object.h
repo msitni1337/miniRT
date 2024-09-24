@@ -30,7 +30,7 @@ typedef struct s_object
 	t_vec3 bottom_cap_center;
 
 	t_img texture;
-	t_img bump_map;
+	t_img normal_map;
 	t_vec3 cone_tip;
 
 	
@@ -42,7 +42,7 @@ typedef struct s_object
 	float radius;
 	float intensity;
 	int checkerboard;
-	int cast_shadow;
+	int hidden;
 } t_object;
 
 typedef struct s_light
@@ -83,6 +83,7 @@ t_vec4 cap_map_uv(t_vec3 vec, t_vec3 u, t_vec3 v, float radius);
 t_vec4 cone_map_uv(t_hit hit, t_object *obj);
 void cone_recalculate(t_object *obj);
 t_hit cone_intersection(t_object *object, t_ray ray);
+void *open_texture(void *mlx_ptr, t_img *texture);
 
 // void set_object_pos(t_object *object, t_vec3 pos);
 #endif // OBJECT_H

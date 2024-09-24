@@ -87,7 +87,7 @@ int main(int c, char **v)
 		LOG_ERROR("MLX IMG CAN'T SET OBJ TEXTURE.");
 		return 1;
 	}
-	if (set_texture(renderer.mlx_context, &obj.bump_map, "planet_normal.xpm") == NULL)
+	if (set_texture(renderer.mlx_context, &obj.normal_map, "planet_normal.xpm") == NULL)
 	{
 		LOG_ERROR("MLX IMG CAN'T SET OBJ TEXTURE.");
 		return 1;

@@ -2,6 +2,7 @@
 #define MLX_UTILS_H
 typedef struct s_img
 {
+	char*filename;
 	void *handle;
 	char *data;
 	int bpp;

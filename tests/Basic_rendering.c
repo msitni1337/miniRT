@@ -6,15 +6,6 @@
 #include "parser.h"
 #include "input.h"
 
-void *set_texture(void *mlx_ptr, t_img *texture, char *filename)
-{
-	texture->handle = mlx_xpm_file_to_image(mlx_ptr, filename, &texture->width, &texture->height);
-	if (texture->handle == NULL)
-		return NULL;
-	texture->data = mlx_get_data_addr(texture->handle, &texture->bpp, &texture->size_line, &texture->endian);
-	return texture->data;
-}
-
 int main(int c, char **v)
 {
 	srand(0);
@@ -76,7 +67,7 @@ int main(int c, char **v)
 		LOG_ERROR("MLX IMG CAN'T SET OBJ TEXTURE.");
 		return 1;
 	}
-	if (set_texture(renderer.mlx_context, &obj.bump_map, "planet_normal.xpm") == NULL)
+	if (set_texture(renderer.mlx_context, &obj.normal_map, "planet_normal.xpm") == NULL)
 	{
 		LOG_ERROR("MLX IMG CAN'T SET OBJ TEXTURE.");
 		return 1;

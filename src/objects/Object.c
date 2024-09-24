@@ -120,3 +120,12 @@ t_vec4 cap_map_uv(t_vec3 vec, t_vec3 u, t_vec3 v, float radius)
     uv_map.y = (uv_map.w / radius) * 0.5f + 0.5f;
     return uv_map;
 }
+
+void *open_texture(void *mlx_ptr, t_img *texture)
+{
+	texture->handle = mlx_xpm_file_to_image(mlx_ptr, texture->filename, &texture->width, &texture->height);
+	if (texture->handle == NULL)
+		return NULL;
+	texture->data = mlx_get_data_addr(texture->handle, &texture->bpp, &texture->size_line, &texture->endian);
+	return texture->data;
+}
