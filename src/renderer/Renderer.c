@@ -32,12 +32,9 @@ t_hit get_lighray_hit(t_scene *scene, t_ray ray)
 	while (i < scene->objects_count)
 	{
 		object = scene->objects + i;
-		if (!object->hidden)
-		{
-			tmp = object->intersection(object, ray);
-			if (tmp.is_valid && (!hit.is_valid || tmp.distance < hit.distance))
-				hit = tmp;
-		}
+		tmp = object->intersection(object, ray);
+		if (tmp.is_valid && (!hit.is_valid || tmp.distance < hit.distance))
+			hit = tmp;
 		i++;
 	}
 	return hit;

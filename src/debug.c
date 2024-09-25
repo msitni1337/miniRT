@@ -47,10 +47,6 @@ void print_camera_value(t_camera camera)
 }
 void print_object_value(t_object object)
 {
-	// printf("object.SRT_matrix: \n");
-	// mat_print(object.SRT_matrix.data, 4);
-	// printf("object.ISRT_matrix: \n");
-	// mat_print(object.ISRT_matrix.data, 4);
 	printf("object.color: \n");
 	print_vec3(object.color);
 	printf("object.radius: %f\n", object.radius);

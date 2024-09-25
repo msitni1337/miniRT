@@ -31,7 +31,7 @@ int set_objects_textures(void* mlx, t_scene* scene)
 			return printf(RED"Can't open texture [%s]\n"rst, obj->texture.filename);
 		i++;
 	}
-	free_texture_filenames(scene);
+	free_textures_filenames(scene);
 	return 0;
 }
 
@@ -48,14 +48,14 @@ int main(int c, char **v)
 	r = (t_renderer){0};
 	if (parsing(&r.scene, c, v) == ERROR)
 	{
-		free_texture_filenames(&r.scene);
+		free_textures_filenames(&r.scene);
 		ft_free(r.scene.objects, r.scene.lights, NULL);
 		return 1;
 	}
 	r.mlx_context = mlx_init();
 	if (r.mlx_context == NULL)
 	{
-		free_texture_filenames(&r.scene);
+		free_textures_filenames(&r.scene);
 		ft_free(r.scene.objects, r.scene.lights, NULL);
 		LOG_ERROR("MLX INIT FAILED.");
 		return 1;
@@ -65,7 +65,7 @@ int main(int c, char **v)
 	r.window = mlx_new_window(r.mlx_context, r.win_width, r.win_height, WIN_TITLE);
 	if (r.window == NULL)
 	{
-		free_texture_filenames(&r.scene);
+		free_textures_filenames(&r.scene);
 		ft_free(r.scene.objects, r.scene.lights, NULL);
 		LOG_ERROR("MLX WINDOW INIT FAILED.");
 		return 1;
@@ -75,7 +75,7 @@ int main(int c, char **v)
 	r.mlx_texture.handle = mlx_new_image(r.mlx_context, r.mlx_texture.width, r.mlx_texture.height);
 	if (r.mlx_texture.handle == NULL)
 	{
-		free_texture_filenames(&r.scene);
+		free_textures_filenames(&r.scene);
 		ft_free(r.scene.objects, r.scene.lights, NULL);
 		LOG_ERROR("MLX IMG INIT FAILED.");
 		return 1;
@@ -83,14 +83,14 @@ int main(int c, char **v)
 	r.mlx_texture.data = mlx_get_data_addr(r.mlx_texture.handle, &r.mlx_texture.bpp, &r.mlx_texture.size_line, &r.mlx_texture.endian);
 	if (r.mlx_texture.data == NULL)
 	{
-		free_texture_filenames(&r.scene);
+		free_textures_filenames(&r.scene);
 		ft_free(r.scene.objects, r.scene.lights, NULL);
 		LOG_ERROR("MLX IMG CAN'T GET IMG DATA BUFFER ADDRESS.");
 		return 1;
 	}
 	if (set_objects_textures(r.mlx_context, &r.scene))
 	{
-		free_texture_filenames(&r.scene);
+		free_textures_filenames(&r.scene);
 		ft_free(r.scene.objects, r.scene.lights, NULL);
 		return 1;
 	}

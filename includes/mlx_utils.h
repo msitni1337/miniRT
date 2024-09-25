@@ -1,5 +1,8 @@
 #ifndef MLX_UTILS_H
 #define MLX_UTILS_H
+#include <mlx.h>
+//#include "mlx.h"
+
 typedef struct s_img
 {
 	char*filename;

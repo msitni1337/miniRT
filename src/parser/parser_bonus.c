@@ -63,32 +63,28 @@ int fill_object_params(t_object *obj, char**param)
 		{
 			obj->checkerboard = TRUE;
 		}
-		else if (ft_strcmp(*param, "-h") == 0)
-		{
-			obj->hidden = TRUE;
-		}
-		else if (ft_strcmp(*param, "-r"))
+		else if (ft_strcmp(*param, "-r") == 0)
 		{
 			param++;
 			if (get_float(&obj->reflection, *param) || obj->reflection < 0 || obj->reflection > 1.0f)
 				return printf(RED"provide a reflection value [0.0 ~ 1.0].\n"rst);
 		}
-		else if (ft_strcmp(*param, "-t"))
+		else if (ft_strcmp(*param, "-t") == 0)
 		{
 			param++;
 			if (param == NULL)
 				return printf(RED"provide a path to the xpm texture img.\n"rst);
-			obj->texture.filename = ft_strdup(param);
-			if (obj->texture.data == NULL)
+			obj->texture.filename = ft_strdup(*param);
+			if (obj->texture.filename == NULL)
 				return printf(RED "Malloc failed\n" rst);
 		}
-		else if (ft_strcmp(*param, "-n"))
+		else if (ft_strcmp(*param, "-n") == 0)
 		{
 			param++;
 			if (param == NULL)
 				return printf(RED"provide a path to the xpm normal map.\n"rst);
-			obj->normal_map.filename = ft_strdup(param);
-			if (obj->normal_map.data == NULL)
+			obj->normal_map.filename = ft_strdup(*param);
+			if (obj->normal_map.filename == NULL)
 				return printf(RED "Malloc failed\n" rst);
 		}
 		param++;
