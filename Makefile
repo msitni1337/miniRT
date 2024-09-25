@@ -19,8 +19,12 @@ CC = cc
 NAME = miniRT
 NAME_b = miniRT_bonus
 CFLAGS = -O3 -Iincludes -g3 -fsanitize=address
-LDFLAGS_linux = -Lmlx_Linux -lmlx_Linux -lXext -lX11 -lm
-LDFLAGS_mac = -L. -lmlx -framework OpenGL -framework AppKit
+LDFLAGS = -Lmlx_Linux -lmlx_Linux -lXext -lX11 -lm
+
+ifeq ($(shell uname -s),Darwin)
+	CFLAGS += -DINPUT_MAC
+	LDFLAGS = -L. -lmlx -framework OpenGL -framework AppKit
+endif
 
 .PHONY : re fclean clean all bonus
 .SECONDARY : ${OBJ_m} ${OBJ_b}
@@ -39,9 +43,9 @@ fclean : clean
 	rm -f $(NAME_b)
 
 ${NAME}: $(OBJ_m)
-	$(CC) $(CFLAGS) $(OBJ_m) -o $(NAME) $(LDFLAGS_mac)
+	$(CC) $(CFLAGS) $(OBJ_m) -o $(NAME) $(LDFLAGS)
 
  ${NAME_b}: $(OBJ_b)
-	$(CC) $(CFLAGS) $(OBJ_b) -o $(NAME_b) $(LDFLAGS_mac)
+	$(CC) $(CFLAGS) $(OBJ_b) -o $(NAME_b) $(LDFLAGS)
 
 re : fclean all

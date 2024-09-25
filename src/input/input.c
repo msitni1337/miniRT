@@ -165,8 +165,9 @@ int key_hook_down(int key, t_renderer *renderer)
 		control_selected_obj(key, renderer);
 
 	if (key == KEY_CTR)
-		renderer->tab_mode = TRUE; 
-
+		renderer->tab_mode = TRUE;
+	if (key == KEY_ESC)
+		on_destroy(renderer);
 	return 0;
 }
 int mouse_hook_up(int button, int x, int y, t_renderer *renderer)
@@ -188,4 +189,9 @@ int mouse_hook_down(int button, int x, int y, t_renderer *renderer)
 	(void)y;
 	(void)renderer;
 	return 0;
+}
+
+int on_destroy(t_renderer*renderer)
+{
+	
 }
