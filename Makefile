@@ -8,10 +8,10 @@ Object_b	= ${Object_m} src/objects/bonus/Cone_bonus.c src/objects/bonus/Cone_cap
 input		= src/input/input.c src/input/camera.c src/input/object.c
 utils		= src/utils/dynamic_arrays.c src/utils/free.c src/utils/logging.c src/utils/mlx_utils.c
 
-SRC_m = ${LinAlgebra} ${Renderer} ${Parser_m} ${Object_m} ${input} ${utils} tests/main.c
+SRC_m = ${LinAlgebra} ${Renderer} ${Parser_m} ${Object_m} ${input} ${utils} src/main.c src/mlx/mlx_init.c 
 OBJ_m = $(SRC_m:.c=.o)
 
-SRC_b = ${LinAlgebra} ${Renderer} ${Parser_b} ${Object_b} ${input} ${utils} tests/main_bonus.c
+SRC_b = ${LinAlgebra} ${Renderer} ${Parser_b} ${Object_b} ${input} ${utils} src/main_bonus.c src/mlx/mlx_init_bonus.c 
 OBJ_b = $(SRC_b:.c=.o)
 
 # VARS

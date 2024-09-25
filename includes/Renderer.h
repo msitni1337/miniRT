@@ -29,5 +29,7 @@ int render(t_renderer *renderer);
 // Debug
 void print_camera_value(t_camera camera);
 void print_object_value(t_object object);
+int start_mlx(t_renderer *r);
+void free_all(t_renderer* r);
 
 #endif // RENDERER_H
