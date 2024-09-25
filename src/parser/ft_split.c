@@ -5,16 +5,6 @@ int ft_isspace(char c)
 	return (c == ' ' || c == '\t' || c == '\n' || c == '\f' || c == '\r' || c == '\v');
 }
 
-size_t ft_strlen(const char *s)
-{
-	size_t i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-
 size_t ft_strlcpy(char *dst, const char *src, size_t sz)
 {
 	size_t i;

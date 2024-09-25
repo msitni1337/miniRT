@@ -109,22 +109,22 @@ void control_selected_obj(int key, t_renderer *renderer)
 		break;
 	}
 	case KEY_A:
-		renderer->selected_obj->position.x -= 2.0f ;
+		renderer->selected_obj->position.x -= 2.0f;
 		break;
 	case KEY_D:
-		renderer->selected_obj->position.x += 2.0f ;
+		renderer->selected_obj->position.x += 2.0f;
 		break;
 	case KEY_S:
-		renderer->selected_obj->position.y -= 2.0f ;
+		renderer->selected_obj->position.y -= 2.0f;
 		break;
 	case KEY_W:
-		renderer->selected_obj->position.y += 2.0f ;
+		renderer->selected_obj->position.y += 2.0f;
 		break;
 	case KEY_8:
-		renderer->selected_obj->position.z += 2.0f ;
+		renderer->selected_obj->position.z += 2.0f;
 		break;
 	case KEY_2:
-		renderer->selected_obj->position.z -= 2.0f ;
+		renderer->selected_obj->position.z -= 2.0f;
 		break;
 	case KEY_4:
 	{
@@ -152,13 +152,11 @@ int key_hook_up(int key, t_renderer *renderer)
 	(void)key;
 	(void)renderer;
 	if (key == KEY_CTR)
-		renderer->tab_mode = FALSE; 
+		renderer->tab_mode = FALSE;
 	return 0;
 }
 int key_hook_down(int key, t_renderer *renderer)
 {
-	printf("key pressed: %d\n", key);
-
 	if (renderer->tab_mode)
 		control_camera(key, renderer);
 	else
@@ -191,7 +189,11 @@ int mouse_hook_down(int button, int x, int y, t_renderer *renderer)
 	return 0;
 }
 
-int on_destroy(t_renderer*renderer)
+int on_destroy(t_renderer *r)
 {
-	
+	mlx_loop_end(r->mlx_context);
+	free_objects_textures(r->mlx_context, r->scene.objects, r->scene.objects_count);
+	ft_free(r->scene.objects, r->scene.lights, NULL);
+	mlx_destroy_image(r->mlx_context, r->mlx_texture.handle);
+	return 0;
 }

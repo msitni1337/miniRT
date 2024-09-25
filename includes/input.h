@@ -1,6 +1,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 #include "Renderer.h"
+#include "utils.h"
 
 #ifdef INPUT_MAC
 #define KEY_UP 126
@@ -35,6 +36,7 @@
 #define KEY_4 65430
 #define KEY_TAB 65289
 #define KEY_CTR 65507
+#define KEY_ESC 65307
 #endif
 
 # define ON_KEYDOWN 2

@@ -55,7 +55,7 @@ int fill_camera(t_scene *scene, char **param, size_t count)
 	return (0);
 }
 
-int fill_object_params(t_object *obj, char**param)
+int fill_object_params(t_object *obj, char **param)
 {
 	while (param && *param)
 	{
@@ -67,13 +67,13 @@ int fill_object_params(t_object *obj, char**param)
 		{
 			param++;
 			if (get_float(&obj->reflection, *param) || obj->reflection < 0 || obj->reflection > 1.0f)
-				return printf(RED"provide a reflection value [0.0 ~ 1.0].\n"rst);
+				return printf(RED "provide a reflection value [0.0 ~ 1.0].\n" rst);
 		}
 		else if (ft_strcmp(*param, "-t") == 0)
 		{
 			param++;
 			if (param == NULL)
-				return printf(RED"provide a path to the xpm texture img.\n"rst);
+				return printf(RED "provide a path to the xpm texture img.\n" rst);
 			obj->texture.filename = ft_strdup(*param);
 			if (obj->texture.filename == NULL)
 				return printf(RED "Malloc failed\n" rst);
@@ -82,7 +82,7 @@ int fill_object_params(t_object *obj, char**param)
 		{
 			param++;
 			if (param == NULL)
-				return printf(RED"provide a path to the xpm normal map.\n"rst);
+				return printf(RED "provide a path to the xpm normal map.\n" rst);
 			obj->normal_map.filename = ft_strdup(*param);
 			if (obj->normal_map.filename == NULL)
 				return printf(RED "Malloc failed\n" rst);
@@ -238,7 +238,6 @@ int fill_cone_cap(t_parser *p, char **param, size_t count)
 	return (0);
 }
 
-
 void free_array(char **arr)
 {
 	int i;
@@ -324,19 +323,23 @@ int read_file(char *file, t_scene *scene, t_parser *parser)
 
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		return printf(RED"Scene file doesn't exist ):\n" rst), 1;
+		return printf(RED "Scene file doesn't exist ):\n" rst), 1;
 	line_num = 1;
+	line = get_next_line(fd);
 	while (line)
 	{
-		line = get_next_line(fd);
-		if (!line)
-			break;
 		if (line[0] != '#' && check_line(line, scene, parser) == ERROR)
 		{
-			free(line);
+			while (line)
+			{
+				free(line);
+				line = get_next_line(fd);
+			}
+			close(fd);
 			return printf(RED "Error in line: %zu\n" rst, line_num), 1;
 		}
 		free(line);
+		line = get_next_line(fd);
 		line_num++;
 	}
 	close(fd);

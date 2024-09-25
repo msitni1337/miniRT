@@ -198,17 +198,21 @@ int read_file(char *file, t_scene *scene, t_parser *parser)
 	if (fd < 0)
 		return printf(RED"Scene file doesn't exist ):\n" rst), 1;
 	line_num = 1;
+	line = get_next_line(fd);
 	while (line)
 	{
-		line = get_next_line(fd);
-		if (!line)
-			break;
 		if (check_line(line, scene, parser) == ERROR)
 		{
-			free(line);
+			while (line)
+			{
+				free(line);
+				line = get_next_line(fd);
+			}
+			close(fd);
 			return printf(RED "Error in line: %zu\n" rst, line_num), 1;
 		}
 		free(line);
+		line = get_next_line(fd);
 		line_num++;
 	}
 	close(fd);

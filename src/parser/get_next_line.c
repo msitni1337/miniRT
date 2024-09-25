@@ -1,139 +1,92 @@
-#include "parser.h"
+#include "get_next_line.h"
 
-int ft_index(const char *s, char c)
+int	st_getnl_index(const char *str)
 {
-	unsigned int i;
+	int	i;
 
-	if (!s)
-		return (-1);
 	i = 0;
-	while (s[i] != '\0')
-	{
-		if (s[i] == c)
-			return (i);
+	while (str && str[i] && str[i] != '\n')
 		i++;
-	}
-	if (s[i] == c)
+	if (str && str[i] == '\n')
 		return (i);
 	return (-1);
 }
 
-char *ft_strjoin(char *s1, char const *s2)
+char	*ft_get_remainder(char **rem)
 {
-	char *string;
-	size_t i;
-	size_t x;
+	char	*rem_tmp;
+	char	*res;
 
-	if (!s1)
-		s1 = ft_strdup("");
-	string = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!string)
-		return (NULL);
-	i = 0;
-	while (s1[i])
+	if (st_getnl_index(*rem) == -1 || st_getnl_index(*rem)
+		+ 1 == ft_strlen(*rem))
 	{
-		string[i] = s1[i];
-		i++;
+		res = ft_substr(*rem, 0, ft_strlen(*rem));
+		free(*rem);
+		*rem = NULL;
+		return (res);
 	}
-	x = 0;
-	while (s2[x])
-		string[i++] = s2[x++];
-	string[i] = 0;
-	free(s1);
-	return (string);
-}
-static char *get_line(char *backup)
-{
-	int len;
-	int x;
-	char *line;
-
-	len = 0;
-	if (*backup == '\0')
-		return (NULL);
-	while (backup[len] && backup[len] != '\n')
-		len++;
-	if (backup[len] == '\n')
-		len++;
-	line = malloc(sizeof(char) * len + 1);
-	if (!line)
-		return (NULL);
-	x = 0;
-	while (x < len)
-	{
-		line[x] = backup[x];
-		x++;
-	}
-	line[x] = '\0';
-	return (line);
+	res = ft_substr(*rem, 0, st_getnl_index(*rem) + 1);
+	rem_tmp = ft_substr(*rem, st_getnl_index(*rem) + 1, ft_strlen(*rem));
+	free(*rem);
+	*rem = rem_tmp;
+	if (!rem_tmp)
+		return (free_ptr(res, 0, 0, 0));
+	return (res);
 }
 
-static char *get_backup(char *backup)
+int	st_get_line(char **res, char **rem, int fd, char *tmp)
 {
-	char *str;
-	int start;
-	int i;
+	char	*buff;
+	char	*result;
+	int		chars_read;
 
-	start = 0;
-	while (backup[start] && backup[start] != '\n')
-		start++;
-	if (backup[start] == '\n')
-		start++;
-	if (backup[start] == '\0')
-	{
-		free(backup);
-		return (NULL);
-	}
-	str = malloc(sizeof(char) * (ft_strlen(backup) - start + 1));
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (backup[start])
-		str[i++] = backup[start++];
-	str[i] = '\0';
-	free(backup);
-	return (str);
-}
-static char *read_line(char *backup, int fd)
-{
-	int byte;
-	char *buff;
-
-	buff = malloc(BUFFER_SIZE + 1 * sizeof(char));
+	buff = malloc(BUFFER_SIZE + ((size_t) 1));
 	if (!buff)
-		return (NULL);
-	byte = 1;
-	while (byte > 0 && ft_index(backup, '\n') == -1)
+		return (0 || free_ptr(0, 0, 0, res));
+	chars_read = read(fd, buff, BUFFER_SIZE);
+	if (chars_read == -1)
+		return (0 || free_ptr(0, buff, 0, res));
+	buff[chars_read] = 0;
+	if (st_getnl_index(buff) != -1)
 	{
-		byte = read(fd, buff, BUFFER_SIZE);
-		if (byte == 0)
-			break;
-		if (byte == -1)
-		{
-			free(buff);
-			return (NULL);
-		}
-		buff[byte] = '\0';
-		backup = ft_strjoin(backup, buff);
+		tmp = ft_substr(buff, 0, st_getnl_index(buff) + 1);
+		result = ft_strjoin(*res, tmp);
+		*rem = ft_substr(buff, st_getnl_index(buff) + 1, ft_strlen(buff));
+		if (!*rem || !result)
+			return (0 || free_ptr(buff, 0, result, res));
 	}
-	free(buff);
-	return (backup);
+	else
+		result = ft_strjoin(*res, buff);
+	free_ptr(tmp, buff, 0, res);
+	*res = result;
+	return (chars_read);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	static char *backup;
-	char *line;
+	static char	*line_remain;
+	char		*res;
+	int			bytes_read;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0)
+		return (NULL);
+	res = 0;
+	while (st_getnl_index(res) == -1)
 	{
-		exit(1);
-		return (NULL);
+		if (line_remain)
+		{
+			res = ft_get_remainder(&line_remain);
+			if (!res)
+				return (NULL);
+			continue ;
+		}
+		bytes_read = st_get_line(&res, &line_remain, fd, 0);
+		if (!res)
+			return (NULL);
+		if (!bytes_read && !line_remain && (!res || !*res))
+			return (free_ptr(res, 0, 0, 0));
+		else if (!bytes_read && !line_remain)
+			break ;
 	}
-	backup = read_line(backup, fd);
-	if (!backup)
-		return (NULL);
-	line = get_line(backup);
-	backup = get_backup(backup);
-	return (line);
+	return (res);
 }

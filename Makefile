@@ -1,8 +1,8 @@
 # SRCS
 LinAlgebra	= src/linear_algebra/Mat4x4.c src/linear_algebra/Vec3.c
 Renderer	= src/renderer/Camera.c src/renderer/Ray.c src/renderer/Renderer.c
-Parser_m	= src/parser/ft_split.c src/parser/get_next_line.c src/parser/get_vec3.c src/parser/parser.c src/parser/parser_utils.c 
-Parser_b	= src/parser/ft_split.c src/parser/get_next_line.c src/parser/get_vec3.c src/parser/parser_bonus.c src/parser/parser_utils.c 
+Parser_m	= src/parser/ft_split.c src/parser/get_next_line.c src/parser/get_next_line_utils.c src/parser/get_vec3.c src/parser/parser.c src/parser/parser_utils.c 
+Parser_b	= src/parser/ft_split.c src/parser/get_next_line.c src/parser/get_next_line_utils.c src/parser/get_vec3.c src/parser/parser_bonus.c src/parser/parser_utils.c 
 Object_m	= src/objects/mandatory/Cylinder.c src/objects/mandatory/Light.c src/objects/mandatory/Object.c src/objects/mandatory/Plane.c src/objects/mandatory/Sphere.c
 Object_b	= ${Object_m} src/objects/bonus/Cone_bonus.c src/objects/bonus/Cone_cap_bonus.c src/objects/bonus/Rectangle_bonus.c
 input		= src/input/input.c
@@ -18,7 +18,7 @@ OBJ_b = $(SRC_b:.c=.o)
 CC = cc
 NAME = miniRT
 NAME_b = miniRT_bonus
-CFLAGS = -O3 -Iincludes -g3 -fsanitize=address
+CFLAGS = -Iincludes -g3 #-fsanitize=address
 LDFLAGS = -Lmlx_Linux -lmlx_Linux -lXext -lX11 -lm
 
 ifeq ($(shell uname -s),Darwin)

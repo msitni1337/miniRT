@@ -59,5 +59,8 @@ int main(int c, char **v)
 	mlx_hook(r.window, ON_MOUSEUP, 1L << 3, mouse_hook_up, &r);
 	mlx_hook(r.window, ON_DESTROY, 0L, on_destroy, &r);
 	mlx_loop(r.mlx_context);
+	mlx_destroy_window(r.mlx_context, r.window);
+	mlx_destroy_display(r.mlx_context);
+	free(r.mlx_context);
 	return 0;
 }

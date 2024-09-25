@@ -129,3 +129,22 @@ void *open_texture(void *mlx_ptr, t_img *texture)
 	texture->data = mlx_get_data_addr(texture->handle, &texture->bpp, &texture->size_line, &texture->endian);
 	return texture->data;
 }
+
+int set_objects_textures(void* mlx, t_scene* scene)
+{
+	t_object*obj;
+	size_t i;
+
+	i = 0;
+	while (i < scene->objects_count)
+	{
+		obj = scene->objects + i;
+		if (obj->texture.filename != NULL && open_texture(mlx, &obj->texture) == NULL)
+			return printf(RED"Can't open texture [%s]\n"rst, obj->texture.filename);
+		if (obj->normal_map.filename != NULL && open_texture(mlx, &obj->normal_map) == NULL)
+			return printf(RED"Can't open texture [%s]\n"rst, obj->texture.filename);
+		i++;
+	}
+	free_textures_filenames(scene);
+	return 0;
+}

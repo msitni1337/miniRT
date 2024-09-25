@@ -1,40 +1,6 @@
 #include "input.h"
 #include "parser_bonus.h"
 
-void free_textures_filenames(t_scene* scene)
-{
-	t_object*obj;
-	size_t i;
-
-	i = 0;
-	while (i < scene->objects_count)
-	{
-		obj = scene->objects + i;
-		ft_free(obj->texture.filename, obj->normal_map.filename, NULL);
-		i++;
-	}
-}
-
-
-int set_objects_textures(void* mlx, t_scene* scene)
-{
-	t_object*obj;
-	size_t i;
-
-	i = 0;
-	while (i < scene->objects_count)
-	{
-		obj = scene->objects + i;
-		if (obj->texture.filename != NULL && open_texture(mlx, &obj->texture) == NULL)
-			return printf(RED"Can't open texture [%s]\n"rst, obj->texture.filename);
-		if (obj->normal_map.filename != NULL && open_texture(mlx, &obj->normal_map) == NULL)
-			return printf(RED"Can't open texture [%s]\n"rst, obj->texture.filename);
-		i++;
-	}
-	free_textures_filenames(scene);
-	return 0;
-}
-
 int main(int c, char **v)
 {
 	t_renderer r;
@@ -104,5 +70,8 @@ int main(int c, char **v)
 	mlx_hook(r.window, ON_MOUSEUP, 1L << 3, mouse_hook_up, &r);
 	mlx_hook(r.window, ON_DESTROY, 0L, on_destroy, &r);
 	mlx_loop(r.mlx_context);
+	mlx_destroy_window(r.mlx_context, r.window);
+	mlx_destroy_display(r.mlx_context);
+	free(r.mlx_context);
 	return 0;
 }
