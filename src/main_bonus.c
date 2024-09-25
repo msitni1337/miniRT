@@ -6,7 +6,7 @@
 /*   By: msitni <msitni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 09:57:48 by msitni            #+#    #+#             */
-/*   Updated: 2024/09/25 09:57:52 by msitni           ###   ########.fr       */
+/*   Updated: 2024/09/25 10:20:54 by msitni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	main(int c, char **v)
 
 	if (c != 2)
 	{
-		LOG_ERROR("invalid args");
+		log_error("invalid args");
 		printf(YELLOW "usage: %s [Scene_file_path.rt]\n" rst, v[0]);
 		return (1);
 	}

@@ -14,7 +14,7 @@ int main(int c, char **v)
 	renderer.mlx_context = mlx_init();
 	if (renderer.mlx_context == NULL)
 	{
-		LOG_ERROR("MLX INIT FAILED.");
+		log_error("MLX INIT FAILED.");
 		return 1;
 	}
 	renderer.win_width = WIN_WIDTH;
@@ -22,7 +22,7 @@ int main(int c, char **v)
 	renderer.window = mlx_new_window(renderer.mlx_context, renderer.win_width, renderer.win_height, WIN_TITLE);
 	if (renderer.window == NULL)
 	{
-		LOG_ERROR("MLX WINDOW INIT FAILED.");
+		log_error("MLX WINDOW INIT FAILED.");
 		return 1;
 	}
 	renderer.mlx_texture.width = renderer.win_width;
@@ -30,13 +30,13 @@ int main(int c, char **v)
 	renderer.mlx_texture.handle = mlx_new_image(renderer.mlx_context, renderer.mlx_texture.width, renderer.mlx_texture.height);
 	if (renderer.mlx_texture.handle == NULL)
 	{
-		LOG_ERROR("MLX IMG INIT FAILED.");
+		log_error("MLX IMG INIT FAILED.");
 		return 1;
 	}
 	renderer.mlx_texture.data = mlx_get_data_addr(renderer.mlx_texture.handle, &renderer.mlx_texture.bpp, &renderer.mlx_texture.size_line, &renderer.mlx_texture.endian);
 	if (renderer.mlx_texture.data == NULL)
 	{
-		LOG_ERROR("MLX IMG CAN'T GET IMG DATA BUFFER ADDRESS.");
+		log_error("MLX IMG CAN'T GET IMG DATA BUFFER ADDRESS.");
 		return 1;
 	}
 	renderer.scene.ambient_color = (t_vec3){1.0f, 1.0f, 1.0f};
@@ -64,12 +64,12 @@ int main(int c, char **v)
 	obj = new_sphere((t_vec3){0, 0, 3}, 5, (t_vec3){255.0f, 255.0f, 255.0f});
 	if (set_texture(renderer.mlx_context, &obj.texture, "planet.xpm") == NULL)
 	{
-		LOG_ERROR("MLX IMG CAN'T SET OBJ TEXTURE.");
+		log_error("MLX IMG CAN'T SET OBJ TEXTURE.");
 		return 1;
 	}
 	if (set_texture(renderer.mlx_context, &obj.normal_map, "planet_normal.xpm") == NULL)
 	{
-		LOG_ERROR("MLX IMG CAN'T SET OBJ TEXTURE.");
+		log_error("MLX IMG CAN'T SET OBJ TEXTURE.");
 		return 1;
 	}
 	add_to_arr(&objects, &obj);

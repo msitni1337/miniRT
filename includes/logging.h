@@ -12,7 +12,8 @@
 #define CYAN    "\x1b[36m"
 #define WHITE   "\x1b[37m"
 
-int LOG_ERROR(const char*error);
-int LOG_DEBUG(const char*msg);
-int LOG_INFO(const char*info);
+int log_error(const char*error);
+int log_debug(const char*msg);
+int log_info(const char*info);
+
 #endif // LOGGING_H

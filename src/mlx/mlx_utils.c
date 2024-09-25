@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   logging.c                                          :+:      :+:    :+:   */
+/*   mlx_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msitni <msitni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 10:21:51 by msitni            #+#    #+#             */
-/*   Updated: 2024/09/25 10:21:51 by msitni           ###   ########.fr       */
+/*   Created: 2024/09/25 10:16:05 by msitni            #+#    #+#             */
+/*   Updated: 2024/09/25 10:16:05 by msitni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "logging.h"
+#include "Renderer.h"
 
-int	log_error(const char *error)
+void	set_img_pixel_at(t_img *img, int x, int y, int color)
 {
-	return (printf(RED "[ %s ]: ERROR: %s\n" rst, PROG_NAME, error));
+	char	*tmp;
+
+	tmp = &(img->data[x * (img->bpp / 8) + y * img->size_line]);
+	*(unsigned int *)tmp = color;
 }
 
-int	log_debug(const char *msg)
+unsigned int	get_img_pixel_at(t_img *img, int x, int y)
 {
-	return (printf(YELLOW "[ %s ]: WARNING: %s\n" rst, PROG_NAME, msg));
-}
+	char	*tmp;
 
-int	log_info(const char *info)
-{
-	return (printf(GREEN "[ %s ]: INFO: %s\n" rst, PROG_NAME, info));
+	tmp = &(img->data[x * (img->bpp / 8) + y * img->size_line]);
+	return (*(unsigned int *)tmp);
 }

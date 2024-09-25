@@ -247,7 +247,7 @@ int render(t_renderer *renderer)
 
 	if (renderer->redraw == FALSE)
 		return 0;
-	LOG_INFO("Rendering Image..");
+	log_info("Rendering Image..");
 	img = &(renderer->mlx_texture);
 	for (int y = renderer->mlx_texture.height - 1; y >= 0; y--)
 	{
@@ -261,7 +261,7 @@ int render(t_renderer *renderer)
 		}
 		mlx_put_image_to_window(renderer->mlx_context, renderer->window, renderer->mlx_texture.handle, 0, 0);
 	}
-	LOG_INFO("Finished Image..");
+	log_info("Finished Image..");
 	renderer->redraw = FALSE;
 	return 0;
 }

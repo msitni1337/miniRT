@@ -39,5 +39,6 @@ int get_vec3(t_vec3*vec3, char*str);
 int get_float(float*f, char*str);
 int is_valid_color(t_vec3 color);
 int is_normalized(t_vec3 vec);
+size_t	ft_strlcpy(char *dst, const char *src, size_t sz);
 
 #endif

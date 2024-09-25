@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msitni <msitni@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/25 10:21:45 by msitni            #+#    #+#             */
+/*   Updated: 2024/09/25 10:30:50 by msitni           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "utils.h"
 
-void ft_free(void *p1, void *p2, void *p3)
+void	ft_free(void *p1, void *p2, void *p3)
 {
 	if (p1)
 		free(p1);
@@ -10,10 +22,24 @@ void ft_free(void *p1, void *p2, void *p3)
 		free(p2);
 }
 
-void free_textures_filenames(t_scene *scene)
+void *free_till(char **ptr, int index)
 {
-	t_object *obj;
-	size_t i;
+	int	i;
+
+	i = 0;
+	while (i < index)
+	{
+		free(ptr[i]);
+		i++;
+	}
+	free(ptr);
+	return (NULL);
+}
+
+void	free_textures_filenames(t_scene *scene)
+{
+	t_object	*obj;
+	size_t		i;
 
 	i = 0;
 	while (i < scene->objects_count)
@@ -24,9 +50,9 @@ void free_textures_filenames(t_scene *scene)
 	}
 }
 
-void free_objects_textures(void *mlx, t_object *objs, size_t count)
+void	free_objects_textures(void *mlx, t_object *objs, size_t count)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (i < count)

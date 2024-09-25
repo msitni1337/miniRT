@@ -6,7 +6,7 @@
 /*   By: msitni <msitni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 09:59:03 by msitni            #+#    #+#             */
-/*   Updated: 2024/09/25 09:59:04 by msitni           ###   ########.fr       */
+/*   Updated: 2024/09/25 10:20:54 by msitni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	create_canvas(t_renderer *r)
 	{
 		free_textures_filenames(&r->scene);
 		ft_free(r->scene.objects, r->scene.lights, NULL);
-		LOG_ERROR("MLX IMG INIT FAILED.");
+		log_error("MLX IMG INIT FAILED.");
 		return (1);
 	}
 	r->mlx_texture.data = mlx_get_data_addr(r->mlx_texture.handle,
@@ -33,7 +33,7 @@ int	create_canvas(t_renderer *r)
 		mlx_destroy_image(r->mlx_context, r->mlx_texture.handle);
 		free_textures_filenames(&r->scene);
 		ft_free(r->scene.objects, r->scene.lights, NULL);
-		LOG_ERROR("MLX IMG CAN'T GET IMG DATA BUFFER ADDRESS.");
+		log_error("MLX IMG CAN'T GET IMG DATA BUFFER ADDRESS.");
 		return (1);
 	}
 	return (0);
@@ -59,7 +59,7 @@ int	init_mlx(t_renderer *r)
 	{
 		free_textures_filenames(&r->scene);
 		ft_free(r->scene.objects, r->scene.lights, NULL);
-		LOG_ERROR("MLX INIT FAILED.");
+		log_error("MLX INIT FAILED.");
 		return (1);
 	}
 	r->win_width = WIN_WIDTH;
@@ -71,7 +71,7 @@ int	init_mlx(t_renderer *r)
 		free_textures_filenames(&r->scene);
 		mlx_destroy_display(r->mlx_context);
 		ft_free(r->scene.objects, r->scene.lights, r->mlx_context);
-		LOG_ERROR("MLX WINDOW INIT FAILED.");
+		log_error("MLX WINDOW INIT FAILED.");
 		return (1);
 	}
 	return (0);

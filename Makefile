@@ -6,7 +6,7 @@ Parser_b	= src/parser/ft_split.c src/parser/get_next_line.c src/parser/get_next_
 Object_m	= src/objects/mandatory/Cylinder.c src/objects/mandatory/Light.c src/objects/mandatory/Object.c src/objects/mandatory/Plane.c src/objects/mandatory/Sphere.c
 Object_b	= ${Object_m} src/objects/bonus/Cone_bonus.c src/objects/bonus/Cone_cap_bonus.c src/objects/bonus/Rectangle_bonus.c
 input		= src/input/input.c src/input/camera.c src/input/object.c
-utils		= src/utils/dynamic_arrays.c src/utils/free.c src/utils/logging.c src/utils/mlx_utils.c
+utils		= src/utils/dynamic_arrays.c src/utils/free.c src/utils/logging.c src/utils/ft_memset.c src/mlx/mlx_utils.c 
 
 SRC_m = ${LinAlgebra} ${Renderer} ${Parser_m} ${Object_m} ${input} ${utils} src/main.c src/mlx/mlx_init.c 
 OBJ_m = $(SRC_m:.c=.o)

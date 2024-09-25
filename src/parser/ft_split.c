@@ -1,44 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msitni <msitni@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/25 10:32:04 by msitni            #+#    #+#             */
+/*   Updated: 2024/09/25 10:32:06 by msitni           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parser.h"
 
-int ft_isspace(char c)
+int	ft_isspace(char c)
 {
-	return (c == ' ' || c == '\t' || c == '\n' || c == '\f' || c == '\r' || c == '\v');
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\f' || c == '\r'
+		|| c == '\v');
 }
 
-size_t ft_strlcpy(char *dst, const char *src, size_t sz)
+static size_t	count_strs(char const *str, int (*delim)(char))
 {
-	size_t i;
-
-	i = 0;
-	if (!sz)
-		return (ft_strlen(src));
-	while (src[i] && i < sz - 1)
-	{
-		dst[i] = src[i];
-		i++;
-	}
-	dst[i] = 0;
-	return (ft_strlen(src));
-}
-
-static char **handle_error(char **ptr, int index)
-{
-	int i;
-
-	i = 0;
-	while (i < index)
-	{
-		free(ptr[i]);
-		i++;
-	}
-	free(ptr);
-	return (NULL);
-}
-
-static size_t count_strs(char const *str, int (*delim)(char))
-{
-	size_t count;
-	int i;
+	size_t	count;
+	int		i;
 
 	count = 0;
 	i = 0;
@@ -59,9 +42,9 @@ static size_t count_strs(char const *str, int (*delim)(char))
 	return (count);
 }
 
-static size_t get_next_str_size(char const *str, int (*delim)(char))
+static size_t	get_next_str_size(char const *str, int (*delim)(char))
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (str && str[i] && !delim(str[i]))
@@ -69,12 +52,12 @@ static size_t get_next_str_size(char const *str, int (*delim)(char))
 	return (i);
 }
 
-static char **perform_split(char **res, char const *s, int (*delim)(char))
+static char	**perform_split(char **res, char const *s, int (*delim)(char))
 {
-	int index;
-	int curr_index;
-	char *str;
-	size_t str_s;
+	int		index;
+	int		curr_index;
+	char	*str;
+	size_t	str_s;
 
 	curr_index = 0;
 	index = 0;
@@ -87,7 +70,7 @@ static char **perform_split(char **res, char const *s, int (*delim)(char))
 		{
 			str = malloc(str_s + 1);
 			if (!str)
-				return (handle_error(res, index));
+				return (free_till(res, index));
 			ft_strlcpy(str, s + curr_index, str_s + 1);
 			res[index] = str;
 			index++;
@@ -98,9 +81,9 @@ static char **perform_split(char **res, char const *s, int (*delim)(char))
 	return (res);
 }
 
-char **ft_split(char const *s, size_t *count, int (*delim)(char))
+char	**ft_split(char const *s, size_t *count, int (*delim)(char))
 {
-	char **res;
+	char	**res;
 
 	if (!s)
 		return (NULL);
