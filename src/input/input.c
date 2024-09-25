@@ -165,7 +165,8 @@ int key_hook_down(int key, t_renderer *renderer)
 	if (key == KEY_CTR)
 		renderer->tab_mode = TRUE;
 	if (key == KEY_ESC)
-		on_destroy(renderer);
+		mlx_loop_end(renderer->mlx_context);
+
 	return 0;
 }
 int mouse_hook_up(int button, int x, int y, t_renderer *renderer)
@@ -189,11 +190,8 @@ int mouse_hook_down(int button, int x, int y, t_renderer *renderer)
 	return 0;
 }
 
-int on_destroy(t_renderer *r)
+int on_destroy(void *mlx)
 {
-	mlx_loop_end(r->mlx_context);
-	free_objects_textures(r->mlx_context, r->scene.objects, r->scene.objects_count);
-	ft_free(r->scene.objects, r->scene.lights, NULL);
-	mlx_destroy_image(r->mlx_context, r->mlx_texture.handle);
+	mlx_loop_end(mlx);
 	return 0;
 }

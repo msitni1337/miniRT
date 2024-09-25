@@ -7,8 +7,8 @@ int main(int c, char **v)
 
 	if (c != 2)
 	{
-		printf("invalid args\n");
-		printf("usage: %s [Scene_file_path.rt]\n", v[0]);
+		LOG_ERROR("invalid args");
+		printf(YELLOW "usage: %s [Scene_file_path.rt]\n" rst, v[0]);
 		return 1;
 	}
 	r = (t_renderer){0};
@@ -59,6 +59,8 @@ int main(int c, char **v)
 	mlx_hook(r.window, ON_MOUSEUP, 1L << 3, mouse_hook_up, &r);
 	mlx_hook(r.window, ON_DESTROY, 0L, on_destroy, &r);
 	mlx_loop(r.mlx_context);
+	ft_free(r.scene.objects, r.scene.lights, NULL);
+	mlx_destroy_image(r.mlx_context, r.mlx_texture.handle);
 	mlx_destroy_window(r.mlx_context, r.window);
 	mlx_destroy_display(r.mlx_context);
 	free(r.mlx_context);

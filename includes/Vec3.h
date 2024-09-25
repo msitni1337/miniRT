@@ -17,15 +17,6 @@
 #define FLT_MAX 3.402823466e+38F
 #define FLT_MIN 1.175494351e-38F
 
-#define rst   "\x1b[0m"
-#define RED     "\x1b[31m"
-#define GREEN   "\x1b[32m"
-#define YELLOW  "\x1b[33m"
-#define BLUE    "\x1b[34m"
-#define MAGENTA "\x1b[35m"
-#define CYAN    "\x1b[36m"
-#define WHITE   "\x1b[37m"
-
 typedef struct s_vec3
 {
 	float x;

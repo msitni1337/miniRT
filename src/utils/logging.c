@@ -1,16 +1,16 @@
 #include "logging.h"
 
-void LOG_ERROR(const char*error)
+int LOG_ERROR(const char*error)
 {
-    printf("[ %s ]: ERROR: %s\n", PROG_NAME, error);
+    return printf(RED"[ %s ]: ERROR: %s\n"rst, PROG_NAME, error);
 }
 
-void LOG_WARN(const char*warn)
+int LOG_DEBUG(const char*msg)
 {
-    printf("[ %s ]: WARNING: %s\n", PROG_NAME, warn);
+    return printf(YELLOW"[ %s ]: WARNING: %s\n"rst, PROG_NAME, msg);
 }
 
-void LOG_INFO(const char*info)
+int LOG_INFO(const char*info)
 {
-    printf("[ %s ]: INFO: %s\n", PROG_NAME, info);
+    return printf(GREEN"[ %s ]: INFO: %s\n"rst, PROG_NAME, info);
 }

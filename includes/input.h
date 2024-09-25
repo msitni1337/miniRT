@@ -39,18 +39,17 @@
 #define KEY_ESC 65307
 #endif
 
-# define ON_KEYDOWN 2
-# define ON_KEYUP 3
-# define ON_MOUSEDOWN 4
-# define ON_MOUSEUP 5
-# define ON_MOUSEMOVE 6
-# define ON_EXPOSE 12
-# define ON_DESTROY 17
-
+#define ON_KEYDOWN 2
+#define ON_KEYUP 3
+#define ON_MOUSEDOWN 4
+#define ON_MOUSEUP 5
+#define ON_MOUSEMOVE 6
+#define ON_EXPOSE 12
+#define ON_DESTROY 17
 
 int key_hook_up(int key, t_renderer *renderer);
 int key_hook_down(int key, t_renderer *renderer);
 int mouse_hook_up(int button, int x, int y, t_renderer *renderer);
 int mouse_hook_down(int button, int x, int y, t_renderer *renderer);
-int on_destroy(t_renderer*renderer);
+int on_destroy(void *mlx);
 #endif // INPUT_H

@@ -18,7 +18,7 @@ OBJ_b = $(SRC_b:.c=.o)
 CC = cc
 NAME = miniRT
 NAME_b = miniRT_bonus
-CFLAGS = -Iincludes -g3 #-fsanitize=address
+CFLAGS = -Iincludes -fsanitize=address -O3
 LDFLAGS = -Lmlx_Linux -lmlx_Linux -lXext -lX11 -lm
 
 ifeq ($(shell uname -s),Darwin)
@@ -26,7 +26,7 @@ ifeq ($(shell uname -s),Darwin)
 	LDFLAGS = -L. -lmlx -framework OpenGL -framework AppKit
 endif
 
-.PHONY : re fclean clean all bonus
+.PHONY : re be fclean clean all bonus
 .SECONDARY : ${OBJ_m} ${OBJ_b}
 
 %.o : %.c
@@ -49,3 +49,4 @@ ${NAME}: $(OBJ_m)
 	$(CC) $(CFLAGS) $(OBJ_b) -o $(NAME_b) $(LDFLAGS)
 
 re : fclean all
+be : fclean bonus

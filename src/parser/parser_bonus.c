@@ -6,11 +6,11 @@ int fill_ambient(t_scene *scene, char **param, size_t count)
 	float intensity;
 
 	if (count != 3)
-		return printf(RED "invalid number of params for ambient light\n" rst);
+		return LOG_ERROR("invalid number of params for ambient light");
 	if (get_float(&intensity, param[1]) || intensity < 0 || intensity > 1.0f)
-		return printf(RED "invalid intensity param for ambient light\n" rst);
+		return LOG_ERROR("invalid intensity param for ambient light");
 	if (get_vec3(&color, param[2]) || is_valid_color(color))
-		return printf(RED "invalid color param for ambient light\n" rst);
+		return LOG_ERROR("invalid color param for ambient light");
 	scene->ambient_color = vec3_scale(color, 1 / 255.0f);
 	scene->ambient_intensity = intensity;
 	return (0);
@@ -24,16 +24,16 @@ int fill_light(t_parser *p, char **param, size_t count)
 	t_vec3 color;
 
 	if (count != 4)
-		return printf(RED "invalid number of params for light\n" rst);
+		return LOG_ERROR("invalid number of params for light");
 	if (get_vec3(&position, param[1]))
-		return printf(RED "invalid position param for light\n" rst);
+		return LOG_ERROR("invalid position param for light");
 	if (get_float(&intensity, param[2]) || intensity < 0 || intensity > 1.0f)
-		return printf(RED "invalid intensity param for light\n" rst);
+		return LOG_ERROR("invalid intensity param for light");
 	if (get_vec3(&color, param[3]) || is_valid_color(color))
-		return printf(RED "invalid color param for light\n" rst);
+		return LOG_ERROR("invalid color param for light");
 	light = new_light(position, intensity, color);
 	if (add_to_arr(&p->lights, &light) == NULL)
-		return printf(RED "Malloc failed\n" rst);
+		return LOG_ERROR("Malloc failed");
 	return (0);
 }
 
@@ -44,13 +44,13 @@ int fill_camera(t_scene *scene, char **param, size_t count)
 	float fov;
 
 	if (count != 4)
-		return printf(RED "invalid number of params for camera\n" rst);
+		return LOG_ERROR("invalid number of params for camera");
 	if (get_vec3(&position, param[1]))
-		return printf(RED "invalid position param for camera\n" rst);
+		return LOG_ERROR("invalid position param for camera");
 	if (get_vec3(&orientation, param[2]))
-		return printf(RED "invalid orientation param for camera\n" rst);
+		return LOG_ERROR("invalid orientation param for camera");
 	if (get_float(&fov, param[3]) || fov > 180.0f || fov < 0)
-		return printf(RED "invalid fov param for camera\n" rst);
+		return LOG_ERROR("invalid fov param for camera");
 	scene->camera = new_camera(position, orientation, (float)WIN_HEIGHT / WIN_WIDTH, fov);
 	return (0);
 }
@@ -67,25 +67,25 @@ int fill_object_params(t_object *obj, char **param)
 		{
 			param++;
 			if (get_float(&obj->reflection, *param) || obj->reflection < 0 || obj->reflection > 1.0f)
-				return printf(RED "provide a reflection value [0.0 ~ 1.0].\n" rst);
+				return LOG_ERROR("provide a reflection value [0.0 ~ 1.0].");
 		}
 		else if (ft_strcmp(*param, "-t") == 0)
 		{
 			param++;
 			if (param == NULL)
-				return printf(RED "provide a path to the xpm texture img.\n" rst);
+				return LOG_ERROR("provide a path to the xpm texture img.");
 			obj->texture.filename = ft_strdup(*param);
 			if (obj->texture.filename == NULL)
-				return printf(RED "Malloc failed\n" rst);
+				return LOG_ERROR("Malloc failed");
 		}
 		else if (ft_strcmp(*param, "-n") == 0)
 		{
 			param++;
 			if (param == NULL)
-				return printf(RED "provide a path to the xpm normal map.\n" rst);
+				return LOG_ERROR("provide a path to the xpm normal map.");
 			obj->normal_map.filename = ft_strdup(*param);
 			if (obj->normal_map.filename == NULL)
-				return printf(RED "Malloc failed\n" rst);
+				return LOG_ERROR("Malloc failed");
 		}
 		param++;
 	}
@@ -100,18 +100,18 @@ int fill_sphere(t_parser *p, char **param, size_t count)
 	t_vec3 color;
 
 	if (count < 4)
-		return printf(RED "invalid number of params for sphere\n" rst);
+		return LOG_ERROR("invalid number of params for sphere");
 	if (get_vec3(&position, param[1]))
-		return printf(RED "invalid position param for sphere\n" rst);
+		return LOG_ERROR("invalid position param for sphere");
 	if (get_float(&diameter, param[2]) || diameter < 0)
-		return printf(RED "invalid diameter param for sphere\n" rst);
+		return LOG_ERROR("invalid diameter param for sphere");
 	if (get_vec3(&color, param[3]) || is_valid_color(color))
-		return printf(RED "invalid color param for sphere\n" rst);
+		return LOG_ERROR("invalid color param for sphere");
 	object = new_sphere(position, diameter / 2, color);
 	if (count > 4 && fill_object_params(&object, param + 4))
 		return 1;
 	if (add_to_arr(&p->objects, &object) == NULL)
-		return printf(RED "Malloc failed\n" rst);
+		return LOG_ERROR("Malloc failed");
 	return (0);
 }
 
@@ -123,18 +123,18 @@ int fill_plane(t_parser *p, char **param, size_t count)
 	t_vec3 color;
 
 	if (count < 4)
-		return printf(RED "invalid number of params for plane\n" rst);
+		return LOG_ERROR("invalid number of params for plane");
 	if (get_vec3(&point, param[1]))
-		return printf(RED "invalid point param for plane\n" rst);
+		return LOG_ERROR("invalid point param for plane");
 	if (get_vec3(&normal, param[2]) || vec3_magnitude(normal) <= ZERO)
-		return printf(RED "invalid normal param for plane\n" rst);
+		return LOG_ERROR("invalid normal param for plane");
 	if (get_vec3(&color, param[3]) || is_valid_color(color))
-		return printf(RED "invalid color param for plane\n" rst);
+		return LOG_ERROR("invalid color param for plane");
 	object = new_plane(point, normal, color);
 	if (count > 4 && fill_object_params(&object, param + 4))
 		return 1;
 	if (add_to_arr(&p->objects, &object) == NULL)
-		return printf(RED "Malloc failed\n" rst);
+		return LOG_ERROR("Malloc failed");
 	return (0);
 }
 
@@ -144,22 +144,22 @@ int fill_cylinder(t_parser *p, char **param, size_t count)
 	t_vec3 height_diam;
 
 	if (count < 6)
-		return printf(RED "invalid number of params for cylinder\n" rst);
+		return LOG_ERROR("invalid number of params for cylinder");
 	if (get_vec3(&o.position, param[1]))
-		return printf(RED "invalid point param for cylinder\n" rst);
+		return LOG_ERROR("invalid point param for cylinder");
 	if (get_vec3(&o.normal, param[2]) || vec3_magnitude(o.normal) <= ZERO)
-		return printf(RED "invalid normal param for cylinder\n" rst);
+		return LOG_ERROR("invalid normal param for cylinder");
 	if (get_float(&height_diam.x, param[3]) || height_diam.x < 0)
-		return printf(RED "invalid height param for cylinder\n" rst);
+		return LOG_ERROR("invalid height param for cylinder");
 	if (get_float(&height_diam.y, param[4]) || height_diam.y < 0)
-		return printf(RED "invalid diameter param for cylinder\n" rst);
+		return LOG_ERROR("invalid diameter param for cylinder");
 	if (get_vec3(&o.color, param[5]) || is_valid_color(o.color))
-		return printf(RED "invalid color param for cylinder\n" rst);
+		return LOG_ERROR("invalid color param for cylinder");
 	o = new_cylinder(o.normal, o.position, height_diam, o.color);
 	if (count > 6 && fill_object_params(&o, param + 6))
 		return 1;
 	if (add_to_arr(&p->objects, &o) == NULL)
-		return printf(RED "Malloc failed\n" rst);
+		return LOG_ERROR("Malloc failed");
 	return (0);
 }
 
@@ -169,22 +169,22 @@ int fill_rect(t_parser *p, char **param, size_t count)
 	t_vec3 height_width;
 
 	if (count < 6)
-		return printf(RED "invalid number of params for rectangle\n" rst);
+		return LOG_ERROR("invalid number of params for rectangle");
 	if (get_vec3(&o.position, param[1]))
-		return printf(RED "invalid point param for rectangle\n" rst);
+		return LOG_ERROR("invalid point param for rectangle");
 	if (get_vec3(&o.normal, param[2]) || vec3_magnitude(o.normal) <= ZERO)
-		return printf(RED "invalid normal param for rectangle\n" rst);
+		return LOG_ERROR("invalid normal param for rectangle");
 	if (get_float(&height_width.x, param[3]) || height_width.x < 0)
-		return printf(RED "invalid width param for rectangle\n" rst);
+		return LOG_ERROR("invalid width param for rectangle");
 	if (get_float(&height_width.y, param[4]) || height_width.y < 0)
-		return printf(RED "invalid height param for rectangle\n" rst);
+		return LOG_ERROR("invalid height param for rectangle");
 	if (get_vec3(&o.color, param[5]) || is_valid_color(o.color))
-		return printf(RED "invalid color param for rectangle\n" rst);
+		return LOG_ERROR("invalid color param for rectangle");
 	o = new_rect(o.position, o.normal, o.color, height_width);
 	if (count > 6 && fill_object_params(&o, param + 6))
 		return 1;
 	if (add_to_arr(&p->objects, &o) == NULL)
-		return printf(RED "Malloc failed\n" rst);
+		return LOG_ERROR("Malloc failed");
 	return (0);
 }
 
@@ -194,22 +194,22 @@ int fill_cone(t_parser *p, char **param, size_t count)
 	t_vec3 height_diam;
 
 	if (count < 6)
-		return printf(RED "invalid number of params for non cap cone\n" rst);
+		return LOG_ERROR("invalid number of params for non cap cone");
 	if (get_vec3(&o.position, param[1]))
-		return printf(RED "invalid point param for non cap cone\n" rst);
+		return LOG_ERROR("invalid point param for non cap cone");
 	if (get_vec3(&o.normal, param[2]) || vec3_magnitude(o.normal) <= ZERO)
-		return printf(RED "invalid normal param for non cap cone\n" rst);
+		return LOG_ERROR("invalid normal param for non cap cone");
 	if (get_float(&height_diam.x, param[3]) || height_diam.x < 0)
-		return printf(RED "invalid height param for non cap cone\n" rst);
+		return LOG_ERROR("invalid height param for non cap cone");
 	if (get_float(&height_diam.y, param[4]) || height_diam.y < 0)
-		return printf(RED "invalid diameter param for non cap cone\n" rst);
+		return LOG_ERROR("invalid diameter param for non cap cone");
 	if (get_vec3(&o.color, param[5]) || is_valid_color(o.color))
-		return printf(RED "invalid color param for non cap cone\n" rst);
+		return LOG_ERROR("invalid color param for non cap cone");
 	o = new_cone(o.normal, o.position, height_diam, o.color);
 	if (count > 6 && fill_object_params(&o, param + 6))
 		return 1;
 	if (add_to_arr(&p->objects, &o) == NULL)
-		return printf(RED "Malloc failed\n" rst);
+		return LOG_ERROR("Malloc failed");
 	return (0);
 }
 
@@ -219,22 +219,22 @@ int fill_cone_cap(t_parser *p, char **param, size_t count)
 	t_vec3 height_diam;
 
 	if (count < 6)
-		return printf(RED "invalid number of params for capped cone\n" rst);
+		return LOG_ERROR("invalid number of params for capped cone");
 	if (get_vec3(&o.position, param[1]))
-		return printf(RED "invalid point param for capped cone\n" rst);
+		return LOG_ERROR("invalid point param for capped cone");
 	if (get_vec3(&o.normal, param[2]) || vec3_magnitude(o.normal) <= ZERO)
-		return printf(RED "invalid normal param for capped cone\n" rst);
+		return LOG_ERROR("invalid normal param for capped cone");
 	if (get_float(&height_diam.x, param[3]) || height_diam.x < 0)
-		return printf(RED "invalid height param for capped cone\n" rst);
+		return LOG_ERROR("invalid height param for capped cone");
 	if (get_float(&height_diam.y, param[4]) || height_diam.y < 0)
-		return printf(RED "invalid diameter param for capped cone\n" rst);
+		return LOG_ERROR("invalid diameter param for capped cone");
 	if (get_vec3(&o.color, param[5]) || is_valid_color(o.color))
-		return printf(RED "invalid color param for capped cone\n" rst);
+		return LOG_ERROR("invalid color param for capped cone");
 	o = new_cone_cap(o.normal, o.position, height_diam, o.color);
 	if (count > 6 && fill_object_params(&o, param + 6))
 		return 1;
 	if (add_to_arr(&p->objects, &o) == NULL)
-		return printf(RED "Malloc failed\n" rst);
+		return LOG_ERROR("Malloc failed");
 	return (0);
 }
 
@@ -309,7 +309,7 @@ int check_line(char *line, t_scene *scene, t_parser *parser)
 	}
 	else
 	{
-		printf(RED "invalid line\n" rst);
+		LOG_ERROR("invalid line");
 		return free_array(param), ERROR;
 	}
 	return free_array(param), SUCESS;
@@ -323,7 +323,7 @@ int read_file(char *file, t_scene *scene, t_parser *parser)
 
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		return printf(RED "Scene file doesn't exist ):\n" rst), 1;
+		return LOG_ERROR("Scene file doesn't exist ):"), 1;
 	line_num = 1;
 	line = get_next_line(fd);
 	while (line)
@@ -336,7 +336,7 @@ int read_file(char *file, t_scene *scene, t_parser *parser)
 				line = get_next_line(fd);
 			}
 			close(fd);
-			return printf(RED "Error in line: %zu\n" rst, line_num), 1;
+			return printf(RED "=: Error in line: %zu\n" rst, line_num), 1;
 		}
 		free(line);
 		line = get_next_line(fd);
@@ -382,7 +382,7 @@ int check_args(char *s)
 		return (SUCESS);
 	else
 	{
-		printf(RED "should enter .rt file :)\n" rst);
+		LOG_ERROR("should enter .rt file :)");
 		return (ERROR);
 	}
 }
@@ -404,8 +404,8 @@ int parsing(t_scene *scene, int ac, char **av)
 		scene->lights = p.lights.data;
 		if (p.ambient_count != 0 && p.camera_count != 0 && p.lights.count != 0)
 			return SUCESS;
+		LOG_ERROR("One or more Capital param is missing");
+		LOG_ERROR("Capital params are [Camera, Ambient light, Light]");
 	}
-	printf(RED "One or more Capital param is missing\n" rst);
-	printf(RED "Capital params are [Camera, Ambient light, Light]\n" rst);
 	return ERROR;
 }
