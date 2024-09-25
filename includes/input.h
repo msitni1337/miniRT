@@ -47,9 +47,15 @@
 #define ON_EXPOSE 12
 #define ON_DESTROY 17
 
+#define SENS 2.0f
+
 int key_hook_up(int key, t_renderer *renderer);
 int key_hook_down(int key, t_renderer *renderer);
 int mouse_hook_up(int button, int x, int y, t_renderer *renderer);
 int mouse_hook_down(int button, int x, int y, t_renderer *renderer);
 int on_destroy(void *mlx);
+
+void control_camera(int key, t_camera *cam);
+void control_selected_obj(int key, t_object *obj);
+
 #endif // INPUT_H

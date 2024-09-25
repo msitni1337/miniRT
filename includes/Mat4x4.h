@@ -14,8 +14,7 @@ typedef struct s_mat4x4
 	float data[MAT_ROWS * MAT_COLS];
 } t_mat4x4;
 
-t_mat4x4 mat_new(float val);
-t_mat4x4 mat_id(); // { 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0}
+t_mat4x4 mat_id();
 t_mat4x4 mat_inv(t_mat4x4 *m1);
 t_mat3x3 mat_sub_mat(t_mat4x4 *m1, int x, int y);
 float mat4_determinant(t_mat4x4 *m1);

@@ -1,11 +1,6 @@
 #include "Mat4x4.h"
 #include <stdio.h>
 
-t_mat4x4 mat_new(float val)
-{
-	assert(!"NOT IMPLEMENTED"); // TODO: Possibly not needed
-	return (t_mat4x4){0};
-}
 t_mat3x3 mat_sub_mat(t_mat4x4 *m1, int x, int y)
 {
 	t_mat3x3 result;
@@ -168,10 +163,11 @@ t_vec3 mat_mul_vec3(t_mat4x4 *mat, t_vec3 *vec)
 	while (row < MAT_ROWS)
 	{
 		sum = 0;
-		sum += *mat_at(mat, row, 0) * result.x;
-		sum += *mat_at(mat, row, 1) * result.y;
-		sum += *mat_at(mat, row, 2) * result.z;
-		sum += *mat_at(mat, row, 3) * result.w;
+
+		sum += mat->data[row * MAT_COLS + 0] * result.x;
+		sum += mat->data[row * MAT_COLS + 1] * result.y;
+		sum += mat->data[row * MAT_COLS + 2] * result.z;
+		sum += mat->data[row * MAT_COLS + 3] * result.w;
 
 		*((float*)&result + row) = sum;
 		row++;
