@@ -11,7 +11,9 @@ Here're some of the project's best features:
 *   Rendering basic shapes (plane rectangle sphere cylinder and cone)
 *   Multiple colored point lights
 *   Shadows
-*   Reflections.
+*   Reflections
+*   Texture uv mapping
+*   Normal maps.
 
 <h2>🕹️ controls</h2>
 
@@ -35,5 +37,5 @@ make
 <p>3. Run</p>
 
 ```
-./miniRT
+./miniRT [path to a scene file]
 ```
