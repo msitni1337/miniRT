@@ -27,84 +27,60 @@ t_vec4 cone_map_uv(t_hit hit, t_object *obj)
 	return map;
 }
 
+t_quad_eq calculate_cone_quad(t_object*obj, t_ray ray)
+{
+	t_quad_eq eq;
+	t_vec3 w;
+	float tip_dist;
+	float m;
+
+	tip_dist = vec3_magnitude(vec3_scale(obj->normal, obj->height));
+	m = (obj->radius * obj->radius) / (tip_dist * tip_dist);
+	w = vec3_sub_vec3(ray.origin, obj->cone_tip);
+	eq.a = vec3_dot(ray.dir, ray.dir) - m * (vec3_dot(ray.dir, obj->normal) * vec3_dot(ray.dir, obj->normal)) - (vec3_dot(ray.dir, obj->normal) * vec3_dot(ray.dir, obj->normal));
+	eq.b = 2 * (vec3_dot(ray.dir, w) - m * (vec3_dot(ray.dir, obj->normal) * vec3_dot(w, obj->normal)) - (vec3_dot(ray.dir, obj->normal) * vec3_dot(w, obj->normal)));
+	eq.c = vec3_dot(w, w) - m * (vec3_dot(w, obj->normal) * vec3_dot(w, obj->normal)) - (vec3_dot(w, obj->normal) * vec3_dot(w, obj->normal));
+	eq.det = (eq.b * eq.b) - (4.0f * eq.a * eq.c);
+	return eq;
+}
+
+void chop_cone(t_quad_eq eq, t_hit*hit, t_object *obj, t_ray ray)
+{
+	float t;
+
+	t_vec3 hitpoint_vector = vec3_sub_vec3(hit->hit_point, obj->position);
+	float origin_distance = vec3_dot(hitpoint_vector, obj->normal);
+	if (origin_distance < ZERO || origin_distance > obj->height)
+	{
+		if (eq.det > ZERO)
+		{
+			t = (-eq.b + sqrtf(eq.det)) / (2 * eq.a);
+			hit->hit_point = vec3_scale(ray.dir, t);
+			hit->hit_point = vec3_add_vec3(hit->hit_point, ray.origin);
+			hitpoint_vector = vec3_sub_vec3(hit->hit_point, obj->position);
+			origin_distance = vec3_dot(hitpoint_vector, obj->normal);
+			hit->distance = vec3_magnitude(vec3_sub_vec3(ray.origin, hit->hit_point));
+		}
+		if (origin_distance < ZERO || origin_distance > obj->height)
+			hit->is_valid = FALSE;
+	}
+}
+
 t_hit cone_intersection(t_object *object, t_ray ray)
 {
 	t_hit hit;
+	t_quad_eq eq;
 
 	hit.object = object;
 	hit.is_valid = FALSE;
-
-	t_vec3 w = vec3_sub_vec3(ray.origin, object->cone_tip);
-
-	float r = object->radius;
-	float tip_dist = vec3_magnitude(vec3_scale(object->normal, object->height));
-	float m = (r * r) / (tip_dist * tip_dist);
-
-	float a = vec3_dot(ray.dir, ray.dir) - m * (vec3_dot(ray.dir, object->normal) * vec3_dot(ray.dir, object->normal)) - (vec3_dot(ray.dir, object->normal) * vec3_dot(ray.dir, object->normal));
-	float b = 2 * (vec3_dot(ray.dir, w) - m * (vec3_dot(ray.dir, object->normal) * vec3_dot(w, object->normal)) - (vec3_dot(ray.dir, object->normal) * vec3_dot(w, object->normal)));
-	float c = vec3_dot(w, w) - m * (vec3_dot(w, object->normal) * vec3_dot(w, object->normal)) - (vec3_dot(w, object->normal) * vec3_dot(w, object->normal));
-
-	float determinant = (b * b) - (4.0f * a * c);
-
-	if (determinant == ZERO)
-	{
-		float t = -b / (2 * a);
-		if (t > CAM_CLIP) // near clipping plane
-		{
-			hit.hit_point = vec3_scale(ray.dir, t);
-			hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
-			hit.normal = vec3_normalize(vec3_sub_vec3(hit.hit_point, object->position));
-			hit.distance = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
-			hit.is_valid = TRUE;
-		}
-	}
-	else if (determinant > ZERO)
-	{
-		float t = (-b - sqrtf(determinant)) / (2 * a);
-		if (t <= CAM_CLIP) // near clipping plane
-			t = (-b + sqrtf(determinant)) / (2 * a);
-		if (t > CAM_CLIP)
-		{
-			hit.hit_point = vec3_scale(ray.dir, t);
-			hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
-			hit.normal = vec3_normalize(vec3_sub_vec3(hit.hit_point, object->position));
-			hit.distance = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
-			hit.is_valid = TRUE;
-		}
-	}
-
+	eq = calculate_cone_quad(object, ray);
+	solve_quad_eq(eq, &hit, ray);
 	if (hit.is_valid)
-	{
-		t_vec3 hitpoint_vector = vec3_sub_vec3(hit.hit_point, object->position);
-		float origin_distance = vec3_dot(hitpoint_vector, object->normal);
-		if (origin_distance < ZERO || origin_distance > object->height)
-		{
-			/*
-			 * Check intersections with other side of the cone.
-			 * This step can be optimized out by skipping this
-			 * calculation as we always put caps on the end of
-			 * the cone
-			 */
-			if (determinant > ZERO)
-			{
-				float t = (-b + sqrtf(determinant)) / (2 * a);
-				hit.hit_point = vec3_scale(ray.dir, t);
-				hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
-
-				hitpoint_vector = vec3_sub_vec3(hit.hit_point, object->position);
-				origin_distance = vec3_dot(hitpoint_vector, object->normal);
-				if (origin_distance < ZERO || origin_distance > object->height)
-					hit.is_valid = FALSE;
-				else
-					hit.distance = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
-			}
-			else
-				hit.is_valid = FALSE;
-		}
-	}
-
-	if (hit.is_valid)
-		hit.uv_map = cone_map_uv(hit, object);
+		chop_cone(eq, &hit, object, ray);
+	if (hit.is_valid == FALSE)
+		return hit;
+	hit.normal = vec3_normalize(vec3_sub_vec3(hit.hit_point, object->position));
+	hit.uv_map = cone_map_uv(hit, object);
 	return hit;
 }
 

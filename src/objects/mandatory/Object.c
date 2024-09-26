@@ -1,35 +1,5 @@
 #include "Object.h"
 
-// t_object *get_next_object_by_type(t_scene *scene, size_t *i, t_object_type type)
-// {
-//     while (scene->objects.data && *i < scene->objects.count)
-//     {
-//         if (scene->objects.data[*i].type & type)
-//             return &scene->objects.data[*i];
-//         (*i)++;
-//     }
-//     return NULL;
-// }
-
-/*
-t_vec3 get_object_pos(t_object *object)
-{
-    t_vec3 pos;
-
-    pos.x = *mat_at(&object->SRT_matrix, 0, 3);
-    pos.y = *mat_at(&object->SRT_matrix, 1, 3);
-    pos.z = *mat_at(&object->SRT_matrix, 2, 3);
-
-    return pos;
-}
-void set_object_pos(t_object *object, t_vec3 pos)
-{
-    *mat_at(&object->SRT_matrix, 0, 3) = pos.x;
-    *mat_at(&object->SRT_matrix, 1, 3) = pos.y;
-    *mat_at(&object->SRT_matrix, 2, 3) = pos.z;
-}
-*/
-
 t_vec3 get_axis_rotation(t_vec3 normalized_orientation, t_vec3 axis)
 {
     float cos_theta;
@@ -147,4 +117,25 @@ int set_objects_textures(void* mlx, t_scene* scene)
 	}
 	free_textures_filenames(scene);
 	return 0;
+}
+
+void solve_quad_eq(t_quad_eq eq, t_hit*hit, t_ray ray)
+{
+	float t;
+
+	if (eq.det == ZERO)
+		t = -eq.b / (2 * eq.a);
+	else if (eq.det > ZERO)
+	{
+		t = (-eq.b - sqrtf(eq.det)) / (2 * eq.a);
+		if (t <= CAM_CLIP)
+			t = (-eq.b + sqrtf(eq.det)) / (2 * eq.a);
+	}
+	if (eq.det >= ZERO && t > CAM_CLIP) // near clipping plane
+	{
+		hit->hit_point = vec3_scale(ray.dir, t);
+		hit->hit_point = vec3_add_vec3(hit->hit_point, ray.origin);
+		hit->distance = vec3_magnitude(vec3_sub_vec3(ray.origin, hit->hit_point));
+		hit->is_valid = TRUE;
+	}
 }

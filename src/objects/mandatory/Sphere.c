@@ -37,45 +37,21 @@ t_hit sphere_intersection(t_object *object, t_ray ray)
 		t = (-b +/- sqrtf(b² - 4 a c)) / (2 * a)
 	*/
 	t_hit hit;
+	t_quad_eq eq;
+	t_vec3 w;
+	
 	hit.object = object;
 	hit.is_valid = FALSE;
-
-	float radius_sq = object->radius * object->radius;
-	t_vec3 w = vec3_sub_vec3(ray.origin, object->position);
-
-	float b = 2 * vec3_dot(w, ray.dir);
-	float c = vec3_dot(w, w) - radius_sq;
-
-	float determinant = (b * b) - (4.0f * c);
-
-	if (determinant == ZERO)
-	{
-		float t = -b / 2;
-		if (t > CAM_CLIP) // near clipping plane
-		{
-			hit.is_valid = TRUE;
-			hit.hit_point = vec3_scale(ray.dir, t);
-			hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
-			hit.distance = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
-			hit.normal = vec3_normalize(vec3_sub_vec3(hit.hit_point, object->position));
-		}
-	}
-	else if (determinant > ZERO)
-	{
-		float t = (-b - sqrtf(determinant)) / 2;
-		if (t <= CAM_CLIP) // near clipping plane
-			t = (-b + sqrtf(determinant)) / 2;
-		if (t > CAM_CLIP)
-		{
-			hit.is_valid = TRUE;
-			hit.hit_point = vec3_scale(ray.dir, t);
-			hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
-			hit.distance = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
-			hit.normal = vec3_normalize(vec3_sub_vec3(hit.hit_point, object->position));
-		}
-	}
-	if (hit.is_valid)
-		hit.uv_map = sphere_map_uv(hit, object);
+	w = vec3_sub_vec3(ray.origin, object->position);
+	eq.a = 1.0f;
+	eq.b = 2 * vec3_dot(w, ray.dir);
+	eq.c = vec3_dot(w, w) - object->radius * object->radius;;
+	eq.det = (eq.b * eq.b) - (4.0f * eq.c);
+	solve_quad_eq(eq, &hit, ray);
+	if (hit.is_valid == FALSE)
+		return hit;
+	hit.normal = vec3_normalize(vec3_sub_vec3(hit.hit_point, object->position));
+	hit.uv_map = sphere_map_uv(hit, object);
 	return hit;
 }
 

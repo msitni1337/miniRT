@@ -62,6 +62,13 @@ typedef struct s_scene
 	t_vec3 ambient_color;
 } t_scene;
 
+typedef struct s_quad_eq
+{
+	float a;
+	float b;
+	float c;
+	float det;
+} t_quad_eq;
 
 t_light new_light(t_vec3 position, float intensity, t_vec3 color);
 t_object new_sphere(t_vec3 pos, float radius, t_vec3 color);
@@ -77,6 +84,8 @@ t_mat4x4 get_z_rotation_matrix(float angle);
 // t_vec3 get_object_pos(t_object *object);
 t_object *get_next_object_by_type(t_scene *scene, size_t *i, t_object_type type);
 
+
+void solve_quad_eq(t_quad_eq eq, t_hit*hit, t_ray ray);
 t_hit cap_intersection(t_vec3 cap_normal, t_vec3 cap_center, float radius, t_ray ray);
 t_vec4 cap_map_uv(t_vec3 vec, t_vec3 u, t_vec3 v, float radius);
 t_vec4 cone_map_uv(t_hit hit, t_object *obj);

@@ -11,7 +11,7 @@ void rect_intersection_1(t_hit *hit)
     point_vec = vec3_sub_vec3(hit->hit_point, obj->position);
     x_dis = vec3_dot(obj->orth_normal, point_vec);
     y_dis = vec3_dot(obj->orth_normal2, point_vec);
-    if (fabs(x_dis) >= obj->width / 2 && fabs(y_dis) >= obj->height / 2)
+    if (fabs(x_dis) >= obj->width / 2 || fabs(y_dis) >= obj->height / 2)
         return;
     hit->is_valid = TRUE;
     hit->uv_map.x = -x_dis / (obj->width / 2);
