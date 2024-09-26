@@ -23,6 +23,7 @@ typedef struct s_renderer
 
 t_hit get_ray_hit(t_scene *scene, t_ray ray);
 t_vec3 get_vec3_color(unsigned int color);
+t_vec3 shade_color(t_scene *scene, t_hit hit, t_ray ray);
 
 int render(t_renderer *renderer);
 

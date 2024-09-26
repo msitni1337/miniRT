@@ -3,12 +3,14 @@
 #include "Mat4x4.h"
 #include "Camera.h"
 
+typedef struct s_object t_object;
+
 typedef struct s_hit
 {
 	int is_valid;
 	t_vec3 normal;
 	t_vec4 uv_map;
-	void *object;
+	t_object *object;
 	t_vec3 hit_point;
 	t_vec3 color;
 	float distance;

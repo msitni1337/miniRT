@@ -53,7 +53,8 @@ int key_hook_up(int key, t_renderer *renderer);
 int key_hook_down(int key, t_renderer *renderer);
 int mouse_hook_up(int button, int x, int y, t_renderer *renderer);
 int mouse_hook_down(int button, int x, int y, t_renderer *renderer);
-int on_destroy(void *mlx);
+void	hook_input(t_renderer *r);
+int	on_destroy(t_renderer *r);
 
 void control_camera(int key, t_camera *cam);
 void control_selected_obj(int key, t_object *obj);

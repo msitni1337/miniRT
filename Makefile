@@ -1,6 +1,6 @@
 # SRCS
 LinAlgebra	= src/linear_algebra/Mat4x4.c src/linear_algebra/Vec3.c
-Renderer	= src/renderer/Camera.c src/renderer/Ray.c src/renderer/Renderer.c
+Renderer	= src/renderer/Camera.c src/renderer/Ray.c src/renderer/Renderer.c src/renderer/Shading.c
 Parser_m	= src/parser/ft_split.c src/parser/get_next_line.c src/parser/get_next_line_utils.c src/parser/get_vec3.c src/parser/parser.c src/parser/parser_utils.c 
 Parser_b	= src/parser/ft_split.c src/parser/get_next_line.c src/parser/get_next_line_utils.c src/parser/get_vec3.c src/parser/parser_bonus.c src/parser/parser_utils.c 
 Object_m	= src/objects/mandatory/Cylinder.c src/objects/mandatory/Light.c src/objects/mandatory/Object.c src/objects/mandatory/Plane.c src/objects/mandatory/Sphere.c

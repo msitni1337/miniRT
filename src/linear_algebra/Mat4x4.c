@@ -1,5 +1,4 @@
 #include "Mat4x4.h"
-#include <stdio.h>
 
 t_mat3x3 mat_sub_mat(t_mat4x4 *m1, int x, int y)
 {

@@ -6,7 +6,7 @@
 /*   By: msitni <msitni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 09:05:09 by msitni            #+#    #+#             */
-/*   Updated: 2024/09/25 09:05:11 by msitni           ###   ########.fr       */
+/*   Updated: 2024/09/26 03:06:13 by msitni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	key_hook_down(int key, t_renderer *renderer)
 	if (key == KEY_CTR)
 		renderer->tab_mode = TRUE;
 	else if (key == KEY_ESC)
-		mlx_loop_end(renderer->mlx_context);
+		on_destroy(renderer);
 	else if (renderer->tab_mode)
 	{
 		control_camera(key, &renderer->scene.camera);
@@ -65,8 +65,21 @@ int	mouse_hook_down(int button, int x, int y, t_renderer *renderer)
 	return (0);
 }
 
-int	on_destroy(void *mlx)
+#ifndef INPUT_MAC
+
+int	on_destroy(t_renderer *r)
 {
-	mlx_loop_end(mlx);
+	mlx_loop_end(r->mlx_context);
 	return (0);
 }
+
+#else
+
+int	on_destroy(t_renderer *r)
+{
+	free_all(r);
+	exit(0);
+	return (0);
+}
+
+#endif

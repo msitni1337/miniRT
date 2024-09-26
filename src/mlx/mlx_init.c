@@ -6,7 +6,7 @@
 /*   By: msitni <msitni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 09:59:06 by msitni            #+#    #+#             */
-/*   Updated: 2024/09/25 10:20:54 by msitni           ###   ########.fr       */
+/*   Updated: 2024/09/26 03:08:47 by msitni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,6 @@ int	create_canvas(t_renderer *r)
 	return (0);
 }
 
-void	hook_input(t_renderer *r)
-{
-	r->tab_mode = FALSE;
-	r->redraw = TRUE;
-	r->selected_obj = NULL;
-	mlx_hook(r->window, ON_KEYDOWN, 1L << 0, key_hook_down, r);
-	mlx_hook(r->window, ON_KEYUP, 1L << 1, key_hook_up, r);
-	mlx_loop_hook(r->mlx_context, render, r);
-	mlx_hook(r->window, ON_MOUSEDOWN, 1L << 2, mouse_hook_down, r);
-	mlx_hook(r->window, ON_MOUSEUP, 1L << 3, mouse_hook_up, r);
-	mlx_hook(r->window, ON_DESTROY, 0L, on_destroy, r->mlx_context);
-}
-
 int	init_mlx(t_renderer *r)
 {
 	r->mlx_context = mlx_init();
@@ -65,7 +52,9 @@ int	init_mlx(t_renderer *r)
 			WIN_TITLE);
 	if (r->window == NULL)
 	{
+#ifndef INPUT_MAC
 		mlx_destroy_display(r->mlx_context);
+#endif
 		ft_free(r->scene.objects, r->scene.lights, r->mlx_context);
 		log_error("MLX WINDOW INIT FAILED.");
 		return (1);
@@ -80,7 +69,9 @@ int	start_mlx(t_renderer *r)
 	if (create_canvas(r))
 	{
 		mlx_destroy_window(r->mlx_context, r->window);
+#ifndef INPUT_MAC
 		mlx_destroy_display(r->mlx_context);
+#endif
 		free(r->mlx_context);
 		return (1);
 	}
@@ -94,6 +85,8 @@ void	free_all(t_renderer *r)
 	ft_free(r->scene.objects, r->scene.lights, NULL);
 	mlx_destroy_image(r->mlx_context, r->mlx_texture.handle);
 	mlx_destroy_window(r->mlx_context, r->window);
+#ifndef INPUT_MAC
 	mlx_destroy_display(r->mlx_context);
+#endif
 	free(r->mlx_context);
 }
