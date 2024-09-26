@@ -6,7 +6,7 @@
 /*   By: msitni <msitni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 09:05:23 by msitni            #+#    #+#             */
-/*   Updated: 2024/09/25 09:05:24 by msitni           ###   ########.fr       */
+/*   Updated: 2024/09/26 04:54:44 by msitni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ void	control_selected_obj(int key, t_object *obj)
 		obj->position.z += SENS;
 	else if (key == KEY_2)
 		obj->position.z -= SENS;
+	else if (key == KEY_H)
+		obj->hidden = !obj->hidden;
 	else
 		control_selected_obj_1(key, obj);
 	obj->recalculate(obj);

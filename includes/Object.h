@@ -42,6 +42,7 @@ typedef struct s_object
 	float radius;
 	float intensity;
 	int checkerboard;
+	int hidden;
 } t_object;
 
 typedef struct s_light

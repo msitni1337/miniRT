@@ -20,6 +20,8 @@
 #define KEY_TAB 48
 #define KEY_CTR 256
 #define KEY_ESC 53
+#define KEY_H 4
+#define MOUSE_CLICK 1
 #else
 #define KEY_DOWN 65364
 #define KEY_UP 65362

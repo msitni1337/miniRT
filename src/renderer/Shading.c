@@ -1,25 +1,5 @@
 #include "Renderer.h"
 
-t_hit get_lighray_hit(t_scene *scene, t_ray ray)
-{
-	t_object *object;
-	size_t i;
-	t_hit hit;
-	t_hit tmp;
-
-	i = 0;
-	hit.is_valid = FALSE;
-	while (i < scene->objects_count)
-	{
-		object = scene->objects + i;
-		tmp = object->intersection(object, ray);
-		if (tmp.is_valid && (!hit.is_valid || tmp.distance < hit.distance))
-			hit = tmp;
-		i++;
-	}
-	return hit;
-}
-
 t_vec3 shift_by_normal_map(t_object* obj, t_hit hit, t_ray ray)
 {
 	t_vec3 normal;
@@ -54,6 +34,7 @@ float calculate_light_intensity(t_light*light, t_hit hit)
 	light_normal = vec3_sub_vec3(light->position, hit.hit_point);
 	light_normal = vec3_normalize(light_normal);
 	intensity = light->intensity * vec3_dot(hit.normal, light_normal);
+    assert(intensity <= 1.0f);
 	intensity = float_cap(intensity, 0.0f, 1.0f);
 	return intensity;
 }
@@ -66,7 +47,7 @@ int is_not_in_shadow(t_scene*scene, t_light*light, t_hit hit)
 	light_ray.origin = light->position;
 	light_ray.target = hit.hit_point;
 	light_ray.dir = vec3_normalize(vec3_sub_vec3(light_ray.target, light_ray.origin));
-	shadow_hit = get_lighray_hit(scene, light_ray);
+	shadow_hit = cast_ray(scene, light_ray, TRUE);
 	return !shadow_hit.is_valid || shadow_hit.object == hit.object;
 }
 

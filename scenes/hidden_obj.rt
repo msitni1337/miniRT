@@ -1,0 +1,9 @@
+C	0,-20,0		0,1,0		180
+L	-10,-10,20	0.7			255,255,255
+A	0.2			255,255,255
+sp	-5,0,0		4			255,0,0 -h
+pl	0,0,-2		0,0,1		255,255,0
+cy	5,0,0		0,0,1		4 			4 		0,0,255 -h
+# Click on H to hide and unhide objects but still cast shadow
+# This option will make some cool features like spot lights ...
+# PS: use a cone with a light source to do so..

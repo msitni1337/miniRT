@@ -1,24 +1,6 @@
 #include "Renderer.h"
 
-t_hit get_ray_hit(t_scene *scene, t_ray ray)
-{
-	t_object *object;
-	size_t i;
-	t_hit hit;
-	t_hit tmp;
 
-	i = 0;
-	hit.is_valid = FALSE;
-	while (i < scene->objects_count)
-	{
-		object = scene->objects + i;
-		tmp = object->intersection(object, ray);
-		if (tmp.is_valid && (!hit.is_valid || tmp.distance < hit.distance))
-			hit = tmp;
-		i++;
-	}
-	return hit;
-}
 
 unsigned int get_color_vec3(t_vec3 vec)
 {
@@ -51,7 +33,7 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 	unsigned int color;
 
 	color = BG_COLOR;
-	hit_point = get_ray_hit(scene, ray);
+	hit_point = cast_ray(scene, ray, FALSE);
 	if (hit_point.is_valid)
 	{
 		t_object *obj = hit_point.object;
@@ -104,7 +86,7 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 			*/
 			/**/
 			ref_ray.target = vec3_add_vec3(ref_ray.origin, ref_ray.dir);
-			t_hit ref_hit = get_ray_hit(scene, ref_ray);
+			t_hit ref_hit = cast_ray(scene, ref_ray, FALSE);
 			if (ref_hit.is_valid && ref_hit.object != hit_point.object)
 			{
 				t_object *ref_obj = ref_hit.object;

@@ -6,7 +6,7 @@
 /*   By: msitni <msitni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 09:05:09 by msitni            #+#    #+#             */
-/*   Updated: 2024/09/26 03:06:13 by msitni           ###   ########.fr       */
+/*   Updated: 2024/09/26 05:04:19 by msitni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,14 @@ int	mouse_hook_up(int button, int x, int y, t_renderer *renderer)
 	t_vec3	pixel;
 	t_vec3	size;
 
+	if(button != MOUSE_CLICK)
+		return (0);
 	pixel.x = x;
 	pixel.y = renderer->mlx_texture.height - y;
 	size.x = renderer->mlx_texture.width;
 	size.y = renderer->mlx_texture.height;
 	ray = get_ray(&renderer->scene.camera, pixel, size);
-	hit = get_ray_hit(&(renderer->scene), ray);
+	hit = cast_ray(&(renderer->scene), ray, TRUE);
 	if (hit.is_valid)
 		renderer->selected_obj = hit.object;
 	return (0);

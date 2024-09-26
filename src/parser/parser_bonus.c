@@ -63,6 +63,10 @@ int fill_object_params(t_object *obj, char **param)
 		{
 			obj->checkerboard = TRUE;
 		}
+		else if (ft_strcmp(*param, "-h") == 0)
+		{
+			obj->hidden = TRUE;
+		}
 		else if (ft_strcmp(*param, "-r") == 0)
 		{
 			param++;
