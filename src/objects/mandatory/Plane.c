@@ -1,5 +1,22 @@
 #include "Object.h"
 
+void plane_map_uvs(t_hit *hit, t_object *obj)
+{
+    t_vec3 point_vec;
+    float x_dis;
+    float y_dis;
+
+    point_vec = vec3_sub_vec3(hit->hit_point, obj->position);
+    x_dis = vec3_dot(obj->orth_normal, point_vec);
+    y_dis = vec3_dot(obj->orth_normal2, point_vec);
+    hit->uv_map.x = x_dis / INF;
+    hit->uv_map.x = hit->uv_map.x * 0.5f + 0.5f;
+    hit->uv_map.y = y_dis / INF;
+    hit->uv_map.y = hit->uv_map.y * 0.5f + 0.5f;
+    hit->uv_map.z = x_dis;
+    hit->uv_map.w = y_dis;
+}
+
 t_hit plane_intersection(t_object *object, t_ray ray)
 {
     /*
@@ -19,13 +36,15 @@ t_hit plane_intersection(t_object *object, t_ray ray)
         t = (dot(n, p) - dot(n , a)) / dot(n , d))
     */
     t_hit hit;
+    float dot_na; 
+    float dot_nd; 
+    float dot_np; 
+
     hit.object = object;
     hit.is_valid = FALSE;
-
-    float dot_na = vec3_dot(object->normal, ray.origin);
-    float dot_nd = vec3_dot(object->normal, ray.dir);
-    float dot_np = vec3_dot(object->normal, object->position);
-
+    dot_na = vec3_dot(object->normal, ray.origin);
+    dot_nd = vec3_dot(object->normal, ray.dir);
+    dot_np = vec3_dot(object->normal, object->position);
     if (fabs(dot_nd) > ZERO)
     {
         float t = (dot_np - dot_na) / dot_nd;
@@ -36,17 +55,7 @@ t_hit plane_intersection(t_object *object, t_ray ray)
             hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
             hit.distance = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
             hit.normal = object->normal;
-
-            t_vec3 point_vec = vec3_sub_vec3(hit.hit_point, object->position);
-            float x_dis = vec3_dot(object->orth_normal, point_vec);
-            float y_dis = vec3_dot(object->orth_normal2, point_vec);
-
-            hit.uv_map.x = x_dis / INF;
-            hit.uv_map.x = hit.uv_map.x * 0.5f + 0.5f;
-            hit.uv_map.y = y_dis / INF;
-            hit.uv_map.y = hit.uv_map.y * 0.5f + 0.5f;
-            hit.uv_map.z = x_dis;
-            hit.uv_map.w = y_dis;
+            plane_map_uvs(&hit, object);
         }
     }
     return hit;

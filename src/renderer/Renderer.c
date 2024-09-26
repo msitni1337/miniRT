@@ -59,10 +59,10 @@ t_vec3 calculate_reflection_color(t_scene *scene, t_hit hit, t_vec3 hit_color, t
 	/**/
 	/*
 	 * Randomize reflection direction to have haizzy effect.
-	ref_ray.dir.x += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
-	ref_ray.dir.y += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
-	ref_ray.dir.z += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
-	ref_ray.dir = vec3_normalize(ref_ray.dir);
+	r_ray.dir.x += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
+	r_ray.dir.y += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
+	r_ray.dir.z += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
+	r_ray.dir = vec3_normalize(r_ray.dir);
 	*/
 	/**/
 	r_ray.target = vec3_add_vec3(r_ray.origin, r_ray.dir);
@@ -104,27 +104,39 @@ unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 	return pixel_color;
 }
 
-int render(t_renderer *renderer)
+void render_pass(t_renderer *r)
 {
-	t_img *img;
+	t_ray ray;
+	t_vec3 dimensions;
+	int x;
+	int y;
+	unsigned int color;
 
-	if (renderer->redraw == FALSE)
+	y = r->mlx_texture.height - 1;
+	dimensions = (t_vec3){r->mlx_texture.width, r->mlx_texture.height};
+	while (y >= 0)
+	{
+		x = 0;
+		while (x < r->mlx_texture.width)
+		{
+			ray = get_ray(&r->scene.camera, (t_vec3){x, y}, dimensions);
+			color = calculate_intersections(&r->scene, ray);
+			// mlx_pixel_put(r->mlx_context, renderer->window, x, renderer->mlx_texture.height - y, color);
+			set_img_pixel_at(&r->mlx_texture, x, r->mlx_texture.height - y, color);
+			x++;
+		}
+		mlx_put_image_to_window(r->mlx_context, r->window, r->mlx_texture.handle, 0, 0);
+		y--;
+	}
+}
+
+int render(t_renderer *r)
+{
+	if (r->redraw == FALSE)
 		return 0;
 	log_info("Rendering Image..");
-	img = &(renderer->mlx_texture);
-	for (int y = renderer->mlx_texture.height - 1; y >= 0; y--)
-	{
-		for (int x = 0; x < renderer->mlx_texture.width; x++)
-		{
-			t_ray ray;
-			ray = get_ray(&renderer->scene.camera, (t_vec3){x, y}, (t_vec3){img->width, img->height});
-			unsigned int color = calculate_intersections(&renderer->scene, ray);
-			// mlx_pixel_put(renderer->mlx_context, renderer->window, x, renderer->mlx_texture.height - y, color);
-			set_img_pixel_at(&renderer->mlx_texture, x, renderer->mlx_texture.height - y, color);
-		}
-		mlx_put_image_to_window(renderer->mlx_context, renderer->window, renderer->mlx_texture.handle, 0, 0);
-	}
+	render_pass(r);
 	log_info("Finished Image..");
-	renderer->redraw = FALSE;
+	r->redraw = FALSE;
 	return 0;
 }

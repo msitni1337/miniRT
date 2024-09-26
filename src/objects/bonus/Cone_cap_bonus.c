@@ -3,10 +3,10 @@
 t_hit cone_cap_intersection(t_object *object, t_ray ray)
 {
 	t_hit hit;
+	t_hit cap;
 
 	hit = cone_intersection(object, ray);
 
-	t_hit cap;
 	cap = cap_intersection(object->anti_normal, object->position, object->radius, ray);
 
 	if (cap.is_valid && (!hit.is_valid || cap.distance < hit.distance))

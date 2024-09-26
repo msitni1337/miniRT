@@ -1,5 +1,27 @@
 #include "Object.h"
 
+void rect_intersection_1(t_hit *hit)
+{
+    t_object *obj;
+    t_vec3 point_vec;
+    float x_dis;
+    float y_dis;
+
+    obj = hit->object;
+    point_vec = vec3_sub_vec3(hit->hit_point, obj->position);
+    x_dis = vec3_dot(obj->orth_normal, point_vec);
+    y_dis = vec3_dot(obj->orth_normal2, point_vec);
+    if (fabs(x_dis) >= obj->width / 2 && fabs(y_dis) >= obj->height / 2)
+        return;
+    hit->is_valid = TRUE;
+    hit->uv_map.x = -x_dis / (obj->width / 2);
+    hit->uv_map.x = hit->uv_map.x * 0.5f + 0.5f;
+    hit->uv_map.y = y_dis / (obj->height / 2);
+    hit->uv_map.y = hit->uv_map.y * 0.5f + 0.5f;
+    hit->uv_map.z = x_dis;
+    hit->uv_map.w = y_dis;
+}
+
 t_hit rect_intersection(t_object *object, t_ray ray)
 {
     /*
@@ -19,13 +41,15 @@ t_hit rect_intersection(t_object *object, t_ray ray)
         t = (dot(n, p) - dot(n , a)) / dot(n , d))
     */
     t_hit hit;
+    float dot_na;
+    float dot_nd;
+    float dot_np;
+
     hit.object = object;
     hit.is_valid = FALSE;
-
-    float dot_na = vec3_dot(object->normal, ray.origin);
-    float dot_nd = vec3_dot(object->normal, ray.dir);
-    float dot_np = vec3_dot(object->normal, object->position);
-
+    dot_na = vec3_dot(object->normal, ray.origin);
+    dot_nd = vec3_dot(object->normal, ray.dir);
+    dot_np = vec3_dot(object->normal, object->position);
     if (fabs(dot_nd) > ZERO)
     {
         float t = (dot_np - dot_na) / dot_nd;
@@ -35,21 +59,7 @@ t_hit rect_intersection(t_object *object, t_ray ray)
             hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
             hit.distance = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
             hit.normal = object->normal;
-
-            t_vec3 point_vec = vec3_sub_vec3(hit.hit_point, object->position);
-            float x_dis = vec3_dot(object->orth_normal, point_vec);
-            float y_dis = vec3_dot(object->orth_normal2, point_vec);
-
-            if (fabs(x_dis) < object->width / 2 && fabs(y_dis) < object->height / 2)
-            {
-                hit.is_valid = TRUE;
-                hit.uv_map.x = -x_dis / (object->width / 2);
-                hit.uv_map.x = hit.uv_map.x * 0.5f + 0.5f;
-                hit.uv_map.y = y_dis / (object->height / 2);
-                hit.uv_map.y = hit.uv_map.y * 0.5f + 0.5f;
-                hit.uv_map.z = x_dis;
-                hit.uv_map.w = y_dis;
-            }
+            rect_intersection_1(&hit);
         }
     }
     return hit;
