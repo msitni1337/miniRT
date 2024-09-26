@@ -22,6 +22,7 @@ typedef struct s_renderer
 } t_renderer;
 
 t_hit cast_ray(t_scene *scene, t_ray ray, int hidden);
+unsigned int get_color_vec3(t_vec3 vec);
 t_vec3 get_vec3_color(unsigned int color);
 t_vec3 shade_color(t_scene *scene, t_hit hit, t_ray ray);
 

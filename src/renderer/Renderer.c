@@ -1,139 +1,92 @@
 #include "Renderer.h"
 
-
-
-unsigned int get_color_vec3(t_vec3 vec)
+t_vec3 get_object_color(t_hit hit)
 {
-	unsigned char r;
-	unsigned char g;
-	unsigned char b;
+	t_vec3 pixel_coord;
+	t_vec3 color;
+	int x;
+	int y;
 
-	r = vec.x * 255.0f;
-	g = vec.y * 255.0f;
-	b = vec.z * 255.0f;
-	return (0x00 << 24 | r << 16 | g << 8 | b);
+	color = hit.object->color;	
+	if (hit.object->checkerboard)
+	{
+		x = ceil(hit.uv_map.z);
+		y = ceil(hit.uv_map.w);
+		if ((y + x) % 2 == 0)
+			color = (t_vec3){0};
+		else
+			color = (t_vec3){1, 1, 1};
+	}
+	else if (hit.object->texture.data != NULL)
+	{
+		x = hit.uv_map.x * hit.object->texture.width;
+		y = hit.uv_map.y * hit.object->texture.height;
+		x = int_cap(x, 0, hit.object->texture.width - 1);
+		y = int_cap(y, 0, hit.object->texture.height - 1);
+		x = get_img_pixel_at(&hit.object->texture, x, y);
+		color = vec3_scale(get_vec3_color(x), 1 / 255.0f);
+	}
+	return color;
 }
 
-t_vec3 get_vec3_color(unsigned int color)
+// TODO: make reflection ray more accurate by setting it to the reflected ray from camera to the hitted point
+t_vec3 calculate_reflection_color(t_scene*scene, t_hit hit, t_vec3 hit_color)
 {
-	unsigned char r;
-	unsigned char g;
-	unsigned char b;
+	t_vec3 result;
+	t_ray r_ray;
+	t_hit r_hit;
+	t_vec3 r_shade;
+	t_vec3 r_color;
 
-	r = color >> 16;
-	g = color >> 8;
-	b = color;
-	return (t_vec3){r, g, b};
+	result = hit_color;
+	r_ray.origin = hit.hit_point;
+	r_ray.dir = hit.normal;
+	/**/
+	/*
+	 * Randomize reflection direction to have haizzy effect.
+	ref_ray.dir.x += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
+	ref_ray.dir.y += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
+	ref_ray.dir.z += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
+	ref_ray.dir = vec3_normalize(ref_ray.dir);
+	*/
+	/**/
+	r_ray.target = vec3_add_vec3(r_ray.origin, r_ray.dir);
+	r_hit = cast_ray(scene, r_ray, FALSE);
+	if (r_hit.is_valid && r_hit.object != hit.object)
+	{
+		r_color = get_object_color(r_hit);
+		r_shade = shade_color(scene, r_hit, r_ray);
+		r_shade = vec3_mul(r_shade, r_color);
+		r_shade = vec3_scale(r_shade, hit.object->reflection);
+		//t_vec3 ambient = vec3_mul(scene->ambient_color, r_color);
+		//result = vec3_add_vec3(ambient, result);
+		result = vec3_scale(hit_color, 1.0f - hit.object->reflection);
+		result = vec3_add_vec3(result, r_shade);
+	}
+	return result;
 }
 
 unsigned int calculate_intersections(t_scene *scene, t_ray ray)
 {
-	t_hit hit_point;
-	t_vec3 light_color;
-	unsigned int color;
+	t_hit hit;
+	t_vec3 color;
+	t_vec3 shade;
+	unsigned int pixel_color;
 
-	color = BG_COLOR;
-	hit_point = cast_ray(scene, ray, FALSE);
-	if (hit_point.is_valid)
+	pixel_color = BG_COLOR;
+	hit = cast_ray(scene, ray, FALSE);
+	if (hit.is_valid)
 	{
-		t_object *obj = hit_point.object;
-		light_color = shade_color(scene, hit_point, ray);
-		t_vec3 color_vec;
-		t_vec3 hit_point_color = obj->color;
-
-		/* CheckerBoard Color mapping */
-		if (obj->checkerboard)
-		{
-			int x;
-			int y;
-
-			x = ceil(hit_point.uv_map.z);
-			y = ceil(hit_point.uv_map.w);
-			if ((y + x) % 2 == 0)
-				hit_point_color = (t_vec3){0};
-			else
-				hit_point_color = (t_vec3){1, 1, 1};
-		}
-		else if (obj->texture.data != NULL)
-		{
-			t_vec3 pixel_coord;
-			int x;
-			int y;
-
-			x = hit_point.uv_map.x * obj->texture.width;
-			y = hit_point.uv_map.y * obj->texture.height;
-			assert(x >= 0 && y >= 0);
-			// assert(x < obj->texture.width && y < obj->texture.height);
-			x = int_cap(x, 0, obj->texture.width - 1);
-			y = int_cap(y, 0, obj->texture.height - 1);
-			unsigned int tex_color = get_img_pixel_at(&obj->texture, x, y);
-			hit_point_color = vec3_scale(get_vec3_color(tex_color), 1 / 255.0f);
-		}
-
-		/* Reflection Calculations */
-		if (obj->reflection > ZERO)
-		{
-			t_ray ref_ray;
-			ref_ray.origin = hit_point.hit_point;
-			ref_ray.dir = hit_point.normal;
-			/**/
-			/*
-			 * Randomize reflection direction to have haizzy effect.
-			ref_ray.dir.x += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
-			ref_ray.dir.y += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
-			ref_ray.dir.z += ((((float)rand() / (float)RAND_MAX) / 2) - 1) * 0.025;
-			ref_ray.dir = vec3_normalize(ref_ray.dir);
-			*/
-			/**/
-			ref_ray.target = vec3_add_vec3(ref_ray.origin, ref_ray.dir);
-			t_hit ref_hit = cast_ray(scene, ref_ray, FALSE);
-			if (ref_hit.is_valid && ref_hit.object != hit_point.object)
-			{
-				t_object *ref_obj = ref_hit.object;
-				t_vec3 ref_color;
-
-				ref_color = ref_obj->color;
-				if (ref_obj->checkerboard)
-				{
-					int x;
-					int y;
-
-					x = ceil(ref_hit.uv_map.z);
-					y = ceil(ref_hit.uv_map.w);
-					if ((y + x) % 2 == 0)
-						ref_color = (t_vec3){0};
-					else
-						ref_color = (t_vec3){1, 1, 1};
-				}
-				else if (ref_obj->texture.data != NULL)
-				{
-					t_vec3 pixel_coord;
-					int x;
-					int y;
-
-					x = ref_hit.uv_map.x * ref_obj->texture.width;
-					y = ref_hit.uv_map.y * ref_obj->texture.height;
-					assert(x >= 0 && y >= 0);
-					// assert(x < ref_obj->texture.width && y < ref_obj->texture.height);
-					x = int_cap(x, 0, ref_obj->texture.width - 1);
-					y = int_cap(y, 0, ref_obj->texture.height - 1);
-					unsigned int tex_color = get_img_pixel_at(&ref_obj->texture, x, y);
-					ref_color = vec3_scale(get_vec3_color(tex_color), 1 / 255.0f);
-				}
-
-				t_vec3 ref_light = shade_color(scene, ref_hit, ray);
-				t_vec3 ambient = vec3_mul(vec3_scale(scene->ambient_color, scene->ambient_intensity), ref_color);
-				hit_point_color = vec3_scale(hit_point_color, 1.0f - obj->reflection);
-				hit_point_color = vec3_add_vec3(hit_point_color, vec3_scale(vec3_mul(ref_color, ref_light), obj->reflection));
-				hit_point_color = vec3_add_vec3(ambient, hit_point_color);
-			}
-		}
-		color_vec = vec3_mul(light_color, hit_point_color);
-		t_vec3 color_vec1 = vec3_mul(vec3_scale(scene->ambient_color, scene->ambient_intensity), hit_point_color);
-		color_vec = vec3_add_vec3(color_vec, color_vec1);
-		color = get_color_vec3(vec3_cap(color_vec, 0.0f, 1.0f));
+		shade = shade_color(scene, hit, ray);
+		color = get_object_color(hit);
+		if (hit.object->reflection > ZERO)
+			color = calculate_reflection_color(scene, hit, color);
+		shade = vec3_mul(shade, color);
+		color = vec3_mul(scene->ambient_color, color);
+		shade = vec3_add_vec3(shade, color);
+		pixel_color = get_color_vec3(vec3_cap(shade, 0.0f, 1.0f));
 	}
-	return color;
+	return pixel_color;
 }
 
 int render(t_renderer *renderer)

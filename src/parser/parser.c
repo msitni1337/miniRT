@@ -11,8 +11,7 @@ int fill_ambient(t_scene *scene, char **param, size_t count)
 		return log_error("invalid intensity param for ambient light");
 	if (get_vec3(&color, param[2]) || is_valid_color(color))
 		return log_error("invalid color param for ambient light");
-	scene->ambient_color = vec3_scale(color, 1 / 255.0f);
-	scene->ambient_intensity = intensity;
+	scene->ambient_color = vec3_scale(color, (1 / 255.0f) * intensity);
 	return (0);
 }
 
