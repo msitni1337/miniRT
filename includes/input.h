@@ -18,7 +18,7 @@
 #define KEY_6 88
 #define KEY_4 86
 #define KEY_TAB 48
-#define KEY_CTR 256
+#define KEY_CTR 259
 #define KEY_ESC 53
 #define KEY_H 4
 #else

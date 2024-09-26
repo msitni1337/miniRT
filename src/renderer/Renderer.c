@@ -112,9 +112,9 @@ void render_pass(t_renderer *r)
 	int y;
 	unsigned int color;
 
-	y = r->mlx_texture.height - 1;
+	y = r->mlx_texture.height;
 	dimensions = (t_vec3){r->mlx_texture.width, r->mlx_texture.height};
-	while (y >= 0)
+	while (y > 0)
 	{
 		x = 0;
 		while (x < r->mlx_texture.width)
