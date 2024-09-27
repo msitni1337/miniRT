@@ -36,17 +36,17 @@ t_hit plane_intersection(t_object *object, t_ray ray)
         t = (dot(n, p) - dot(n , a)) / dot(n , d))
     */
     t_hit hit;
-    float dot_na; 
-    float dot_nd; 
-    float dot_np; 
+    float dot_na;
+    float dot_nd;
+    float dot_np;
 
     hit.object = object;
     hit.is_valid = FALSE;
-    dot_na = vec3_dot(object->normal, ray.origin);
     dot_nd = vec3_dot(object->normal, ray.dir);
-    dot_np = vec3_dot(object->normal, object->position);
     if (fabs(dot_nd) > ZERO)
     {
+        dot_na = vec3_dot(object->normal, ray.origin);
+        dot_np = vec3_dot(object->normal, object->position);
         float t = (dot_np - dot_na) / dot_nd;
         if (t > CAM_CLIP)
         {

@@ -47,11 +47,11 @@ t_hit rect_intersection(t_object *object, t_ray ray)
 
     hit.object = object;
     hit.is_valid = FALSE;
-    dot_na = vec3_dot(object->normal, ray.origin);
     dot_nd = vec3_dot(object->normal, ray.dir);
-    dot_np = vec3_dot(object->normal, object->position);
     if (fabs(dot_nd) > ZERO)
     {
+        dot_na = vec3_dot(object->normal, ray.origin);
+        dot_np = vec3_dot(object->normal, object->position);
         float t = (dot_np - dot_na) / dot_nd;
         if (t > CAM_CLIP)
         {

@@ -66,11 +66,11 @@ t_hit cap_intersection(t_vec3 cap_normal, t_vec3 cap_center, float radius, t_ray
 
     t_hit hit;
     hit.is_valid = FALSE;
-    dot_na = vec3_dot(cap_normal, ray.origin);
     dot_nd = vec3_dot(cap_normal, ray.dir);
-    dot_np = vec3_dot(cap_normal, cap_center);
     if (fabs(dot_nd) > ZERO)
     {
+        dot_na = vec3_dot(cap_normal, ray.origin);
+        dot_np = vec3_dot(cap_normal, cap_center);
         float t = (dot_np - dot_na) / dot_nd;
         if (t <= CAM_CLIP)
             return hit;

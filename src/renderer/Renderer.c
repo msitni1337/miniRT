@@ -121,13 +121,12 @@ void render_pass(t_renderer *r)
 		{
 			ray = get_ray(&r->scene.camera, (t_vec3){x, y}, dimensions);
 			color = calculate_intersections(&r->scene, ray);
-			// mlx_pixel_put(r->mlx_context, renderer->window, x, renderer->mlx_texture.height - y, color);
 			set_img_pixel_at(&r->mlx_texture, x, r->mlx_texture.height - y, color);
 			x++;
 		}
-		mlx_put_image_to_window(r->mlx_context, r->window, r->mlx_texture.handle, 0, 0);
 		y--;
 	}
+	mlx_put_image_to_window(r->mlx_context, r->window, r->mlx_texture.handle, 0, 0);
 }
 
 int render(t_renderer *r)

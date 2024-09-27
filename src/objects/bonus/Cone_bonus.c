@@ -33,13 +33,17 @@ t_quad_eq calculate_cone_quad(t_object *obj, t_ray ray)
 	t_vec3 w;
 	float tip_dist;
 	float m;
+	float dot_rdn;
+	float dot_wn;
 
 	tip_dist = vec3_magnitude(vec3_scale(obj->normal, obj->height));
 	m = (obj->radius * obj->radius) / (tip_dist * tip_dist);
 	w = vec3_sub_vec3(ray.origin, obj->cone_tip);
-	eq.a = vec3_dot(ray.dir, ray.dir) - m * (vec3_dot(ray.dir, obj->normal) * vec3_dot(ray.dir, obj->normal)) - (vec3_dot(ray.dir, obj->normal) * vec3_dot(ray.dir, obj->normal));
-	eq.b = 2 * (vec3_dot(ray.dir, w) - m * (vec3_dot(ray.dir, obj->normal) * vec3_dot(w, obj->normal)) - (vec3_dot(ray.dir, obj->normal) * vec3_dot(w, obj->normal)));
-	eq.c = vec3_dot(w, w) - m * (vec3_dot(w, obj->normal) * vec3_dot(w, obj->normal)) - (vec3_dot(w, obj->normal) * vec3_dot(w, obj->normal));
+	dot_rdn = vec3_dot(ray.dir, obj->normal);
+	dot_wn = vec3_dot(w, obj->normal);
+	eq.a = vec3_dot(ray.dir, ray.dir) - m * (dot_rdn * dot_rdn) - (dot_rdn * dot_rdn);
+	eq.b = 2 * (vec3_dot(ray.dir, w) - m * (dot_rdn * dot_wn) - (dot_rdn * dot_wn));
+	eq.c = vec3_dot(w, w) - m * (dot_wn * dot_wn) - (dot_wn * dot_wn);
 	eq.det = (eq.b * eq.b) - (4.0f * eq.a * eq.c);
 	return eq;
 }

@@ -43,11 +43,15 @@ t_quad_eq calculate_cylinder_quad(t_object *obj, t_ray ray)
 {
 	t_vec3 w;
 	t_quad_eq eq;
+	float dot_rdn;
+	float dot_wn;
 
 	w = vec3_sub_vec3(ray.origin, obj->position);
-	eq.a = vec3_dot(ray.dir, ray.dir) - (vec3_dot(ray.dir, obj->normal) * vec3_dot(ray.dir, obj->normal));
-	eq.b = 2 * (vec3_dot(ray.dir, w) - (vec3_dot(ray.dir, obj->normal) * vec3_dot(w, obj->normal)));
-	eq.c = vec3_dot(w, w) - (vec3_dot(w, obj->normal) * vec3_dot(w, obj->normal)) - (obj->radius * obj->radius);
+	dot_rdn = vec3_dot(ray.dir, obj->normal);
+	dot_wn = vec3_dot(w, obj->normal);
+	eq.a = vec3_dot(ray.dir, ray.dir) - (dot_rdn * dot_rdn);
+	eq.b = 2 * (vec3_dot(ray.dir, w) - (dot_rdn * dot_wn));
+	eq.c = vec3_dot(w, w) - (dot_wn * dot_wn) - (obj->radius * obj->radius);
 	eq.det = (eq.b * eq.b) - (4.0f * eq.a * eq.c);
 	return eq;
 }
