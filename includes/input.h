@@ -44,6 +44,12 @@
 #define KEY_TAB 65289
 #define KEY_CTR 65507
 #define KEY_ESC 65307
+#define KEY_PLUS_NUM 65451
+#define KEY_MINUS_NUM 65453
+#define KEY_PLUS 61
+#define KEY_MINUS 45
+#define KEY_LPAREN 57
+#define KEY_RPAREN 48
 #define KEY_H 104
 #endif
 
