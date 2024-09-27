@@ -6,7 +6,7 @@
 #define WIN_TITLE "miniRT"
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 720
-#define BG_COLOR 0x00020506
+#define BG_COLOR 0x00020555
 
 typedef struct s_renderer
 {
