@@ -390,7 +390,7 @@ int check_args(char *s)
 	}
 }
 
-int parsing(t_scene *scene, int ac, char **av)
+int parsing(t_scene *scene, char **av)
 {
 	t_parser p;
 

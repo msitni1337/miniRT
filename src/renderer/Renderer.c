@@ -2,7 +2,6 @@
 
 t_vec3 get_object_color(t_hit hit)
 {
-	t_vec3 pixel_coord;
 	t_vec3 color;
 	int x;
 	int y;
@@ -121,13 +120,13 @@ void render_pass(t_renderer *r)
 	unsigned int color;
 
 	y = r->mlx_texture.height;
-	dimensions = (t_vec3){r->mlx_texture.width, r->mlx_texture.height};
+	dimensions = (t_vec3){r->mlx_texture.width, r->mlx_texture.height, 0.0f};
 	while (y > 0)
 	{
 		x = 0;
 		while (x < r->mlx_texture.width)
 		{
-			ray = get_ray(&r->scene.camera, (t_vec3){x, y}, dimensions);
+			ray = get_ray(&r->scene.camera, (t_vec3){x, y, 0.0f}, dimensions);
 			color = calculate_intersections(&r->scene, ray);
 			set_img_pixel_at(&r->mlx_texture, x, r->mlx_texture.height - y, color);
 			x++;

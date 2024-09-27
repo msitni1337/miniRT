@@ -62,7 +62,6 @@ float mat3_determinant(t_mat3x3 *m1)
 {
 	float *m;
 	float det;
-	int col;
 	/*
 		| a b c |
 		| d e f | => det = aei + bfg + cdh - ceg -bdi-afh

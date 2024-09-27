@@ -18,7 +18,7 @@ OBJ_b = $(SRC_b:.c=.o)
 CC = cc
 NAME = miniRT
 NAME_b = miniRT_bonus
-CFLAGS = -Iincludes -O3
+CFLAGS = -Iincludes -Wall -Wextra -Werror -O3
 LDFLAGS = -Lmlx_Linux -lmlx_Linux -lXext -lX11 -lm
 
 ifeq ($(shell uname -s),Darwin)

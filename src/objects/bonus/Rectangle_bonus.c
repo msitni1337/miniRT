@@ -79,7 +79,6 @@ void rect_recalculate(t_object *obj)
 t_object new_rect(t_vec3 centre_point, t_vec3 normal, t_vec3 color, t_vec3 dimensions)
 {
     t_object rect;
-    t_mat4x4 tmp;
 
     rect = (t_object){0};
     rect.type = OBJ_RECT;

@@ -3,6 +3,7 @@
 
 void sphere_recalculate(t_object *object)
 {
+	(void) object;
 }
 
 t_vec4 sphere_map_uv(t_hit hit, t_object *obj)

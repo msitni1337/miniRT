@@ -6,7 +6,7 @@
 /*   By: msitni <msitni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 09:57:48 by msitni            #+#    #+#             */
-/*   Updated: 2024/09/25 10:20:54 by msitni           ###   ########.fr       */
+/*   Updated: 2024/09/27 10:52:47 by msitni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	main(int c, char **v)
 		return (1);
 	}
 	r = (t_renderer){0};
-	if (parsing(&r.scene, c, v) == ERROR)
+	if (parsing(&r.scene, v) == ERROR)
 	{
 		free_textures_filenames(&r.scene);
 		ft_free(r.scene.objects, r.scene.lights, NULL);
