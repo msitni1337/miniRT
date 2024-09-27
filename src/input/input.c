@@ -6,7 +6,7 @@
 /*   By: msitni <msitni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 09:05:09 by msitni            #+#    #+#             */
-/*   Updated: 2024/09/26 08:27:42 by msitni           ###   ########.fr       */
+/*   Updated: 2024/09/27 05:56:44 by msitni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int	key_hook_up(int key, t_renderer *renderer)
 
 int	key_hook_down(int key, t_renderer *renderer)
 {
+	printf("%d\n", key);
+
 	if (key == KEY_CTR)
 		renderer->tab_mode = TRUE;
 	else if (key == KEY_ESC)

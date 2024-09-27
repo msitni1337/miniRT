@@ -10,7 +10,7 @@
 #define FALSE 0
 #define ERROR	1
 #define SUCESS	0
-#define ZERO 1e-10
+#define ZERO 1e-30
 #define PI 3.14159265358979323846264
 #define CAM_CLIP 0.1f
 #define INF 1e8f

@@ -6,9 +6,9 @@ void cylinder_recalculate(t_object *obj)
 	obj->top_cap_center = vec3_add_vec3(obj->position, vec3_scale(obj->normal, obj->height / 2));
 	obj->bottom_cap_center = vec3_add_vec3(obj->position, vec3_scale(obj->anti_normal, obj->height / 2));
 
-	obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 0.0f, 1.0f}));
+	obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){1.0f, 0.0f, 0.0f}));
 	if (vec3_magnitude(obj->orth_normal) <= ZERO)
-		obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 1.0f, 0.0f}));
+		obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 0.0f, 1.0f}));
 
 	obj->orth_normal2 = vec3_cross(obj->normal, obj->orth_normal);
 }

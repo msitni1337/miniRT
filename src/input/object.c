@@ -6,15 +6,55 @@
 /*   By: msitni <msitni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 09:05:23 by msitni            #+#    #+#             */
-/*   Updated: 2024/09/26 08:27:20 by msitni           ###   ########.fr       */
+/*   Updated: 2024/09/27 07:07:03 by msitni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "input.h"
 
-void	control_selected_obj_2(int key, t_object *obj)
+void control_selected_obj_4(int key, t_object *obj)
 {
-	t_mat4x4	rot;
+	if (key == KEY_PLUS_NUM && obj->radius < INF)
+	{
+		obj->radius += obj->radius * exp(-1);
+		obj->radius = float_cap(obj->radius, ZERO, INF);
+	}
+	else if (key == KEY_MINUS_NUM && obj->radius > ZERO)
+	{
+		obj->radius -= obj->radius * exp(-1);
+		obj->radius = float_cap(obj->radius, ZERO, INF);
+	}
+}
+
+void control_selected_obj_3(int key, t_object *obj)
+{
+	if (key == KEY_PLUS && obj->height < INF)
+	{
+		obj->height += obj->height * exp(-1);
+		obj->height = float_cap(obj->height, ZERO, INF);
+	}
+	else if (key == KEY_MINUS && obj->height > ZERO)
+	{
+		obj->height -= obj->height * exp(-1);
+		obj->height = float_cap(obj->height, ZERO, INF);
+	}
+	else if (key == KEY_RPAREN && obj->width < INF)
+	{
+		obj->width += obj->width * exp(-1);
+		obj->width = float_cap(obj->width, ZERO, INF);
+	}
+	else if (key == KEY_LPAREN && obj->width > ZERO)
+	{
+		obj->width -= obj->width * exp(-1);
+		obj->width = float_cap(obj->width, ZERO, INF);
+	}
+	else
+		control_selected_obj_4(key, obj);
+}
+
+void control_selected_obj_2(int key, t_object *obj)
+{
+	t_mat4x4 rot;
 
 	if (key == KEY_RIGHT)
 	{
@@ -34,11 +74,13 @@ void	control_selected_obj_2(int key, t_object *obj)
 		obj->normal = mat_mul_vec3(&rot, &obj->normal);
 		obj->normal = vec3_normalize(obj->normal);
 	}
+	else
+		control_selected_obj_3(key, obj);
 }
 
-void	control_selected_obj_1(int key, t_object *obj)
+void control_selected_obj_1(int key, t_object *obj)
 {
-	t_mat4x4	rot;
+	t_mat4x4 rot;
 
 	if (key == KEY_UP)
 	{
@@ -62,7 +104,7 @@ void	control_selected_obj_1(int key, t_object *obj)
 		control_selected_obj_2(key, obj);
 }
 
-void	control_selected_obj(int key, t_object *obj)
+void control_selected_obj(int key, t_object *obj)
 {
 	if (key == KEY_A)
 		obj->position.x -= SENS;

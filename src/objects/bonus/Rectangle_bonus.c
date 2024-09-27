@@ -71,7 +71,7 @@ void rect_recalculate(t_object *obj)
 
     obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 0.0f, 1.0f}));
     if (vec3_magnitude(obj->orth_normal) <= ZERO)
-        obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){1.0f, 0.0f, 0.0f}));
+        obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 1.0f, 0.0f}));
 
     obj->orth_normal2 = vec3_cross(obj->normal, obj->orth_normal);
 }

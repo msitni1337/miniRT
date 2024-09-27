@@ -20,6 +20,12 @@
 #define KEY_TAB 48
 #define KEY_CTR 259
 #define KEY_ESC 53
+#define KEY_PLUS_NUM 69
+#define KEY_MINUS_NUM 78
+#define KEY_PLUS 24
+#define KEY_MINUS 27
+#define KEY_LPAREN 25
+#define KEY_RPAREN 29
 #define KEY_H 4
 #else
 #define KEY_DOWN 65364
