@@ -60,12 +60,15 @@ t_mat4x4 get_z_rotation_matrix(float angle)
 
 t_hit cap_intersection(t_vec3 cap_normal, t_vec3 cap_center, float radius, t_ray ray)
 {
-    float dot_na = vec3_dot(cap_normal, ray.origin);
-    float dot_nd = vec3_dot(cap_normal, ray.dir);
-    float dot_np = vec3_dot(cap_normal, cap_center);
+    float dot_na;
+    float dot_nd;
+    float dot_np;
 
     t_hit hit;
     hit.is_valid = FALSE;
+    dot_na = vec3_dot(cap_normal, ray.origin);
+    dot_nd = vec3_dot(cap_normal, ray.dir);
+    dot_np = vec3_dot(cap_normal, cap_center);
     if (fabs(dot_nd) > ZERO)
     {
         float t = (dot_np - dot_na) / dot_nd;
@@ -121,19 +124,17 @@ int set_objects_textures(void* mlx, t_scene* scene)
 
 void solve_quad_eq(t_quad_eq eq, t_hit*hit, t_ray ray)
 {
-	float t;
-
 	if (eq.det == ZERO)
-		t = -eq.b / (2 * eq.a);
+		eq.t = -eq.b / (2 * eq.a);
 	else if (eq.det > ZERO)
 	{
-		t = (-eq.b - sqrtf(eq.det)) / (2 * eq.a);
-		if (t <= CAM_CLIP)
-			t = (-eq.b + sqrtf(eq.det)) / (2 * eq.a);
+		eq.t = (-eq.b - sqrtf(eq.det)) / (2 * eq.a);
+		if (eq.t <= CAM_CLIP)
+			eq.t = (-eq.b + sqrtf(eq.det)) / (2 * eq.a);
 	}
-	if (eq.det >= ZERO && t > CAM_CLIP) // near clipping plane
+	if (eq.det >= ZERO && eq.t > CAM_CLIP) // near clipping plane
 	{
-		hit->hit_point = vec3_scale(ray.dir, t);
+		hit->hit_point = vec3_scale(ray.dir, eq.t);
 		hit->hit_point = vec3_add_vec3(hit->hit_point, ray.origin);
 		hit->distance = vec3_magnitude(vec3_sub_vec3(ray.origin, hit->hit_point));
 		hit->is_valid = TRUE;

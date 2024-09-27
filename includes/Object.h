@@ -68,6 +68,7 @@ typedef struct s_quad_eq
 	float b;
 	float c;
 	float det;
+	float t;
 } t_quad_eq;
 
 t_light new_light(t_vec3 position, float intensity, t_vec3 color);

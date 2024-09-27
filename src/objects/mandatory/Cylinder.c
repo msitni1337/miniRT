@@ -39,105 +39,96 @@ t_vec3 cylinder_point_normal(t_hit hit_point, t_object *object)
 	return (vec3_normalize(vec3_sub_vec3(hit_point.hit_point, p)));
 }
 
-t_hit cylinder_intersection(t_object *object, t_ray ray)
+t_quad_eq calculate_cylinder_quad(t_object *obj, t_ray ray)
 {
-	t_hit hit;
+	t_vec3 w;
+	t_quad_eq eq;
 
-	hit.object = object;
-	hit.is_valid = FALSE;
-	t_vec3 w = vec3_sub_vec3(ray.origin, object->position);
+	w = vec3_sub_vec3(ray.origin, obj->position);
+	eq.a = vec3_dot(ray.dir, ray.dir) - (vec3_dot(ray.dir, obj->normal) * vec3_dot(ray.dir, obj->normal));
+	eq.b = 2 * (vec3_dot(ray.dir, w) - (vec3_dot(ray.dir, obj->normal) * vec3_dot(w, obj->normal)));
+	eq.c = vec3_dot(w, w) - (vec3_dot(w, obj->normal) * vec3_dot(w, obj->normal)) - (obj->radius * obj->radius);
+	eq.det = (eq.b * eq.b) - (4.0f * eq.a * eq.c);
+	return eq;
+}
 
-	float a = vec3_dot(ray.dir, ray.dir) - (vec3_dot(ray.dir, object->normal) * vec3_dot(ray.dir, object->normal));
-	float b = 2 * (vec3_dot(ray.dir, w) - (vec3_dot(ray.dir, object->normal) * vec3_dot(w, object->normal)));
-	float c = vec3_dot(w, w) - (vec3_dot(w, object->normal) * vec3_dot(w, object->normal)) - (object->radius * object->radius);
+void chop_cylinder(t_quad_eq eq, t_hit *hit, t_object *obj, t_ray ray)
+{
+	t_vec3 hitpoint_vector;
+	float origin_distance;
+	float t;
 
-	float determinant = (b * b) - (4.0f * a * c);
-
-	if (determinant == ZERO)
+	hitpoint_vector = vec3_sub_vec3(hit->hit_point, obj->position);
+	origin_distance = vec3_dot(hitpoint_vector, obj->normal);
+	t = eq.t;
+	if (fabs(origin_distance) > obj->height / 2)
 	{
-		float t = -b / (2 * a);
-		if (t > CAM_CLIP)
+		/*
+		 * Check intersections with other side of the cylinder.
+		 * This step can be optimized out by skipping this
+		 * calculation as we always put caps on the end of
+		 * the cylinder
+		 */
+		if (eq.det > ZERO)
 		{
-			// hit.object = object;
-			hit.hit_point = vec3_scale(ray.dir, t);
-			hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
-			hit.normal = cylinder_point_normal(hit, object);
-			hit.distance = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
-			hit.is_valid = TRUE;
-		}
-	}
-	else if (determinant > ZERO)
-	{
-		float t = (-b - sqrtf(determinant)) / (2 * a);
-		if (t <= CAM_CLIP) // near clipping plane
-			t = (-b + sqrtf(determinant)) / (2 * a);
-		if (t > CAM_CLIP)
-		{
-			// hit.object = object;
-			hit.hit_point = vec3_scale(ray.dir, t);
-			hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
-			hit.normal = cylinder_point_normal(hit, object);
-			hit.distance = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
-			hit.is_valid = TRUE;
-		}
-	}
-
-	if (hit.is_valid)
-	{
-		t_vec3 hitpoint_vector = vec3_sub_vec3(hit.hit_point, object->position);
-		float origin_distance = vec3_dot(hitpoint_vector, object->normal);
-		if (fabs(origin_distance) > object->height / 2)
-		{
-			/*
-			 * Check intersections with other side of the cylinder.
-			 * This step can be optimized out by skipping this
-			 * calculation as we always put caps on the end of
-			 * the cylinder
-			 */
-			if (determinant > ZERO)
+			t = (-eq.b + sqrtf(eq.det)) / (2 * eq.a);
+			if (eq.t != t)
 			{
-				float t = (-b + sqrtf(determinant)) / (2 * a);
-				hit.hit_point = vec3_scale(ray.dir, t);
-				hit.hit_point = vec3_add_vec3(hit.hit_point, ray.origin);
-				hitpoint_vector = vec3_sub_vec3(hit.hit_point, object->position);
-				origin_distance = vec3_dot(hitpoint_vector, object->normal);
-				if (fabs(origin_distance) > object->height / 2)
-					hit.is_valid = FALSE;
-				else
-					hit.distance = vec3_magnitude(vec3_sub_vec3(ray.origin, hit.hit_point));
+				hit->hit_point = vec3_scale(ray.dir, t);
+				hit->hit_point = vec3_add_vec3(hit->hit_point, ray.origin);
+				hitpoint_vector = vec3_sub_vec3(hit->hit_point, obj->position);
+				origin_distance = vec3_dot(hitpoint_vector, obj->normal);
+				hit->distance = vec3_magnitude(vec3_sub_vec3(ray.origin, hit->hit_point));
 			}
-			else
-				hit.is_valid = FALSE;
 		}
+		if (eq.t == t || fabs(origin_distance) > obj->height / 2)
+			hit->is_valid = FALSE;
 	}
+}
 
-	if (hit.is_valid)
-		hit.uv_map = cylinder_map_uv(hit, object);
-
+void cylinder_caps(t_hit*hit,t_object*obj, t_ray ray)
+{
 	t_hit cap;
 	t_hit top_cap;
 	t_hit down_cap;
 
 	cap.is_valid = FALSE;
-	top_cap = cap_intersection(object->normal, object->top_cap_center, object->radius, ray);
-	top_cap.normal = object->normal;
-
-	down_cap = cap_intersection(object->normal, object->bottom_cap_center, object->radius, ray);
-	down_cap.normal = object->anti_normal;
-
+	top_cap = cap_intersection(obj->normal, obj->top_cap_center, obj->radius, ray);
+	top_cap.normal = obj->normal;
+	down_cap = cap_intersection(obj->normal, obj->bottom_cap_center, obj->radius, ray);
+	down_cap.normal = obj->anti_normal;
 	if (top_cap.is_valid && (!down_cap.is_valid || top_cap.distance < down_cap.distance))
 		cap = top_cap;
 	else if (down_cap.is_valid && (!top_cap.is_valid || down_cap.distance < top_cap.distance))
 		cap = down_cap;
-	if (cap.is_valid && (!hit.is_valid || cap.distance < hit.distance))
+	if (cap.is_valid && (!hit->is_valid || cap.distance < hit->distance))
 	{
-		// hit.object = object;
-		hit.hit_point = cap.hit_point;
-		hit.normal = cap.normal;
-		hit.distance = cap.distance;
-		hit.uv_map = cap_map_uv(vec3_sub_vec3(cap.hit_point, object->position), object->orth_normal, object->orth_normal2, object->radius);
-		hit.is_valid = TRUE;
+		hit->hit_point = cap.hit_point;
+		hit->normal = cap.normal;
+		hit->distance = cap.distance;
+		hit->uv_map = cap_map_uv(vec3_sub_vec3(cap.hit_point, obj->position), obj->orth_normal, obj->orth_normal2, obj->radius);
+		hit->is_valid = TRUE;
 	}
+}
+
+t_hit cylinder_intersection(t_object *object, t_ray ray)
+{
+	t_quad_eq eq;
+	t_hit hit;
+
+	hit.object = object;
+	hit.is_valid = FALSE;
+
+	eq = calculate_cylinder_quad(object, ray);
+	solve_quad_eq(eq, &hit, ray);
+	if (hit.is_valid)
+		chop_cylinder(eq, &hit, object, ray);
+	if (hit.is_valid)
+	{
+		hit.normal = cylinder_point_normal(hit, object);
+		hit.uv_map = cylinder_map_uv(hit, object);
+	}
+	cylinder_caps(&hit, object, ray);
 	return hit;
 }
 
