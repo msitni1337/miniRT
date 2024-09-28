@@ -86,6 +86,8 @@ int fill_object_params(t_object *obj, char **param)
 		}
 		else if (ft_strcmp(*param, "-t") == 0)
 		{
+			if (obj->texture.filename != NULL)
+				return (log_error("multiple texture img provided."));
 			param++;
 			if (param == NULL)
 				return log_error("provide a path to the xpm texture img.");
@@ -95,6 +97,8 @@ int fill_object_params(t_object *obj, char **param)
 		}
 		else if (ft_strcmp(*param, "-n") == 0)
 		{
+			if (obj->normal_map.filename != NULL)
+				return (log_error("multiple normal img provided."));
 			param++;
 			if (param == NULL)
 				return log_error("provide a path to the xpm normal map.");

@@ -6,7 +6,7 @@
 /*   By: msitni <msitni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 11:16:47 by msitni            #+#    #+#             */
-/*   Updated: 2024/09/27 11:16:48 by msitni           ###   ########.fr       */
+/*   Updated: 2024/09/28 04:17:58 by msitni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ t_hit sphere_intersection(t_object *object, t_ray ray)
 	w = vec3_sub_vec3(ray.origin, object->position);
 	eq.a = 1.0f;
 	eq.b = 2 * vec3_dot(w, ray.dir);
-	eq.c = vec3_dot(w, w) - object->radius * object->radius;;
+	eq.c = vec3_dot(w, w) - object->radius * object->radius;
 	eq.det = (eq.b * eq.b) - (4.0f * eq.c);
 	solve_quad_eq(eq, &hit, ray);
 	if (hit.is_valid == FALSE)
