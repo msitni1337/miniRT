@@ -54,25 +54,17 @@ void control_selected_obj_3(int key, t_object *obj)
 
 void control_selected_obj_2(int key, t_object *obj)
 {
-	t_mat4x4 rot;
-
 	if (key == KEY_RIGHT)
 	{
-		rot = get_y_rotation_matrix(-10);
-		obj->normal = mat_mul_vec3(&rot, &obj->normal);
-		obj->normal = vec3_normalize(obj->normal);
+		rotate_axis(obj->orth_normal2, &obj->orth_normal, &obj->normal, -10);
 	}
 	else if (key == KEY_4)
 	{
-		rot = get_z_rotation_matrix(5);
-		obj->normal = mat_mul_vec3(&rot, &obj->normal);
-		obj->normal = vec3_normalize(obj->normal);
+		rotate_axis(obj->normal, &obj->orth_normal2, &obj->orth_normal, 10);
 	}
 	else if (key == KEY_6)
 	{
-		rot = get_z_rotation_matrix(-5);
-		obj->normal = mat_mul_vec3(&rot, &obj->normal);
-		obj->normal = vec3_normalize(obj->normal);
+		rotate_axis(obj->normal, &obj->orth_normal2, &obj->orth_normal, -10);
 	}
 	else
 		control_selected_obj_3(key, obj);
@@ -80,25 +72,18 @@ void control_selected_obj_2(int key, t_object *obj)
 
 void control_selected_obj_1(int key, t_object *obj)
 {
-	t_mat4x4 rot;
-
+	// t_mat4x4 rot;
 	if (key == KEY_UP)
 	{
-		rot = get_x_rotation_matrix(10);
-		obj->normal = mat_mul_vec3(&rot, &obj->normal);
-		obj->normal = vec3_normalize(obj->normal);
+		rotate_axis(obj->orth_normal, &obj->normal, &obj->orth_normal2, 10);
 	}
 	else if (key == KEY_DOWN)
 	{
-		rot = get_x_rotation_matrix(-10);
-		obj->normal = mat_mul_vec3(&rot, &obj->normal);
-		obj->normal = vec3_normalize(obj->normal);
+		rotate_axis(obj->orth_normal, &obj->normal, &obj->orth_normal2, -10);
 	}
 	else if (key == KEY_LEFT)
 	{
-		rot = get_y_rotation_matrix(10);
-		obj->normal = mat_mul_vec3(&rot, &obj->normal);
-		obj->normal = vec3_normalize(obj->normal);
+		rotate_axis(obj->orth_normal2, &obj->orth_normal, &obj->normal, 10);
 	}
 	else
 		control_selected_obj_2(key, obj);
@@ -106,6 +91,7 @@ void control_selected_obj_1(int key, t_object *obj)
 
 void control_selected_obj(int key, t_object *obj)
 {
+	printf("%d\n", key);
 	if (key == KEY_A)
 		obj->position.x -= SENS;
 	else if (key == KEY_D)

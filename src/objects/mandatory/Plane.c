@@ -21,9 +21,9 @@ void plane_map_uvs(t_hit *hit, t_object *obj)
     point_vec = vec3_sub_vec3(hit->hit_point, obj->position);
     x_dis = vec3_dot(obj->orth_normal, point_vec);
     y_dis = vec3_dot(obj->orth_normal2, point_vec);
-    hit->uv_map.x = x_dis / INF;
+    hit->uv_map.x = x_dis / 100;
     hit->uv_map.x = hit->uv_map.x * 0.5f + 0.5f;
-    hit->uv_map.y = y_dis / INF;
+    hit->uv_map.y = y_dis / 100;
     hit->uv_map.y = hit->uv_map.y * 0.5f + 0.5f;
     hit->uv_map.z = x_dis;
     hit->uv_map.w = y_dis;
@@ -76,12 +76,6 @@ t_hit plane_intersection(t_object *object, t_ray ray)
 void plane_recalculate(t_object *obj)
 {
     obj->anti_normal = vec3_scale(obj->normal, -1);
-
-    obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 0.0f, 1.0f}));
-    if (vec3_magnitude(obj->orth_normal) <= ZERO)
-        obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 1.0f, 0.0f}));
-
-    obj->orth_normal2 = vec3_cross(obj->normal, obj->orth_normal);
 }
 
 t_object new_plane(t_vec3 point, t_vec3 normal, t_vec3 color)
@@ -95,6 +89,10 @@ t_object new_plane(t_vec3 point, t_vec3 normal, t_vec3 color)
     plane.position = point;
     plane.normal = vec3_normalize(normal);
     plane.color = vec3_scale(color, 1.0f / 255.0f);
+    plane.orth_normal = vec3_normalize(vec3_cross(plane.normal, (t_vec3){0.0f, 0.0f, 1.0f}));
+    if (vec3_magnitude(plane.orth_normal) <= ZERO)
+        plane.orth_normal = vec3_normalize(vec3_cross(plane.normal, (t_vec3){0.0f, 1.0f, 0.0f}));
+    plane.orth_normal2 = vec3_cross(plane.normal, plane.orth_normal);
     plane_recalculate(&plane);
     return plane;
 }

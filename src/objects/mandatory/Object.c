@@ -12,62 +12,19 @@
 
 #include "Object.h"
 
-t_vec3 get_axis_rotation(t_vec3 normalized_orientation, t_vec3 axis)
+void rotate_axis(t_vec3 normal,t_vec3*u, t_vec3*v, float angle)
 {
-    float cos_theta;
-    float sin_theta;
+    t_vec3 r_u;
+    t_vec3 r_v;
+    t_vec3 tmp;
 
-    cos_theta = vec3_dot(axis, normalized_orientation);
-    sin_theta = sqrtf(1 - cos_theta * cos_theta);
+    tmp = vec3_scale(*u, cosf((angle / 180) * PI));
+    r_u = vec3_scale(*v, sinf((angle / 180) * PI));
+    r_u = vec3_add_vec3(tmp, r_u);
 
-    return vec3_f(cos_theta, sin_theta, 0);
-}
-
-t_mat4x4 get_x_rotation_matrix(float angle)
-{
-    t_mat4x4 x_rot;
-
-    float cos = cosf((angle / 180) * PI);
-    float sin = sinf((angle / 180) * PI);
-
-    x_rot = mat_id();
-    *mat_at(&x_rot, 1, 1) = cos;
-    *mat_at(&x_rot, 1, 2) = -sin;
-    *mat_at(&x_rot, 2, 1) = sin;
-    *mat_at(&x_rot, 2, 2) = cos;
-
-    return x_rot;
-}
-
-t_mat4x4 get_y_rotation_matrix(float angle)
-{
-    t_mat4x4 y_rot;
-
-    float cos = cosf((angle / 180) * PI);
-    float sin = sinf((angle / 180) * PI);
-
-    y_rot = mat_id();
-    *mat_at(&y_rot, 0, 0) = cos;
-    *mat_at(&y_rot, 0, 2) = sin;
-    *mat_at(&y_rot, 2, 0) = -sin;
-    *mat_at(&y_rot, 2, 2) = cos;
-
-    return y_rot;
-}
-
-t_mat4x4 get_z_rotation_matrix(float angle)
-{
-    t_mat4x4 z_rot;
-
-    float cos = cosf((angle / 180) * PI);
-    float sin = sinf((angle / 180) * PI);
-
-    z_rot = mat_id();
-    *mat_at(&z_rot, 0, 0) = cos;
-    *mat_at(&z_rot, 0, 1) = -sin;
-    *mat_at(&z_rot, 1, 0) = sin;
-    *mat_at(&z_rot, 1, 1) = cos;
-    return z_rot;
+    r_v = vec3_cross(r_u, normal);
+    *u = r_u;
+    *v = r_v;
 }
 
 t_hit cap_intersection(t_vec3 cap_normal, t_vec3 cap_center, float radius, t_ray ray)

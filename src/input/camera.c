@@ -12,30 +12,23 @@
 
 #include "input.h"
 
-void	control_camera_1(int key, t_camera *cam, t_mat4x4 rot)
+void	control_camera_1(int key, t_camera *cam)
 {
 	if (key == KEY_UP)
 	{
-		rot = get_x_rotation_matrix(10);
-		cam->forward = mat_mul_vec3(&rot, &cam->forward);
+		rotate_axis(cam->U, &cam->forward, &cam->V, 5);
 	}
 	else if (key == KEY_DOWN)
 	{
-		rot = get_x_rotation_matrix(-10);
-		cam->forward = mat_mul_vec3(&rot, &cam->forward);
-		cam->forward = vec3_normalize(cam->forward);
+		rotate_axis(cam->U, &cam->forward, &cam->V, -5);
 	}
 	else if (key == KEY_LEFT)
 	{
-		rot = get_z_rotation_matrix(10);
-		cam->forward = mat_mul_vec3(&rot, &cam->forward);
-		cam->forward = vec3_normalize(cam->forward);
+		rotate_axis(cam->V, &cam->forward, &cam->U, -5);
 	}
 	else if (key == KEY_RIGHT)
 	{
-		rot = get_z_rotation_matrix(-10);
-		cam->forward = mat_mul_vec3(&rot, &cam->forward);
-		cam->forward = vec3_normalize(cam->forward);
+		rotate_axis(cam->V, &cam->forward, &cam->U, 5);
 	}
 }
 
@@ -56,6 +49,6 @@ void	control_camera(int key, t_camera *cam)
 	else if (key == KEY_2)
 		cam->origin.z -= SENS;
 	else
-		control_camera_1(key, cam, (t_mat4x4){0});
+		control_camera_1(key, cam);
 	calculate_camera_uv(cam);
 }

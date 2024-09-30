@@ -91,6 +91,9 @@ t_object new_cone_cap(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_ve
 t_object new_cone(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_vec3 color);
 t_object new_rect(t_vec3 centre_point, t_vec3 normal, t_vec3 color, t_vec3 dimensions);
 
+t_hit cone_cap_intersection(t_object *object, t_ray ray);
+
+
 t_mat4x4 get_x_rotation_matrix(float angle);
 t_mat4x4 get_y_rotation_matrix(float angle);
 t_mat4x4 get_z_rotation_matrix(float angle);
@@ -106,6 +109,8 @@ void cone_recalculate(t_object *obj);
 t_hit cone_intersection(t_object *object, t_ray ray);
 int set_objects_textures(void* mlx, t_scene* scene);
 void free_textures_filenames(t_scene* scene);
+t_vec3 rotate_around(t_vec3 vec, t_vec3 axis, float angle);
+void rotate_axis(t_vec3 normal, t_vec3*u, t_vec3*v, float angle);
 
 // void set_object_pos(t_object *object, t_vec3 pos);
 #endif // OBJECT_H

@@ -31,21 +31,3 @@ t_hit cone_cap_intersection(t_object *object, t_ray ray)
 	}
 	return hit;
 }
-
-t_object new_cone_cap(t_vec3 normal, t_vec3 center, t_vec3 height_diameter, t_vec3 color)
-{
-	t_object cone;
-
-	cone = (t_object){0};
-	cone.type = OBJ_CONE;
-	cone.intersection = &cone_cap_intersection;
-	cone.recalculate = &cone_recalculate;
-	cone.position = center;
-	cone.normal = vec3_normalize(normal);
-	cone.height = height_diameter.x;
-	cone.radius = height_diameter.y / 2;
-	cone.color = vec3_scale(color, 1.0f / 255.0f);
-	cone_recalculate(&cone);
-
-	return cone;
-}

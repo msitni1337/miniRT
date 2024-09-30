@@ -80,12 +80,6 @@ t_hit rect_intersection(t_object *object, t_ray ray)
 void rect_recalculate(t_object *obj)
 {
     obj->anti_normal = vec3_scale(obj->normal, -1);
-
-    obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 0.0f, 1.0f}));
-    if (vec3_magnitude(obj->orth_normal) <= ZERO)
-        obj->orth_normal = vec3_normalize(vec3_cross(obj->normal, (t_vec3){0.0f, 1.0f, 0.0f}));
-
-    obj->orth_normal2 = vec3_cross(obj->normal, obj->orth_normal);
 }
 
 t_object new_rect(t_vec3 centre_point, t_vec3 normal, t_vec3 color, t_vec3 dimensions)
@@ -101,6 +95,9 @@ t_object new_rect(t_vec3 centre_point, t_vec3 normal, t_vec3 color, t_vec3 dimen
     rect.height = dimensions.y;
     rect.width = dimensions.x;
     rect.color = vec3_scale(color, 1.0f / 255.0f);
-    rect_recalculate(&rect);
+    rect.orth_normal = vec3_normalize(vec3_cross(rect.normal, (t_vec3){0.0f, 0.0f, 1.0f}));
+    if (vec3_magnitude(rect.orth_normal) <= ZERO)
+        rect.orth_normal = vec3_normalize(vec3_cross(rect.normal, (t_vec3){0.0f, 1.0f, 0.0f}));
+    rect.orth_normal2 = vec3_cross(rect.normal, rect.orth_normal);
     return rect;
 }
