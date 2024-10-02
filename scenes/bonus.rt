@@ -1,8 +1,15 @@
-C	0,-20,3		0,1,0		180
-L	-10,-10,5	0.7			255,0,0
-#L	10,-10,5	0.7			0,255,0
-#L	0,-10,5	    1			0,0,255
-A	0.5			255,255,255
+#C  POSITION   DIRECTIOM   FOV
+C	0,-30,3		0,1,0		180
+#L  POSITION   INTENSITY   Color
+L	-10,-10,17	0.7			255,255,255
+#A  INTENSITY   Color
+A	0.4			255,255,255
+# every object takes aditional parameters after supplying mandatory ones.
+# [-r [Level of reflections 0~1]]
+# [-c [Toggle checkerboard pattern]]
+# [-t [texture path]]
+# [-n [normal map path]]
+
 sp	0,0,4		7			255,0,0		-t	img/planet.xpm	-n	img/planet_normal.xpm
 pl	0,0,-2		0,0,1		255,255,255 -r 0.7
 cy	7,0,0		0,0,1		4 			4 		0,0,255

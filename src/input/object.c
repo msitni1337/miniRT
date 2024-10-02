@@ -72,7 +72,6 @@ void control_selected_obj_2(int key, t_object *obj)
 
 void control_selected_obj_1(int key, t_object *obj)
 {
-	// t_mat4x4 rot;
 	if (key == KEY_UP)
 	{
 		rotate_axis(obj->orth_normal, &obj->normal, &obj->orth_normal2, 10);
@@ -91,7 +90,6 @@ void control_selected_obj_1(int key, t_object *obj)
 
 void control_selected_obj(int key, t_object *obj)
 {
-	printf("%d\n", key);
 	if (key == KEY_A)
 		obj->position.x -= SENS;
 	else if (key == KEY_D)
