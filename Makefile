@@ -7,17 +7,22 @@ Object_m	= src/objects/mandatory/Cylinder.c src/objects/mandatory/Light.c src/ob
 Object_b	= ${Object_m} src/objects/bonus/Cone_bonus.c src/objects/bonus/Cone_cap_bonus.c src/objects/bonus/Rectangle_bonus.c
 input		= src/input/input.c src/input/camera.c src/input/object.c
 utils		= src/utils/dynamic_arrays.c src/utils/free.c src/utils/logging.c src/utils/ft_memset.c src/mlx/mlx_utils.c 
+extra		= src/parser/scene_gen_extra.c
 
-SRC_m = ${LinAlgebra} ${Renderer} ${Parser_m} ${Object_m} ${input} ${utils} src/main.c src/mlx/mlx_init.c 
-OBJ_m = $(SRC_m:.c=.o)
+SRC_m		= ${LinAlgebra} ${Renderer} ${Parser_m} ${Object_m} ${input} ${utils} src/main.c src/mlx/mlx_init.c 
+OBJ_m		= $(SRC_m:.c=.o)
 
-SRC_b = ${LinAlgebra} ${Renderer} ${Parser_b} ${Object_b} ${input} ${utils} src/main_bonus.c src/mlx/mlx_init_bonus.c 
-OBJ_b = $(SRC_b:.c=.o)
+SRC_b		= ${LinAlgebra} ${Renderer} ${Parser_b} ${Object_b} ${input} ${utils} src/main_bonus.c src/mlx/mlx_init_bonus.c 
+OBJ_b		= $(SRC_b:.c=.o)
+
+SRC_e		= ${SRC_B} ${extra}
+OBJ_e		= $(SRC_e:.c=.o)
 
 # VARS
 CC = cc
 NAME = miniRT
 NAME_b = miniRT_bonus
+NAME_e = miniRT_extra
 CFLAGS = -Iincludes -Wall -Wextra -Werror -O3
 LDFLAGS = -Lmlx_Linux -lmlx_Linux -lXext -lX11 -lm
 
@@ -26,27 +31,33 @@ ifeq ($(shell uname -s),Darwin)
 	LDFLAGS = -L. -lmlx -framework OpenGL -framework AppKit
 endif
 
-.PHONY : re be fclean clean all bonus
-.SECONDARY : ${OBJ_m} ${OBJ_b}
+.PHONY : re reb ree fclean clean all bonus extra
+.SECONDARY : ${OBJ_m} ${OBJ_e}
 
 %.o : %.c
 	$(CC) $(CFLAGS) $< -c -o $@
 
 all : ${NAME}
 bonus: ${NAME_b}
+extra: ${NAME_e}
 
 clean :
-	rm -f ${OBJ_m} ${OBJ_b}
+	rm -f ${OBJ_m} ${OBJ_e}
 
 fclean : clean
 	rm -f $(NAME)
 	rm -f $(NAME_b)
+	rm -f $(NAME_e)
 
 ${NAME}: $(OBJ_m)
 	$(CC) $(CFLAGS) $(OBJ_m) -o $(NAME) $(LDFLAGS)
 
- ${NAME_b}: $(OBJ_b)
+${NAME_b}: $(OBJ_b)
 	$(CC) $(CFLAGS) $(OBJ_b) -o $(NAME_b) $(LDFLAGS)
 
+${NAME_e}: $(OBJ_e)
+	$(CC) $(CFLAGS) $(OBJ_e) -o $(NAME_e) $(LDFLAGS)
+
 re : fclean all
-be : fclean bonus
+reb : fclean bonus
+ree : fclean extra

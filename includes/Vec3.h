@@ -57,8 +57,6 @@ t_vec3 vec3_normalize(t_vec3 a);
 float vec3_magnitude(t_vec3 a);
 t_vec4 vec3_to_vec4(t_vec3 a, float w);
 t_vec3 vec4_to_vec3(t_vec4 a);
-void print_vec3(t_vec3 u);
-void print_vec4(t_vec4 u);
 
 int int_cap(int val, int min, int max);
 float float_cap(float val, float min, float max);

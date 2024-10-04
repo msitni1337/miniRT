@@ -51,8 +51,7 @@ int main(int c, char **v)
 		log_error("MLX IMG CAN'T GET IMG DATA BUFFER ADDRESS.");
 		return 1;
 	}
-	renderer.scene.ambient_color = (t_vec3){1.0f, 1.0f, 1.0f};
-	renderer.scene.ambient_intensity = 0.5f;
+	renderer.scene.ambient_color = vec3_scale((t_vec3){1.0f, 1.0f, 1.0f}, 0.7f);
 
 	t_darr objects = init_da(sizeof(t_object));
 	t_object obj;

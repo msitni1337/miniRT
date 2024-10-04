@@ -21,18 +21,15 @@ typedef enum e_object_type
 	OBJ_SPHERE   = (1 << 2),
 	OBJ_CYLINDER = (1 << 3),
 	OBJ_CONE     = (1 << 4),
-	OBJ_RECT     = (1 << 5),
+	OBJ_CONE_CAP = (1 << 5),
+	OBJ_RECT     = (1 << 6),
 } t_object_type;
 
 typedef struct s_object
 {
 	t_object_type type;
 	struct s_hit (*intersection)(struct s_object *object, struct s_ray ray);
-	// t_vec3 (*map_uvs)(t_hit hit_point);
 	void (*recalculate)(struct s_object* obj);
-	//struct s_vec3 (*point_normal)(t_hit hit_point);
-	// t_mat4x4 SRT_matrix;
-	// t_mat4x4 ISRT_matrix;
 	t_vec3 normal;
 	t_vec3 anti_normal;
 	t_vec3 orth_normal;
@@ -97,7 +94,6 @@ t_hit cone_cap_intersection(t_object *object, t_ray ray);
 t_mat4x4 get_x_rotation_matrix(float angle);
 t_mat4x4 get_y_rotation_matrix(float angle);
 t_mat4x4 get_z_rotation_matrix(float angle);
-// t_vec3 get_object_pos(t_object *object);
 t_object *get_next_object_by_type(t_scene *scene, size_t *i, t_object_type type);
 
 
@@ -112,5 +108,4 @@ void free_textures_filenames(t_scene* scene);
 t_vec3 rotate_around(t_vec3 vec, t_vec3 axis, float angle);
 void rotate_axis(t_vec3 normal, t_vec3*u, t_vec3*v, float angle);
 
-// void set_object_pos(t_object *object, t_vec3 pos);
 #endif // OBJECT_H

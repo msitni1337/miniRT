@@ -30,4 +30,4 @@ t_darr		*expand_arr(t_darr *arr);
 void	*ft_memset(void *s, int c, size_t n);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 
-#endif
+#endif // DYNAMIC_ARRAYS_H

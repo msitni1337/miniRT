@@ -18,6 +18,7 @@
 #include "dynamic_arrays.h"
 #include "Renderer.h"
 #include "utils.h"
+#include "get_next_line.h"
 
 
 # define BUFFER_SIZE 42
@@ -30,7 +31,6 @@ typedef struct s_parser
 	t_darr lights;
 } t_parser;
 
-char *get_next_line(int fd);
 int parsing(t_scene *scene, char **av);
 int	ft_strcmp(const char *s1, const char *s2);
 char	*ft_strdup(const char *s);
@@ -43,4 +43,4 @@ int is_valid_color(t_vec3 color);
 int is_normalized(t_vec3 vec);
 size_t	ft_strlcpy(char *dst, const char *src, size_t sz);
 
-#endif
+#endif // PARSER_H

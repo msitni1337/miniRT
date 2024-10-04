@@ -37,6 +37,5 @@ typedef struct s_ray
 } t_ray;
 
 t_ray	get_ray(t_camera*camera, t_vec3 pixel, t_vec3 img_size);
-t_ray	apply_mat(t_ray ray, t_mat4x4 mat);
 
 #endif // RAY_H

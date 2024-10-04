@@ -10,10 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Renderer.h"
-#include <stdio.h>
+#include "debug.h"
 
-void mat_print(float *data,int rows)
+void print_mat(float *data,int rows)
 {
 	unsigned int i;
 	unsigned int j;

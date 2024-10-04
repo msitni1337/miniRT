@@ -256,6 +256,7 @@ int fill_cone_cap(t_parser *p, char **param, size_t count)
 	if (count > 6 && fill_object_params(&o, param + 6))
 		return 1;
 	o.intersection = &cone_cap_intersection;
+	o.type = OBJ_CONE_CAP;
 	if (add_to_arr(&p->objects, &o) == NULL)
 		return log_error("Malloc failed");
 	return (0);
