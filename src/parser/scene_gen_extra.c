@@ -131,7 +131,7 @@ int gen_scene_rt_file(t_scene *scene)
     dprintf(fd, "A\t1.0\t%f,%f,%f\n", scene->ambient_color.x * 255.0f,
             scene->ambient_color.y * 255.0f, scene->ambient_color.z * 255.0f);
 
-    dprintf(fd, "#Objects:[%zu]\n", scene->objects_count);
+    dprintf(fd, "\n#Objects:[%zu]\n", scene->objects_count);
     for (size_t i = 0; i < scene->objects_count; i++)
     {
         switch (scene->objects[i].type)

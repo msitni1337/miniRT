@@ -6,7 +6,7 @@
 /*   By: msitni <msitni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 11:14:53 by msitni            #+#    #+#             */
-/*   Updated: 2024/09/27 11:15:33 by msitni           ###   ########.fr       */
+/*   Updated: 2024/10/05 10:55:31 by msitni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@
 #define KEY_LPAREN 57
 #define KEY_RPAREN 48
 #define KEY_H 104
+#define KEY_G 103
 #endif
 
 #define MOUSE_CLICK 1

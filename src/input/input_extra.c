@@ -13,15 +13,16 @@
 #include "input.h"
 #include "extra.h"
 
-int	key_hook_up(int key, t_renderer *renderer)
+int key_hook_up(int key, t_renderer *renderer)
 {
 	if (key == KEY_CTR)
 		renderer->tab_mode = FALSE;
 	return (0);
 }
 
-int	key_hook_down(int key, t_renderer *renderer)
+int key_hook_down(int key, t_renderer *renderer)
 {
+	printf("%d\n", key);
 	if (key == KEY_CTR)
 		renderer->tab_mode = TRUE;
 	else if (key == KEY_ESC)
@@ -41,14 +42,14 @@ int	key_hook_down(int key, t_renderer *renderer)
 	return (0);
 }
 
-int	mouse_hook_up(int button, int x, int y, t_renderer *renderer)
+int mouse_hook_up(int button, int x, int y, t_renderer *renderer)
 {
-	t_ray	ray;
-	t_hit	hit;
-	t_vec3	pixel;
-	t_vec3	size;
+	t_ray ray;
+	t_hit hit;
+	t_vec3 pixel;
+	t_vec3 size;
 
-	if(button != MOUSE_CLICK)
+	if (button != MOUSE_CLICK)
 		return (0);
 	pixel.x = x;
 	pixel.y = renderer->mlx_texture.height - y;
@@ -61,7 +62,7 @@ int	mouse_hook_up(int button, int x, int y, t_renderer *renderer)
 	return (0);
 }
 
-int	mouse_hook_down(int button, int x, int y, t_renderer *renderer)
+int mouse_hook_down(int button, int x, int y, t_renderer *renderer)
 {
 	(void)button;
 	(void)x;
@@ -72,7 +73,7 @@ int	mouse_hook_down(int button, int x, int y, t_renderer *renderer)
 
 #ifndef INPUT_MAC
 
-int	on_destroy(t_renderer *r)
+int on_destroy(t_renderer *r)
 {
 	mlx_loop_end(r->mlx_context);
 	return (0);
@@ -80,7 +81,7 @@ int	on_destroy(t_renderer *r)
 
 #else
 
-int	on_destroy(t_renderer *r)
+int on_destroy(t_renderer *r)
 {
 	free_all(r);
 	exit(0);

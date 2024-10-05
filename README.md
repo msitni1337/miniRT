@@ -2,8 +2,10 @@
 
 <p id="description">Mini raytracer written in c.</p>
 
-  
-  
+<h2> Screenshot</h2>
+
+![Screenshot 1](/img/screenshot1.png)
+
 <h2>🧐 Features</h2>
 
 Here're some of the project's best features:
@@ -59,4 +61,8 @@ Mandatory:
 Bonus:
 ```
 ./miniRT_bonus [path to a scene file with full features]
+```
+Extra:
+```
+./miniRT_extra [path to a scene file with full features]
 ```
