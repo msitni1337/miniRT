@@ -87,7 +87,6 @@ int set_objects_textures(void* mlx, t_scene* scene)
 			return printf(RED"Can't open texture [%s]\n"rst, obj->texture.filename);
 		i++;
 	}
-	free_textures_filenames(scene);
 	return 0;
 }
 

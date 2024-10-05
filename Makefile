@@ -5,17 +5,20 @@ Parser_m	= src/parser/ft_split.c src/parser/get_next_line.c src/parser/get_next_
 Parser_b	= src/parser/ft_split.c src/parser/get_next_line.c src/parser/get_next_line_utils.c src/parser/get_vec3.c src/parser/parser_bonus.c src/parser/parser_utils.c 
 Object_m	= src/objects/mandatory/Cylinder.c src/objects/mandatory/Light.c src/objects/mandatory/Object.c src/objects/mandatory/Plane.c src/objects/mandatory/Sphere.c
 Object_b	= ${Object_m} src/objects/bonus/Cone_bonus.c src/objects/bonus/Cone_cap_bonus.c src/objects/bonus/Rectangle_bonus.c
-input		= src/input/input.c src/input/camera.c src/input/object.c
+input		= src/input/camera.c src/input/object.c
 utils		= src/utils/dynamic_arrays.c src/utils/free.c src/utils/logging.c src/utils/ft_memset.c src/mlx/mlx_utils.c 
-extra		= src/parser/scene_gen_extra.c
 
-SRC_m		= ${LinAlgebra} ${Renderer} ${Parser_m} ${Object_m} ${input} ${utils} src/main.c src/mlx/mlx_init.c 
+mandatory_src	= src/main.c src/mlx/mlx_init.c src/input/input.c
+bonus_src		= src/main_bonus.c src/mlx/mlx_init_bonus.c src/input/input.c
+extra_src		= src/main_bonus.c src/mlx/mlx_init_bonus.c src/parser/scene_gen_extra.c src/input/input_extra.c
+
+SRC_m		= ${LinAlgebra} ${Renderer} ${Parser_m} ${Object_m} ${input} ${utils} ${mandatory_src} 
 OBJ_m		= $(SRC_m:.c=.o)
 
-SRC_b		= ${LinAlgebra} ${Renderer} ${Parser_b} ${Object_b} ${input} ${utils} src/main_bonus.c src/mlx/mlx_init_bonus.c 
+SRC_b		= ${LinAlgebra} ${Renderer} ${Parser_b} ${Object_b} ${input} ${utils} ${bonus_src}
 OBJ_b		= $(SRC_b:.c=.o)
 
-SRC_e		= ${SRC_B} ${extra}
+SRC_e		= ${LinAlgebra} ${Renderer} ${Parser_b} ${Object_b} ${input} ${utils} ${extra_src}
 OBJ_e		= $(SRC_e:.c=.o)
 
 # VARS
@@ -32,7 +35,7 @@ ifeq ($(shell uname -s),Darwin)
 endif
 
 .PHONY : re reb ree fclean clean all bonus extra
-.SECONDARY : ${OBJ_m} ${OBJ_e}
+.SECONDARY : ${OBJ_m} ${OBJ_b} ${OBJ_e}
 
 %.o : %.c
 	$(CC) $(CFLAGS) $< -c -o $@

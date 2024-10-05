@@ -18,7 +18,6 @@
 #include "dynamic_arrays.h"
 #include "Renderer.h"
 #include "utils.h"
-#include "get_next_line.h"
 
 
 # define BUFFER_SIZE 42
@@ -31,6 +30,7 @@ typedef struct s_parser
 	t_darr lights;
 } t_parser;
 
+char	*get_next_line(int fd);
 int parsing(t_scene *scene, char **av);
 int	ft_strcmp(const char *s1, const char *s2);
 char	*ft_strdup(const char *s);

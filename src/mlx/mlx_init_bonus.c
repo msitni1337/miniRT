@@ -68,6 +68,7 @@ int	init_mlx(t_renderer *r)
 
 void	free_all(t_renderer *r)
 {
+	free_textures_filenames(&r->scene);
 	free_objects_textures(r->mlx_context, r->scene.objects,
 		r->scene.objects_count);
 	ft_free(r->scene.objects, r->scene.lights, NULL);
@@ -94,7 +95,6 @@ int	start_mlx(t_renderer *r)
 	}
 	if (set_objects_textures(r->mlx_context, &r->scene))
 	{
-		free_textures_filenames(&r->scene);
 		free_all(r);
 		return (1);
 	}

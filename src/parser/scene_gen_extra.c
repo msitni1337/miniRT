@@ -12,12 +12,79 @@
 
 #include "extra.h"
 
+static int count_chars(long n)
+{
+    int i;
+
+    i = 1;
+    if (n < 0)
+    {
+        n = -n;
+        i++;
+    }
+    while (n > 9)
+    {
+        n /= 10;
+        i++;
+    }
+    return (i);
+}
+
+static int get_first_digit(long n)
+{
+    while (n > 9)
+    {
+        n /= 10;
+    }
+    return ((int)n);
+}
+
+static void fill_str_with_nbr(long nbr, char *str, int *i)
+{
+    if (nbr < 0)
+    {
+        nbr = -nbr;
+        str[*i] = '-';
+        (*i)++;
+    }
+    if (nbr >= 0 && nbr <= 9)
+    {
+        str[*i] = '0' + get_first_digit(nbr);
+        (*i)++;
+        return;
+    }
+    fill_str_with_nbr(nbr / 10, str, i);
+    fill_str_with_nbr(nbr % 10, str, i);
+}
+
+char *ft_itoa(int n)
+{
+    char *str;
+    int i;
+
+    str = malloc(count_chars(n) + 1);
+    if (!str)
+        return (NULL);
+    i = 0;
+    fill_str_with_nbr(n, str, &i);
+    str[i] = 0;
+    return (str);
+}
+
 void add_other_params(int fd, t_object *obj)
 {
+    if (obj->texture.filename != NULL)
+        dprintf(fd, "\t-t\t%s", obj->texture.filename);
+    if (obj->normal_map.filename != NULL)
+        dprintf(fd, "\t-n\t%s", obj->normal_map.filename);
+    if (obj->reflection > 0.0f)
+        dprintf(fd, "\t-r\t%f", obj->reflection);
+    if (obj->hidden)
+        dprintf(fd, "\t-h");
     if (obj->checkerboard)
         dprintf(fd, "\t-c");
     if (obj->hidden)
-        dprintf(fd, "\t-h"); 
+        dprintf(fd, "\t-h");
     dprintf(fd, "\n");
 }
 
@@ -30,7 +97,7 @@ int get_scene_fd()
 
     gettimeofday(&now, NULL);
     tmp = "scene_gen_";
-    fname = itoa(now.tv_sec);
+    fname = ft_itoa(now.tv_sec);
     if (fname == NULL)
         return -1;
     tmp = ft_strjoin(tmp, fname);
@@ -39,12 +106,12 @@ int get_scene_fd()
         return -1;
     fname = ft_strjoin(tmp, ".rt");
     free(tmp);
-    fd = open(fname, O_CREAT | O_TRUNC);
+    fd = open(fname, O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
     free(fname);
     return fd;
 }
 
-int gen_scene(t_scene *scene)
+int gen_scene_rt_file(t_scene *scene)
 {
     int fd;
 
@@ -71,7 +138,7 @@ int gen_scene(t_scene *scene)
         {
         case OBJ_PLANE:
         {
-            dprintf(fd, "#plane:\tPOINT\tNORMAL\tCOLOR\n");
+            dprintf(fd, "#Plane:\tPOINT\tNORMAL\tCOLOR\n");
             dprintf(fd, "pl\t%f,%f,%f\t%f,%f,%f\t%f,%f,%f",
                     scene->objects[i].position.x, scene->objects[i].position.y, scene->objects[i].position.z,
                     scene->objects[i].normal.x, scene->objects[i].normal.y, scene->objects[i].normal.z,
@@ -79,11 +146,67 @@ int gen_scene(t_scene *scene)
             add_other_params(fd, scene->objects + i);
             break;
         }
+        case OBJ_SPHERE:
+        {
+            dprintf(fd, "#Sphere:\tCENTER\tDIAMETER\tCOLOR\n");
+            dprintf(fd, "sp\t%f,%f,%f\t%f\t%f,%f,%f",
+                    scene->objects[i].position.x, scene->objects[i].position.y, scene->objects[i].position.z,
+                    scene->objects[i].radius * 2.0f,
+                    scene->objects[i].color.x * 255.0f, scene->objects[i].color.y * 255.0f, scene->objects[i].color.z * 255.0f);
+            add_other_params(fd, scene->objects + i);
+            break;
+        }
+        case OBJ_CYLINDER:
+        {
+            dprintf(fd, "#Cylinder:\tCENTER\tAXIS\tHEIGHT\tDIAMETER\tCOLOR\n");
+            dprintf(fd, "cy\t%f,%f,%f\t%f,%f,%f\t%f\t%f\t%f,%f,%f",
+                    scene->objects[i].position.x, scene->objects[i].position.y, scene->objects[i].position.z,
+                    scene->objects[i].normal.x, scene->objects[i].normal.y, scene->objects[i].normal.z,
+                    scene->objects[i].height, scene->objects[i].radius * 2.0f,
+                    scene->objects[i].color.x * 255.0f, scene->objects[i].color.y * 255.0f, scene->objects[i].color.z * 255.0f);
+            add_other_params(fd, scene->objects + i);
+            break;
+        }
+        case OBJ_CONE:
+        {
+            dprintf(fd, "#Cone:\tBASE_CENTER\tAXIS\tHEIGHT\tDIAMETER\tCOLOR\n");
+            dprintf(fd, "co\t%f,%f,%f\t%f,%f,%f\t%f\t%f\t%f,%f,%f",
+                    scene->objects[i].position.x, scene->objects[i].position.y, scene->objects[i].position.z,
+                    scene->objects[i].normal.x, scene->objects[i].normal.y, scene->objects[i].normal.z,
+                    scene->objects[i].height, scene->objects[i].radius * 2.0f,
+                    scene->objects[i].color.x * 255.0f, scene->objects[i].color.y * 255.0f, scene->objects[i].color.z * 255.0f);
+            add_other_params(fd, scene->objects + i);
+            break;
+        }
+        case OBJ_CONE_CAP:
+        {
+            dprintf(fd, "#CapCone:\tBASE_CENTER\tAXIS\tHEIGHT\tDIAMETER\tCOLOR\n");
+            dprintf(fd, "cc\t%f,%f,%f\t%f,%f,%f\t%f\t%f\t%f,%f,%f",
+                    scene->objects[i].position.x, scene->objects[i].position.y, scene->objects[i].position.z,
+                    scene->objects[i].normal.x, scene->objects[i].normal.y, scene->objects[i].normal.z,
+                    scene->objects[i].height, scene->objects[i].radius * 2.0f,
+                    scene->objects[i].color.x * 255.0f, scene->objects[i].color.y * 255.0f, scene->objects[i].color.z * 255.0f);
+            add_other_params(fd, scene->objects + i);
+            break;
+        }
+        case OBJ_RECT:
+        {
+            dprintf(fd, "#Rectangle:\tCENTER\tNORMAL\tWIDTH\tHEIGHT\tCOLOR\n");
+            dprintf(fd, "rc\t%f,%f,%f\t%f,%f,%f\t%f\t%f\t%f,%f,%f",
+                    scene->objects[i].position.x, scene->objects[i].position.y, scene->objects[i].position.z,
+                    scene->objects[i].normal.x, scene->objects[i].normal.y, scene->objects[i].normal.z,
+                    scene->objects[i].width, scene->objects[i].height,
+                    scene->objects[i].color.x * 255.0f, scene->objects[i].color.y * 255.0f, scene->objects[i].color.z * 255.0f);
+            add_other_params(fd, scene->objects + i);
+            break;
+        }
         default:
         {
+            assert(!"IMPOSSIBLE TO REACH");
             break;
         }
         }
     }
+    close(fd);
     return 0;
 }

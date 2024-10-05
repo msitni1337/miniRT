@@ -15,6 +15,6 @@
 #include "parser_bonus.h"
 #include <sys/time.h>
 
-int gen_scene(t_scene*scene);
+int gen_scene_rt_file(t_scene *scene);
 
 #endif // EXTRA_H

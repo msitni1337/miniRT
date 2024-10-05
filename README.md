@@ -29,6 +29,7 @@ Here're some of the project's best features:
 *   KEYPAD_+ / KEYPAD_- : control object's height.
 *   KEYPAD_( / KEYPAD_) : control object's width.
 *   KEYPAD_H            : hide/unhide object.
+*   KEYPAD_G            : generate a .rt file for the current scene (extra).
 
 <h2>🛠️ Installation Steps:</h2>
 
@@ -43,6 +44,10 @@ make
 for compiling bonus part (recommended):
 ```
 make bonus
+```
+for compiling extra part (contains some additional features):
+```
+make extra
 ```
 <p>3. Run</p>
 

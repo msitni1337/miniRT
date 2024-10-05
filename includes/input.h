@@ -39,6 +39,7 @@
 #define KEY_LPAREN 25
 #define KEY_RPAREN 29
 #define KEY_H 4
+#define KEY_G 5
 #else
 #define KEY_DOWN 65364
 #define KEY_UP 65362
