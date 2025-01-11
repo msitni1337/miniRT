@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msitni <msitni@student.42.fr>              +#+  +:+       +#+        */
+/*   By: simo <simo@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 11:17:06 by msitni            #+#    #+#             */
-/*   Updated: 2024/09/27 11:17:16 by msitni           ###   ########.fr       */
+/*   Updated: 2025/01/12 00:51:43 by simo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,8 +256,30 @@ int fill_cone_cap(t_parser *p, char **param, size_t count)
 	if (count > 6 && fill_object_params(&o, param + 6))
 		return 1;
 	o.intersection = &cone_cap_intersection;
-	o.type = OBJ_CONE_CAP;
 	if (add_to_arr(&p->objects, &o) == NULL)
+		return log_error("Malloc failed");
+	return (0);
+}
+
+int fill_mandelbulb(t_parser *p, char **param, size_t count)
+{
+	t_object obj;
+	t_vec3 position;
+	float iterations;
+	t_vec3 color;
+
+	if (count < 4)
+		return log_error("invalid number of params for mandelbulb");
+	if (get_vec3(&position, param[1]))
+		return log_error("invalid position param for mandelbulb");
+	if (get_float(&iterations, param[2]) || iterations < 0)
+		return log_error("invalid iterations param for mandelbulb");
+	if (get_vec3(&color, param[3]) || is_valid_color(color))
+		return log_error("invalid color param for mandelbulb");
+	obj = new_mandelbulb(position, iterations, color);
+	if (count > 4)
+		return 1;
+	if (add_to_arr(&p->objects, &obj) == NULL)
 		return log_error("Malloc failed");
 	return (0);
 }
@@ -329,6 +351,11 @@ int check_line(char *line, t_scene *scene, t_parser *parser)
 	else if (ft_strcmp(param[0], "cc") == 0)
 	{
 		if (fill_cone_cap(parser, param, count))
+			return free_array(param), ERROR;
+	}
+	else if (ft_strcmp(param[0], "m") == 0)
+	{
+		if (fill_mandelbulb(parser, param, count))
 			return free_array(param), ERROR;
 	}
 	else
